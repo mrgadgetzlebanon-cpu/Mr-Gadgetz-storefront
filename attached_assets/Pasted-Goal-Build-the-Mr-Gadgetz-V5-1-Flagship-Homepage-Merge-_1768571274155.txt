@@ -1,0 +1,43 @@
+Goal: Build the "Mr. Gadgetz V5.1 Flagship Homepage." Merge the Zentry storytelling sections with the ShopHub dynamic commerce rows into a single, high-performance modular page.
+
+1. Page Architecture (The "Lego" Merge):
+
+Refactor src/pages/Home.tsx to follow the sequence defined in our project JSON.
+
+Sequence: > 1. Hero (Zentry) 2. New Arrivals (ShopHub Slider) 3. Categories Intro (Zentry) 4. Global Category Selection (ShopHub Ribbon) 5. Brand Showcase (Moncy TechStack design - Infinite Marquee/Stack) 6. Brand/Category Rows (Apple, Laptops, Samsung, Audio, Cameras, Watches, Dyson)
+
+2. "Subsection" Logic (Conditional Rendering):
+
+For sections where Subsection: true (e.g., Apple, Samsung, Laptops):
+
+Display a Category Ribbon at the top of the section (Full-width, circular icons with low-stroke borders).
+
+Interactive State: Only render the ProductCard slider after a user clicks a subcategory icon. Use a fade-in animation for the slider.
+
+Default to the first subcategory (e.g., "iPhone" for Apple) on initial load.
+
+For sections where Subsection: false (e.g., Dyson, Cameras):
+
+Directly render the ProductCard slider fetching products for that specific category name.
+
+3. Component Design & Aesthetics:
+
+Headers: Each row must have a clean, bold title (e.g., "Apple Products," "High-Fidelity Audio").
+
+ShopHub Design: Maintain the V5 style—transparent product backgrounds (mix-blend-mode: multiply), bold white current price, and struck-through compareAtPrice.
+
+Moncy Brand Stack: Adapt the TechStack component from the reference. Instead of code icons, use the SVG brand logos for Apple, Samsung, Dyson, etc. Use the infinite scroll logic.
+
+Zentry Elements: Keep the high-end 3D/video transitions in the Hero and Categories Intro sections to maintain the "innovation" feel.
+
+4. Data Strategy (Shopify API):
+
+Use the useShopifyStorefront hook to fetch products by Tag or Collection.
+
+Ensure the Apple/Samsung rows specifically filter for brand:Apple or cat:Audio based on the new Tagging Architecture.
+
+5. Professional Cleanup:
+
+Comment out (do not delete) the old standalone ShopHub page components to keep the codebase clean.
+
+Ensure all new components are extracted into the src/components/Home/ directory.

@@ -1,0 +1,105 @@
+[
+  {
+    "HomePage": [
+      {
+        "Hero Section": {
+          "position": 1,
+          "Design": "zentry"
+        },
+        "New Arrivals": {
+          "position": 2,
+          "Design": "ShopHub"
+        },
+        "Categories": {
+          "position": 3,
+          "Design": "zentry"
+        },
+        "Categories Selection": {
+          "position": 4,
+          "Design": "ShopHub",
+          "Categories": [
+            "Phones",
+            "Tablets",
+            "Laptops",
+            "Watches",
+            "Smart Home",
+            "Audio",
+            "Gaming",
+            "Networking"
+          ],
+          "Subsection": true
+        },
+        "Brand Balls Stack": {
+          "position": 5,
+          "Design": "Moncy"
+        },
+        "Apple Categories": {
+          "position": 6,
+          "Design": "ShopHub",
+          "Categories": [
+            "Iphone",
+            "Ipad",
+            "Macbook Air",
+            "iMac",
+            "Apple Watch",
+            "Accessories"
+          ],
+          "Subsection": true
+        },
+        "Laptops Categories": {
+          "position": 7,
+          "Design": "ShopHub",
+          "Categories": [
+            "Dell",
+            "HP",
+            "Apple",
+            "MSI",
+            "Lenovo",
+            "Asus",
+            "Acer"
+          ],
+          "Subsection": true
+        },
+        "Samsung Categories": {
+          "position": 8,
+          "Design": "ShopHub",
+          "Categories": [
+            "Phones",
+            "Tablets",
+            "Watches",
+            "Audio",
+            "Accessories"
+          ],
+          "Subsection": true
+        },
+        "Audio Categories": {
+          "position": 9,
+          "Design": "ShopHub",
+          "Categories": [
+            "Headphones",
+            "Speakers",
+            "Earbuds",
+            "Earphones",
+            "Microphones"
+          ],
+          "Subsection": true
+        },
+        "Cameras": {
+          "position": 10,
+          "Design": "ShopHub",
+          "Subsection": false
+        },
+        "Watches": {
+          "position": 11,
+          "Design": "ShopHub",
+          "Subsection": false
+        },
+        "Dyson Products": {
+          "position": 12,
+          "Design": "ShopHub",
+          "Subsection": false
+        }
+      }
+    ]
+  }
+]

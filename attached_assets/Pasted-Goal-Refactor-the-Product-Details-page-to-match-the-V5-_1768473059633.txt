@@ -1,0 +1,43 @@
+Goal: Refactor the Product Details page to match the "V5 - Final" specification, focusing on layout logic, visual polish, and modularity.
+
+1. Layout & Modular Structure:
+
+Create or update src/components/Product/ProductDetails.tsx as the main container.
+
+Structure the page into two distinct sections:
+
+Upper Content: Two columns. Left side for the ProductImageSlider (containing the main image and thumbnails). Right side for ProductInfo (title, price, variants, CTA).
+
+Lower Content: A container that holds the Description and Technical Specifications.
+
+2. The "Hidden Split" Logic (Critical):
+
+In the ProductDescription component, write a utility function to parse the descriptionHTML string.
+
+Check: Look for the specific substring <span id="hidden"></span> (or </hidden>).
+
+Condition A (Tag Found): Split the content at that tag.
+
+Render Part 1 in a left column titled "Description".
+
+Render Part 2 in a right column titled "Technical Specifications".
+
+Display these side-by-side (50%/50% grid) on desktop.
+
+Condition B (Tag Not Found): Render the entire description in a single container that takes up 100% width.
+
+3. Visual Tweaks:
+
+Prices: Fetch and display both the compareAtPrice (old price) and price (new price). Style the old price with text-decoration: line-through and a muted gray/beige color. The new price should be bold and prominent.
+
+Image Backgrounds: In the CSS for the product images, set the background to transparent or mix-blend-mode: multiply to ensure no white/grey boxes appear behind the product PNGs.
+
+Buttons: Ensure the "Add to Cart" button uses the exact same styling class as the product card buttons (e.g., solid fill, same border-radius and hover effect).
+
+4. Recommendations Section:
+
+Below the details, add a RelatedProducts component.
+
+This should contain two sections: "Recently Viewed" and "You May Also Like" (best sellers from the same category).
+
+Interaction: Present these as a horizontal Slider by default, but include a toggle/button to switch the view to a Grid layout.

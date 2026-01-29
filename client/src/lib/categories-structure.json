@@ -1,0 +1,145 @@
+{
+  "Phones": {
+    "Mobile Phones": ["Mobile Phone"],
+    "Mobile Accessories": [
+      "Mobile Phone Accessories",
+      "Mobile Phone Case",
+      "Mobile Phone Stands",
+      "Screen Protector",
+      "Screen Protectors",
+      "Power Bank",
+      "Stylus",
+      "Stylus Pens",
+      "Stylus Pen Nibs & Refills"
+    ]
+  },
+
+  "Tablets": {
+    "Tablets": ["Tablet", "E-Book Readers"],
+    "Tablet Accessories": [
+      "Stylus",
+      "Stylus Pens",
+      "Screen Protector",
+      "Screen Protectors"
+    ]
+  },
+
+  "Laptops & PCs": {
+    "Computers": ["Laptop", "Desktop Computers"],
+    "Computer Accessories": [
+      "Laptop Accessories",
+      "Computer Accessories",
+      "Adapter",
+      "Cable",
+      "Charger",
+      "Battery",
+      "Storage",
+      "Privacy Filters",
+      "Keyboards",
+      "Mice",
+      "Webcams"
+    ]
+  },
+
+  "Accessories": {
+    "Wearables": ["Smart Watch", "Activity Monitors", "Watch Bands"],
+    "Power & Connectivity": ["Power Bank", "Charger", "Cable", "Adapter"],
+    "Electronics Accessories": [
+      "Mobile Phone Accessories",
+      "Mobile Phone Case",
+      "Mobile Phone Stands",
+      "Screen Protector",
+      "Screen Protectors",
+      "Power Bank",
+      "Stylus",
+      "Stylus Pens",
+      "Stylus Pen Nibs & Refills",
+      "Laptop Accessories",
+      "Computer Accessories",
+      "Adapter",
+      "Cable",
+      "Charger",
+      "Battery",
+      "Storage",
+      "Privacy Filters",
+      "Tablet Accessories",
+      "Vehicle Air Fresheners",
+      "GPS Tracking Devices",
+      "GPS Cases",
+      "Vaporizers & Electronic Cigarettes",
+      "Keyboards",
+      "Mice",
+      "Webcams"
+    ]
+  },
+
+  "Audio": {
+    "Personal Audio": [
+      "Headphones",
+      "Headphone Carrying Cases",
+      "Earbuds",
+      "Earbud Carrying Cases"
+    ],
+    "Audio Equipment": [
+      "Microphones",
+      "Speakers",
+      "Audio Players & Recorders",
+      "Sound Machines",
+      "Home Theater Systems"
+    ]
+  },
+
+  "Cameras": {
+    "Cameras": ["Camera"],
+    "Camera Accessories": [
+      "Camera Accessories",
+      "Camera Focus Devices",
+      "Camera Stabilizers & Supports",
+      "Projector"
+    ]
+  },
+
+  "Gaming": {
+    "Gaming Accessories": ["Gaming", "Portable Game Console Cases"]
+  },
+
+  "Smart Home": {
+    "Home Appliances": [
+      "Air Purifiers",
+      "Portable Evaporative Coolers",
+      "Upright Vacuums",
+      "Vacuums",
+      "Power Control Units",
+      "Streaming & Home Media Players"
+    ],
+    "Personal Care Appliances": [
+      "Hair Dryers",
+      "Hair Dryer Accessories",
+      "Hair Straighteners",
+      "Hair Styling Tools",
+      "Hair Styling Tool Sets",
+      "Hairbrushes & Combs",
+      "Round Hairbrushes"
+    ]
+  },
+
+  "Networking": {
+    "Networking Devices": ["Networking"]
+  },
+
+  "Automotive": {
+    "Vehicle Accessories": [
+      "Vehicle Air Fresheners",
+      "GPS Tracking Devices",
+      "GPS Cases"
+    ]
+  },
+
+  "Health & Lifestyle": {
+    "Lifestyle Devices": ["Vaporizers & Electronic Cigarettes"]
+  },
+
+  "General Electronics": {
+    "Electronics": ["Electronics", "Electronics Accessories"]
+  }
+}
