@@ -119,7 +119,9 @@ export function Navigation() {
             </div>
           </Link>
 
-          <NavigationMenu useWhiteLogo={useWhiteLogo} />
+          <div className="hidden lg:flex flex-1 justify-center min-w-0">
+            <NavigationMenu useWhiteLogo={useWhiteLogo} />
+          </div>
 
           {/* Actions */}
           <div className="flex items-center gap-2">

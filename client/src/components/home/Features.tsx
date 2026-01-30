@@ -115,7 +115,7 @@ const Features = () => (
       </div>
 
       <BentoTilt
-        className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[65vh]"
+        className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[60vh] xl:h-[65vh]"
         href="/shop?category=parent:Phones"
       >
         <BentoCard
@@ -129,7 +129,7 @@ const Features = () => (
         />
       </BentoTilt>
 
-      <div className="grid h-[135vh] w-full grid-cols-2 grid-rows-3 gap-7">
+      <div className="grid w-full grid-cols-2 grid-rows-3 gap-7 lg:h-[115vh] xl:h-[135vh]">
         <BentoTilt
           className="bento-tilt_1 row-span-1 md:col-span-1 md:row-span-2"
           href="/shop?category=parent:PC+and+Laptops"

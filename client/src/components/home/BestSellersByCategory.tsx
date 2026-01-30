@@ -7,7 +7,9 @@ interface BestSellersByCategoryProps {
   products: Product[];
 }
 
-export function BestSellersByCategory({ products }: BestSellersByCategoryProps) {
+export function BestSellersByCategory({
+  products,
+}: BestSellersByCategoryProps) {
   const bestSellersByCategory = useMemo(() => {
     const categories = Array.from(new Set(products.map((p) => p.category)));
     return categories.map((cat) => ({
@@ -31,7 +33,9 @@ export function BestSellersByCategory({ products }: BestSellersByCategoryProps) 
           {bestSellersByCategory.map((category) => (
             <div key={category.name}>
               <div className="flex items-center gap-4 mb-8">
-                <h3 className="text-2xl font-display font-bold">{category.name}</h3>
+                <h3 className="text-2xl font-display font-bold">
+                  {category.name}
+                </h3>
                 <div className="h-[1px] flex-1 bg-border/50" />
                 <Link
                   href={`/shop?category=${category.name}`}
@@ -41,9 +45,13 @@ export function BestSellersByCategory({ products }: BestSellersByCategoryProps) 
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
                 {category.products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    variant="grid"
+                  />
                 ))}
               </div>
             </div>

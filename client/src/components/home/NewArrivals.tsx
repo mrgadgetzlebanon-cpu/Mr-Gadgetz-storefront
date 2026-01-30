@@ -48,7 +48,7 @@ export function NewArrivals() {
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-[350px] h-[500px] bg-muted rounded-xl animate-pulse"
+                className="flex-shrink-0 w-[300px] sm:w-[330px] h-[440px] sm:h-[470px] bg-muted rounded-xl animate-pulse"
               />
             ))}
           </div>
@@ -122,7 +122,7 @@ export function NewArrivals() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex-shrink-0 w-[350px]"
+                    className="flex-shrink-0 w-[300px] sm:w-[330px]"
                   >
                     <ProductCard product={product} showNewTag />
                   </motion.div>
@@ -139,7 +139,7 @@ export function NewArrivals() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
             {products.map((product, index) => (
               <motion.div
                 key={product.id}
@@ -148,7 +148,7 @@ export function NewArrivals() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
               >
-                <ProductCard product={product} showNewTag />
+                <ProductCard product={product} showNewTag variant="grid" />
               </motion.div>
             ))}
           </div>

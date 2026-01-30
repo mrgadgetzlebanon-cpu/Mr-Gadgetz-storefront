@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import {
@@ -16,12 +16,20 @@ import {
 } from "@/hooks/use-products";
 import { Button } from "@/components/ui/button";
 import CategoryCard from "@/components/ui/category-card";
+import { SIDEBAR_CONFIG } from "@/config/navigationMap";
 
 interface CategoryItem {
   id: string;
   label: string;
   parentCategory: string;
   image: string;
+}
+
+function normalizeKey(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 
 const categories: CategoryItem[] = [
@@ -75,30 +83,278 @@ const categories: CategoryItem[] = [
   },
 ];
 
+const categoryFallbackTags: Record<string, string[]> = {
+  phones: ["phone", "smartphone", "mobile"],
+  tablets: ["tablet", "ipad"],
+  laptops: ["computer", "laptop", "pc"],
+  watches: ["smart watch", "smartwatch"],
+  audio: ["earbuds", "headphones", "speaker"],
+  "smart-home": ["dyson", "smart home", "home"],
+  gaming: ["gaming", "console", "controller"],
+  networking: ["router", "network", "wifi"],
+};
+
+const categoryHandleOrder: Record<string, string[]> = {
+  phones: ["Mobile Phones", "Mobile Accessories"],
+  tablets: ["Tablets", "Tablet Accessories"],
+  laptops: [
+    "Laptops",
+    "Desktops",
+    "Computer Accessories",
+    "Keyboards",
+    "Brands",
+  ],
+};
+
 export function GlobalCategorySelection() {
   const [activeCategory, setActiveCategory] = useState<string>("phones");
   const [showProducts, setShowProducts] = useState(false);
   const [viewMode, setViewMode] = useState<"slider" | "grid">("slider");
+  const productsSectionRef = useRef<HTMLDivElement>(null);
+  const hasInteractedRef = useRef(false);
+  const [useFallbackQuery, setUseFallbackQuery] = useState(false);
 
   const { data: categoryStructure } = useGroupedCollections();
 
   const activeItem = categories.find((c) => c.id === activeCategory);
 
-  const categoryHandles = useMemo(() => {
-    if (!activeItem || !categoryStructure) return [];
-    const category = categoryStructure.grouped.find(
+  const resolveHandlesForCategory = useCallback(
+    (category: CategoryItem | undefined): string[] => {
+      if (!categoryStructure || !category) return [];
+
+      const categoryKeys = [
+        category.parentCategory,
+        category.label,
+        category.id,
+      ]
+        .filter(Boolean)
+        .map((val) => normalizeKey(val));
+
+      const categoryConfig = SIDEBAR_CONFIG.find((group) => {
+        const groupKey = normalizeKey(group.title);
+        return categoryKeys.some(
+          (ck) =>
+            groupKey === ck || groupKey.includes(ck) || ck.includes(groupKey),
+        );
+      });
+
+      if (!categoryConfig) return [];
+
+      const orderedCandidates = (categoryHandleOrder[category.id] || []).map(
+        (c) => normalizeKey(c),
+      );
+
+      const linkCandidates: string[] = [];
+      const pushCandidate = (name?: string) => {
+        if (!name) return;
+        linkCandidates.push(name);
+      };
+
+      categoryConfig.links.forEach((link) => {
+        pushCandidate(link.type);
+        pushCandidate(link.target);
+        pushCandidate(link.collection);
+
+        if (link.subLinks) {
+          link.subLinks.forEach((sub) => {
+            pushCandidate(sub.type);
+            pushCandidate(sub.target);
+            pushCandidate(sub.collection);
+          });
+        }
+      });
+
+      const normalizedCandidates: string[] = [...orderedCandidates];
+
+      linkCandidates.forEach((name) => {
+        const key = normalizeKey(name);
+        if (!normalizedCandidates.includes(key)) {
+          normalizedCandidates.push(key);
+        }
+      });
+
+      const childHandleMap = new Map<string, string[]>();
+      categoryStructure.grouped.forEach((group) => {
+        group.children.forEach((child) => {
+          const keys = [child.name, ...(child.filters || [])];
+          keys
+            .map((k) => normalizeKey(k))
+            .forEach((k) => {
+              const existing = childHandleMap.get(k) || [];
+              childHandleMap.set(k, [...existing, ...child.handles]);
+            });
+        });
+      });
+
+      const orderedHandles: string[] = [];
+      const seenHandles = new Set<string>();
+
+      normalizedCandidates.forEach((candidate) => {
+        const handles = childHandleMap.get(candidate) || [];
+        handles.forEach((h) => {
+          if (!seenHandles.has(h)) {
+            seenHandles.add(h);
+            orderedHandles.push(h);
+          }
+        });
+      });
+
+      return orderedHandles;
+    },
+    [categoryStructure],
+  );
+
+  const resolvedHandles = useMemo(() => {
+    if (!activeItem) return [];
+    const handles = resolveHandlesForCategory(activeItem);
+    if (handles.length > 0) return handles;
+
+    const category = categoryStructure?.grouped.find(
       (g) => g.parent === activeItem.parentCategory,
     );
     return category?.parentHandles || [];
-  }, [activeItem, categoryStructure]);
+  }, [activeItem, categoryStructure, resolveHandlesForCategory]);
+
+  const fallbackQuery = useMemo(() => {
+    const tags = categoryFallbackTags[activeCategory] || [];
+    if (tags.length === 0) return "";
+    return tags.map((t) => `tag:${t}`).join(" OR ");
+  }, [activeCategory]);
 
   const { data: result, isLoading } = usePaginatedProducts({
-    handles: categoryHandles,
+    handles: useFallbackQuery ? [] : resolvedHandles,
     sortKey: "best_selling",
     first: 15,
+    searchQuery: useFallbackQuery ? fallbackQuery : "",
   });
 
+  useEffect(() => {
+    if (resolvedHandles.length === 0 && fallbackQuery) {
+      setUseFallbackQuery(true);
+    }
+  }, [resolvedHandles.length, fallbackQuery]);
+
+  useEffect(() => {
+    if (
+      !isLoading &&
+      !useFallbackQuery &&
+      resolvedHandles.length > 0 &&
+      (result?.products?.length || 0) === 0 &&
+      fallbackQuery
+    ) {
+      setUseFallbackQuery(true);
+    }
+  }, [
+    isLoading,
+    useFallbackQuery,
+    resolvedHandles.length,
+    result?.products?.length,
+    fallbackQuery,
+  ]);
+
   const products = result?.products || [];
+  const isProductsLoading = isLoading;
+
+  const sortedProducts = useMemo(() => {
+    const computeWeight = (product: any) => {
+      const text =
+        `${product.productType || ""} ${product.name || ""} ${(product.tags || []).join(" ")}`.toLowerCase();
+
+      const brand = (product.brand || "").toLowerCase();
+      const brandPriority = (() => {
+        if (brand.includes("apple") || brand.includes("iphone")) return 0;
+        if (brand.includes("samsung")) return 1;
+        if (brand.includes("tecno") || brand.includes("xiaomi")) return 2;
+        return 3;
+      })();
+
+      const matches = (keywords: string[]) =>
+        keywords.some((k) => text.includes(k));
+
+      const deviceBucket = (() => {
+        switch (activeCategory) {
+          case "phones": {
+            const device = matches(["phone", "smartphone", "mobile phone"]);
+            const accessory = matches([
+              "case",
+              "screen protector",
+              "protector",
+              "cable",
+              "charger",
+              "stand",
+              "mount",
+              "lens",
+              "cover",
+              "band",
+              "dock",
+              "adapter",
+              "battery",
+            ]);
+            if (device && !accessory) return 0;
+            if (accessory) return 2;
+            return 1;
+          }
+          case "tablets": {
+            const device = matches(["tablet", "ipad"]);
+            const accessory = matches([
+              "case",
+              "folio",
+              "screen protector",
+              "protector",
+              "cable",
+              "charger",
+              "stand",
+              "mount",
+              "keyboard",
+              "dock",
+              "cover",
+              "adapter",
+            ]);
+            if (device && !accessory) return 0;
+            if (accessory) return 2;
+            return 1;
+          }
+          case "laptops": {
+            const device = matches([
+              "laptop",
+              "notebook",
+              "macbook",
+              "computer",
+              "pc",
+              "desktop",
+            ]);
+            const accessory = matches([
+              "case",
+              "sleeve",
+              "bag",
+              "charger",
+              "adapter",
+              "dock",
+              "keyboard",
+              "mouse",
+              "cable",
+              "stand",
+              "monitor",
+            ]);
+            if (device && !accessory) return 0;
+            if (accessory) return 2;
+            return 1;
+          }
+          default:
+            return 1;
+        }
+      })();
+
+      // Combine device bucket and brand priority (only meaningful for devices)
+      const brandWeight = deviceBucket === 0 ? brandPriority : 0;
+      return deviceBucket * 10 + brandWeight;
+    };
+
+    return products
+      .map((p, index) => ({ p, index, weight: computeWeight(p) }))
+      .sort((a, b) => a.weight - b.weight || a.index - b.index)
+      .map((item) => item.p);
+  }, [products, activeCategory]);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
@@ -128,7 +384,22 @@ export function GlobalCategorySelection() {
       }
     }
   }, [activeCategory, emblaApi]);
+
+  useEffect(() => {
+    setUseFallbackQuery(false);
+  }, [activeCategory, resolvedHandles.length]);
+
+  useEffect(() => {
+    if (showProducts && productsSectionRef.current) {
+      if (!hasInteractedRef.current) return;
+      productsSectionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [showProducts, activeCategory]);
   const handleCategoryClick = (id: string) => {
+    hasInteractedRef.current = true;
     setActiveCategory(id);
   };
 
@@ -141,6 +412,17 @@ export function GlobalCategorySelection() {
     () => categoryEmblaApi?.scrollNext(),
     [categoryEmblaApi],
   );
+
+  useEffect(() => {
+    if (activeCategory === "phones") {
+      // Logs handles used and the product names returned
+      console.log("Phones handles:", resolvedHandles);
+      console.log(
+        "Phones products:",
+        products.map((p) => p.name),
+      );
+    }
+  }, [activeCategory, resolvedHandles, products]);
 
   return (
     <section className="py-16 bg-white" data-testid="section-global-categories">
@@ -216,6 +498,7 @@ export function GlobalCategorySelection() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
+              ref={productsSectionRef}
             >
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <h3 className="text-xl font-semibold">
@@ -249,7 +532,7 @@ export function GlobalCategorySelection() {
                 </div>
               </div>
 
-              {products.length > 0 ? (
+              {sortedProducts.length > 0 ? (
                 viewMode === "slider" ? (
                   <div className="relative group/slider">
                     <button
@@ -261,13 +544,13 @@ export function GlobalCategorySelection() {
 
                     <div className="overflow-hidden py-4" ref={emblaRef}>
                       <div className="flex gap-8 px-2">
-                        {products.map((product, index) => (
+                        {sortedProducts.map((product, index) => (
                           <motion.div
                             key={product.id}
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.03 }}
-                            className="flex-shrink-0 w-[350px]"
+                            className="flex-shrink-0 w-[300px] sm:w-[330px]"
                           >
                             <ProductCard product={product} />
                           </motion.div>
@@ -283,25 +566,25 @@ export function GlobalCategorySelection() {
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
-                    {products.map((product, index) => (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
+                    {sortedProducts.map((product, index) => (
                       <motion.div
                         key={product.id}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: index * 0.03 }}
                       >
-                        <ProductCard product={product} />
+                        <ProductCard product={product} variant="grid" />
                       </motion.div>
                     ))}
                   </div>
                 )
-              ) : isLoading ? (
+              ) : isProductsLoading ? (
                 <div className="flex gap-8 overflow-hidden">
                   {[...Array(5)].map((_, i) => (
                     <div
                       key={i}
-                      className="flex-shrink-0 w-[350px] h-[500px] bg-muted rounded-xl animate-pulse"
+                      className="flex-shrink-0 w-[300px] sm:w-[330px] h-[440px] sm:h-[470px] bg-muted rounded-xl animate-pulse"
                     />
                   ))}
                 </div>

@@ -116,6 +116,7 @@ function NavDropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const useGrid = item.children.length >= 10;
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -150,7 +151,7 @@ function NavDropdown({
     >
       <button
         className={cn(
-          "flex items-center gap-1 text-sm font-medium px-3 py-2 transition-colors",
+          "flex items-center gap-1 text-sm font-medium px-2.5 py-2 whitespace-nowrap transition-colors",
           useWhiteLogo
             ? "text-white/80 hover:text-white"
             : "text-muted-foreground hover:text-foreground",
@@ -167,11 +168,16 @@ function NavDropdown({
 
       {isOpen && (
         <div
-          className="absolute left-0 top-full pt-2 z-50"
+          className="absolute left-0 top-full pt-2 z-[60]"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[200px] animate-in fade-in slide-in-from-top-2 duration-200">
+          <div
+            className={cn(
+              "bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[200px] animate-in fade-in slide-in-from-top-2 duration-200",
+              useGrid && "min-w-[520px]",
+            )}
+          >
             {item.href && (
               <Link
                 href={item.href}
@@ -180,15 +186,25 @@ function NavDropdown({
                 View All {item.label}
               </Link>
             )}
-            {item.children.map((child) => (
-              <Link
-                key={child.label}
-                href={child.href}
-                className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-[#f5f5f5] hover:text-gray-900 transition-colors"
-              >
-                {child.label}
-              </Link>
-            ))}
+
+            <div
+              className={cn(
+                useGrid ? "grid grid-cols-2 gap-1 px-1 pb-1" : "flex flex-col",
+              )}
+            >
+              {item.children.map((child) => (
+                <Link
+                  key={child.label}
+                  href={child.href}
+                  className={cn(
+                    "block px-4 py-2.5 text-sm text-gray-700 hover:bg-[#f5f5f5] hover:text-gray-900 transition-colors",
+                    useGrid && "rounded-lg",
+                  )}
+                >
+                  {child.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -284,7 +300,7 @@ export function NavigationMenu({
   }
 
   return (
-    <div className="hidden lg:flex items-center gap-1">
+    <div className="hidden lg:flex items-center gap-2 flex-nowrap overflow-visible max-w-full px-2 relative z-[60]">
       {navItems.map((item) => (
         <NavDropdown key={item.label} item={item} useWhiteLogo={useWhiteLogo} />
       ))}

@@ -1,24 +1,28 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
-import { ArrowRight, ChevronLeft, ChevronRight, Grid, LayoutList } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Grid,
+  LayoutList,
+} from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ProductCard } from "@/components/ProductCard";
-import { usePaginatedProducts, useGroupedCollections } from "@/hooks/use-products";
+import { useCollectionProducts } from "@/hooks/use-products";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-interface Subcategory {
+interface BrandTab {
   id: string;
   label: string;
-  keywords: string[];
+  collectionHandle: string;
 }
 
 interface BrandProductSectionProps {
   title: string;
-  brandName: string;
-  subcategories: Subcategory[];
-  parentCategories: string[];
+  tabs: BrandTab[];
   viewAllLink?: string;
   className?: string;
   bgClassName?: string;
@@ -26,16 +30,12 @@ interface BrandProductSectionProps {
 
 export function BrandProductSection({
   title,
-  brandName,
-  subcategories,
-  parentCategories,
+  tabs,
   viewAllLink,
   className,
   bgClassName,
 }: BrandProductSectionProps) {
-  const [activeSubcategory, setActiveSubcategory] = useState<string>(
-    subcategories[0]?.id || ""
-  );
+  const [activeTabId, setActiveTabId] = useState<string>(tabs[0]?.id || "");
   const [viewMode, setViewMode] = useState<"slider" | "grid">("slider");
 
   const ribbonRef = useRef<HTMLDivElement>(null);
@@ -46,60 +46,16 @@ export function BrandProductSection({
   const hasDraggedRef = useRef(false);
   const dragThreshold = 5;
 
-  const { data: categoryStructure } = useGroupedCollections();
+  const activeTab = useMemo(
+    () => tabs.find((tab) => tab.id === activeTabId) || tabs[0],
+    [tabs, activeTabId],
+  );
 
-  const categoryHandles = useMemo(() => {
-    if (!categoryStructure) return [];
-    const handles: string[] = [];
-    for (const parentCat of parentCategories) {
-      const category = categoryStructure.grouped.find(
-        (g) => g.parent === parentCat
-      );
-      if (category) {
-        handles.push(...category.parentHandles);
-      }
-    }
-    return handles;
-  }, [parentCategories, categoryStructure]);
+  const { data, isLoading } = useCollectionProducts(
+    activeTab?.collectionHandle || "",
+  );
 
-  const { data: result, isLoading } = usePaginatedProducts({
-    handles: categoryHandles,
-    sortKey: "best_selling",
-    first: 100,
-  });
-
-  const allProducts = result?.products || [];
-
-  const baseProducts = useMemo(() => {
-    if (!brandName || brandName.trim() === "") {
-      return allProducts;
-    }
-    const brandLower = brandName.toLowerCase();
-    return allProducts.filter(
-      (p) =>
-        p.brand?.toLowerCase().includes(brandLower) ||
-        p.name.toLowerCase().includes(brandLower)
-    );
-  }, [allProducts, brandName]);
-
-  const filteredProducts = useMemo(() => {
-    const activeSub = subcategories.find((s) => s.id === activeSubcategory);
-    if (!activeSub) return baseProducts.slice(0, 15);
-
-    const filtered = baseProducts.filter((p) => {
-      const nameLower = p.name.toLowerCase();
-      const categoryLower = p.category.toLowerCase();
-      const brandLower = p.brand?.toLowerCase() || "";
-      return activeSub.keywords.some(
-        (kw) => 
-          nameLower.includes(kw.toLowerCase()) || 
-          categoryLower.includes(kw.toLowerCase()) ||
-          brandLower.includes(kw.toLowerCase())
-      );
-    });
-
-    return filtered.length > 0 ? filtered.slice(0, 15) : baseProducts.slice(0, 15);
-  }, [baseProducts, activeSubcategory, subcategories]);
+  const products = data?.products || [];
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
@@ -119,7 +75,7 @@ export function BrandProductSection({
     if (emblaApi) {
       emblaApi.scrollTo(0);
     }
-  }, [activeSubcategory, emblaApi]);
+  }, [activeTabId, emblaApi]);
 
   useEffect(() => {
     const checkScrollable = () => {
@@ -131,7 +87,7 @@ export function BrandProductSection({
     checkScrollable();
     window.addEventListener("resize", checkScrollable);
     return () => window.removeEventListener("resize", checkScrollable);
-  }, [subcategories]);
+  }, [tabs]);
 
   useEffect(() => {
     const el = ribbonRef.current;
@@ -172,17 +128,17 @@ export function BrandProductSection({
     };
   }, [isRibbonScrollable, isRibbonDragging]);
 
-  const handleSubcategoryClick = (id: string) => {
+  const handleTabClick = (id: string) => {
     if (!hasDraggedRef.current) {
-      setActiveSubcategory(id);
+      setActiveTabId(id);
     }
     hasDraggedRef.current = false;
   };
 
-  const hasProducts = baseProducts.length > 0 || filteredProducts.length > 0;
-  if (!hasProducts && !isLoading && categoryHandles.length > 0) return null;
+  const hasProducts = products.length > 0;
+  if (!hasProducts && !isLoading && activeTab?.collectionHandle) return null;
 
-  const sectionId = brandName ? brandName.toLowerCase() : title.toLowerCase().replace(/\s+/g, "-");
+  const sectionId = title.toLowerCase().replace(/\s+/g, "-");
 
   return (
     <section
@@ -197,7 +153,9 @@ export function BrandProductSection({
           transition={{ duration: 0.5 }}
           className="flex flex-wrap items-center justify-between gap-4 mb-6"
         >
-          <h2 className="text-2xl md:text-3xl font-display font-bold">{title}</h2>
+          <h2 className="text-2xl md:text-3xl font-display font-bold">
+            {title}
+          </h2>
           <div className="flex items-center gap-3">
             <div className="flex bg-muted p-1 rounded-full">
               <Button
@@ -230,7 +188,7 @@ export function BrandProductSection({
           </div>
         </motion.div>
 
-        {subcategories.length > 1 && (
+        {tabs.length > 1 && (
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -241,23 +199,23 @@ export function BrandProductSection({
               "overflow-x-auto scrollbar-hide",
               "lg:justify-center lg:flex-wrap lg:overflow-visible",
               isRibbonScrollable && !isRibbonDragging && "cursor-grab",
-              isRibbonDragging && "cursor-grabbing"
+              isRibbonDragging && "cursor-grabbing",
             )}
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {subcategories.map((sub) => (
+            {tabs.map((tab) => (
               <button
-                key={sub.id}
-                onClick={() => handleSubcategoryClick(sub.id)}
+                key={tab.id}
+                onClick={() => handleTabClick(tab.id)}
                 className={cn(
                   "flex-shrink-0 px-5 py-2.5 rounded-full border-2 text-sm font-medium transition-all duration-300",
-                  activeSubcategory === sub.id
+                  activeTabId === tab.id
                     ? "bg-[#0c57ef] border-[#0c57ef] text-white shadow-lg shadow-[#0c57ef]/30"
-                    : "bg-transparent border-gray-300 dark:border-gray-600 text-foreground hover:border-[#0c57ef] hover:text-[#0c57ef]"
+                    : "bg-transparent border-gray-300 dark:border-gray-600 text-foreground hover:border-[#0c57ef] hover:text-[#0c57ef]",
                 )}
-                data-testid={`${sectionId}-subcategory-${sub.id}`}
+                data-testid={`${sectionId}-tab-${tab.id}`}
               >
-                {sub.label}
+                {tab.label}
               </button>
             ))}
           </motion.div>
@@ -265,13 +223,13 @@ export function BrandProductSection({
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={`${activeSubcategory}-${viewMode}`}
+            key={`${activeTabId}-${viewMode}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            {filteredProducts.length > 0 ? (
+            {products.length > 0 ? (
               viewMode === "slider" ? (
                 <div className="relative group/slider">
                   <button
@@ -283,13 +241,13 @@ export function BrandProductSection({
 
                   <div className="overflow-hidden py-4" ref={emblaRef}>
                     <div className="flex gap-8 px-2">
-                      {filteredProducts.map((product, index) => (
+                      {products.map((product, index) => (
                         <motion.div
                           key={product.id}
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: index * 0.03 }}
-                          className="flex-shrink-0 w-[350px]"
+                          className="flex-shrink-0 w-[300px] sm:w-[330px]"
                         >
                           <ProductCard product={product} />
                         </motion.div>
@@ -305,15 +263,15 @@ export function BrandProductSection({
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
-                  {filteredProducts.map((product, index) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
+                  {products.map((product, index) => (
                     <motion.div
                       key={product.id}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: index * 0.03 }}
                     >
-                      <ProductCard product={product} />
+                      <ProductCard product={product} variant="grid" />
                     </motion.div>
                   ))}
                 </div>
@@ -323,7 +281,7 @@ export function BrandProductSection({
                 {[...Array(5)].map((_, i) => (
                   <div
                     key={i}
-                    className="flex-shrink-0 w-[350px] h-[500px] bg-muted rounded-xl animate-pulse"
+                    className="flex-shrink-0 w-[300px] sm:w-[330px] h-[440px] sm:h-[470px] bg-muted rounded-xl animate-pulse"
                   />
                 ))}
               </div>

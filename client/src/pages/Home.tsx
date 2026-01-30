@@ -8,86 +8,52 @@ import { BrandSpheres } from "@/components/home/BrandSpheres";
 import { BrandProductSection } from "@/components/home/BrandProductSection";
 import { DirectProductSection } from "@/components/home/DirectProductSection";
 
-const appleSubcategories = [
-  { id: "iphone", label: "iPhone", keywords: ["iphone"] },
-  { id: "ipad", label: "iPad", keywords: ["ipad", "tablet"] },
-  { id: "macbook", label: "MacBook", keywords: ["macbook", "mac book"] },
-  { id: "imac", label: "iMac", keywords: ["imac"] },
-  { id: "watch", label: "Apple Watch", keywords: ["apple watch", "watch"] },
+// 1. APPLE CONFIGURATION (direct collection handles)
+const appleTabs = [
+  { id: "iphone", label: "iPhone", collectionHandle: "iphones" },
+  { id: "ipad", label: "iPad", collectionHandle: "ipad" },
+  { id: "macbook", label: "MacBook", collectionHandle: "macbook" },
+  { id: "imac", label: "iMac", collectionHandle: "imac" },
+  { id: "watch", label: "Apple Watch", collectionHandle: "apple-watch" },
   {
     id: "accessories",
     label: "Accessories",
-    keywords: ["airpods", "cable", "charger", "case", "magsafe"],
+    collectionHandle:
+      "apple-apple-accessories-apple-cables-apple-apple-apple-accessories",
   },
 ];
 
-const laptopSubcategories = [
-  { id: "dell", label: "Dell", keywords: ["dell"] },
-  { id: "hp", label: "HP", keywords: ["hp", "hewlett"] },
-  { id: "apple", label: "Apple", keywords: ["macbook", "apple"] },
-  { id: "msi", label: "MSI", keywords: ["msi"] },
-  { id: "lenovo", label: "Lenovo", keywords: ["lenovo", "thinkpad"] },
-  { id: "asus", label: "Asus", keywords: ["asus", "rog", "zenbook"] },
-  { id: "acer", label: "Acer", keywords: ["acer", "predator", "aspire"] },
+// 2. LAPTOP CONFIGURATION (single handle)
+const laptopTabs = [
+  { id: "all", label: "All Laptops", collectionHandle: "pc-and-laptops" },
 ];
 
-const samsungSubcategories = [
-  {
-    id: "phones",
-    label: "Phones",
-    keywords: ["galaxy s", "galaxy z", "galaxy a", "samsung phone"],
-  },
-  { id: "tablets", label: "Tablets", keywords: ["galaxy tab", "samsung tab"] },
-  {
-    id: "watches",
-    label: "Watches",
-    keywords: ["galaxy watch", "samsung watch"],
-  },
-  {
-    id: "audio",
-    label: "Audio",
-    keywords: ["galaxy buds", "samsung audio", "samsung speaker"],
-  },
+// 3. SAMSUNG CONFIGURATION (direct collection handles)
+const samsungTabs = [
+  { id: "phones", label: "Phones", collectionHandle: "samsung-mobiles" },
+  { id: "tablets", label: "Tablets", collectionHandle: "samsung-tablets" },
+  { id: "watches", label: "Watches", collectionHandle: "samsung-watch" },
+  { id: "audio", label: "Audio", collectionHandle: "samsung-audio" },
   {
     id: "accessories",
     label: "Accessories",
-    keywords: ["samsung case", "samsung charger", "samsung cable"],
+    collectionHandle: "samsung-accessories",
   },
 ];
 
-const audioSubcategories = [
-  {
-    id: "headphones",
-    label: "Headphones",
-    keywords: ["headphone", "over-ear", "on-ear"],
-  },
-  {
-    id: "speakers",
-    label: "Speakers",
-    keywords: ["speaker", "soundbar", "subwoofer"],
-  },
-  {
-    id: "earbuds",
-    label: "Earbuds",
-    keywords: ["earbud", "airpods", "buds", "wireless earphone"],
-  },
-  {
-    id: "earphones",
-    label: "Earphones",
-    keywords: ["earphone", "in-ear", "wired"],
-  },
-  {
-    id: "microphones",
-    label: "Microphones",
-    keywords: ["microphone", "mic", "recording"],
-  },
+// 4. AUDIO CONFIGURATION (direct collection handles)
+const audioTabs = [
+  { id: "headphones", label: "Headphones", collectionHandle: "headphones" },
+  { id: "speakers", label: "Speakers", collectionHandle: "speakers" },
+  { id: "earbuds", label: "Earbuds", collectionHandle: "earbuds" },
+  { id: "microphones", label: "Microphones", collectionHandle: "microphones" },
 ];
 
 export default function Home() {
   return (
     <>
       <Helmet>
-        <title>Mr. Gadgetz | Premium Electronics</title>
+        <title>Mr. Gadgetz | Premium Electronics Store</title>
         <meta
           name="description"
           content="Discover the latest tech gadgets and premium electronics at Mr. Gadgetz. Shop smartphones, laptops, audio, gaming gear, and more with fast shipping."
@@ -98,94 +64,75 @@ export default function Home() {
           content="Discover the latest tech gadgets and premium electronics at Mr. Gadgetz. Shop smartphones, laptops, audio, gaming gear, and more."
         />
       </Helmet>
+
       <main className="relative min-h-screen min-w-screen overflow-hidden">
-        {/* 1. Hero Section (Zentry) */}
+        {/* 1. Hero Section */}
         <Hero />
 
-        {/* 2. New Arrivals (ShopHub Slider) */}
+        {/* 2. New Arrivals */}
         <NewArrivals />
 
-        {/* 3. Categories Intro (Zentry) - About section */}
+        {/* 3. Categories Intro (Optional) */}
         {/* <About /> */}
 
-        {/* 4. Global Category Selection (ShopHub Ribbon with subsections) */}
+        {/* 4. Global Category Selection */}
         <GlobalCategorySelection />
 
-        {/* 5. Brand Balls Stack (Moncy - Infinite Marquee) */}
+        {/* 5. Brand Balls Stack */}
         <BrandSpheres />
 
-        {/* 6. Apple Categories (ShopHub with subsections) */}
+        {/* 6. Apple Categories */}
         <BrandProductSection
           title="Apple Products"
-          brandName="Apple"
-          subcategories={appleSubcategories}
-          parentCategories={[
-            "Phones",
-            "Tablets",
-            "PC and Laptops",
-            "Watches",
-            "Audio",
-            "Accessories",
-          ]}
+          tabs={appleTabs}
           viewAllLink="/shop?search=apple"
           bgClassName="bg-white"
         />
 
-        {/* 7. Laptops Categories (ShopHub with subsections) */}
+        {/* 7. Laptops Categories */}
         <BrandProductSection
           title="Laptops & Computers"
-          brandName=""
-          subcategories={laptopSubcategories}
-          parentCategories={["PC and Laptops"]}
-          viewAllLink="/shop?category=parent:PC+and+Laptops"
+          tabs={laptopTabs}
+          viewAllLink="/shop?category=pc-and-laptops"
           bgClassName="bg-white"
         />
 
-        {/* 8. Samsung Categories (ShopHub with subsections) */}
+        {/* 8. Samsung Categories */}
         <BrandProductSection
           title="Samsung Products"
-          brandName="Samsung"
-          subcategories={samsungSubcategories}
-          parentCategories={[
-            "Phones",
-            "Tablets",
-            "Watches",
-            "Audio",
-            "Accessories",
-          ]}
+          tabs={samsungTabs}
           viewAllLink="/shop?search=samsung"
           bgClassName="bg-white"
         />
 
-        {/* 9. Audio Categories (ShopHub with subsections) */}
+        {/* 9. Premium Audio */}
         <BrandProductSection
           title="Premium Audio"
-          brandName=""
-          subcategories={audioSubcategories}
-          parentCategories={["Audio"]}
-          viewAllLink="/shop?category=parent:Audio"
+          tabs={audioTabs}
+          viewAllLink="/shop?category=audio"
           bgClassName="bg-white"
         />
 
-        {/* 10. Cameras - skipped since no Cameras category exists in Shopify collections */}
+        {/* 10. Cameras - skipped */}
 
-        {/* 11. Watches (Direct - no subsections) */}
+        {/* 11. Watches (Direct) */}
         <DirectProductSection
           title="Smartwatches & Wearables"
-          parentCategory="Watches"
-          viewAllLink="/shop?category=parent:Watches"
+          parentCategories={["wearables"]}
+          viewAllLink="/shop?category=Wearables"
           bgClassName="bg-white"
         />
 
-        {/* 12. Dyson Products - searches across multiple categories */}
+        {/* 12. Dyson Products (Direct) */}
         <DirectProductSection
           title="Dyson Products"
-          parentCategories={["Smart Home", "Audio", "Accessories"]}
-          brandFilter="Dyson"
-          viewAllLink="/shop?search=dyson"
+          // FETCHING: Using exact Handle 'dyson-1'
+          parentCategories={["dyson-1"]}
+          viewAllLink="/shop?category=dyson-1"
           bgClassName="bg-white"
         />
-        {/* Zentry Features Grid */}
+
+        {/* Features Grid */}
         <Features />
       </main>
     </>

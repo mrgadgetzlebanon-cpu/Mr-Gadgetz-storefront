@@ -4,7 +4,10 @@ import { Link } from "wouter";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ProductCard } from "@/components/ProductCard";
-import { usePaginatedProducts, useGroupedCollections } from "@/hooks/use-products";
+import {
+  usePaginatedProducts,
+  useGroupedCollections,
+} from "@/hooks/use-products";
 import { cn } from "@/lib/utils";
 
 interface Subcategory {
@@ -32,7 +35,7 @@ export function CategoryProductSection({
   className,
 }: CategoryProductSectionProps) {
   const [activeSubcategory, setActiveSubcategory] = useState<string>(
-    subcategories[0]?.id || ""
+    subcategories[0]?.id || "",
   );
   const [showProducts, setShowProducts] = useState(!hasSubsections);
 
@@ -41,7 +44,7 @@ export function CategoryProductSection({
   const categoryHandles = useMemo(() => {
     if (!parentCategory || !categoryStructure) return [];
     const category = categoryStructure.grouped.find(
-      (g) => g.parent === parentCategory
+      (g) => g.parent === parentCategory,
     );
     return category?.parentHandles || [];
   }, [parentCategory, categoryStructure]);
@@ -125,7 +128,9 @@ export function CategoryProductSection({
           transition={{ duration: 0.5 }}
           className="flex items-center justify-between mb-6"
         >
-          <h2 className="text-2xl md:text-3xl font-display font-bold">{title}</h2>
+          <h2 className="text-2xl md:text-3xl font-display font-bold">
+            {title}
+          </h2>
           {viewAllLink && (
             <Link
               href={viewAllLink}
@@ -152,7 +157,7 @@ export function CategoryProductSection({
                   "flex-shrink-0 px-5 py-2.5 rounded-full border-2 text-sm font-medium transition-all duration-300",
                   activeSubcategory === sub.id
                     ? "bg-[#0c57ef] border-[#0c57ef] text-white shadow-lg shadow-[#0c57ef]/30"
-                    : "bg-transparent border-gray-300 dark:border-gray-600 text-foreground hover:border-[#0c57ef] hover:text-[#0c57ef]"
+                    : "bg-transparent border-gray-300 dark:border-gray-600 text-foreground hover:border-[#0c57ef] hover:text-[#0c57ef]",
                 )}
                 data-testid={`subcategory-${sub.id}`}
               >
@@ -189,7 +194,7 @@ export function CategoryProductSection({
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: index * 0.03 }}
-                          className="flex-shrink-0 w-[350px]"
+                          className="flex-shrink-0 w-[260px] sm:w-[300px] lg:w-[350px]"
                         >
                           <ProductCard product={product} />
                         </motion.div>
@@ -209,7 +214,7 @@ export function CategoryProductSection({
                   {[...Array(5)].map((_, i) => (
                     <div
                       key={i}
-                      className="flex-shrink-0 w-[350px] h-[500px] bg-muted rounded-xl animate-pulse"
+                      className="flex-shrink-0 w-[300px] sm:w-[330px] h-[440px] sm:h-[470px] bg-muted rounded-xl animate-pulse"
                     />
                   ))}
                 </div>

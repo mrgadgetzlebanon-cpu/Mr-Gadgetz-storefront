@@ -57,38 +57,38 @@ export default function ProductDetails() {
         <meta name="twitter:image" content={product.image} />
       </Helmet>
       <div className="container mx-auto px-4 py-8">
-      <button 
-        onClick={handleGoBack}
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
-        data-testid="button-back"
-      >
-        <ArrowLeft className="w-4 h-4 mr-1" /> Back
-      </button>
+        <button
+          onClick={handleGoBack}
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
+          data-testid="button-back"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1" /> Back
+        </button>
 
-      {/* Upper Content - Two Columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Left - Image Slider */}
-        <ProductImageSlider images={allImages} productName={product.name} />
+        {/* Upper Content - Two Columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Left - Image Slider */}
+          <ProductImageSlider images={allImages} productName={product.name} />
 
-        {/* Right - Product Info */}
-        <ProductInfo product={product} />
-      </div>
+          {/* Right - Product Info */}
+          <ProductInfo product={product} />
+        </div>
 
-      {/* Lower Content - Description & Specs */}
-      <div className="mt-12 pt-8 border-t border-border/50">
-        <ProductDescription 
-          descriptionHtml={product.descriptionHtml} 
-          description={product.description}
-          specs={product.specs as Record<string, string> | undefined}
+        {/* Lower Content - Description & Specs */}
+        <div className="mt-12 pt-8 border-t border-border/50">
+          <ProductDescription
+            descriptionHtml={product.descriptionHtml}
+            description={product.description}
+            specs={product.specs as Record<string, string> | undefined}
+          />
+        </div>
+
+        {/* Related Products */}
+        <RelatedProducts
+          currentProductId={product.id}
+          category={product.category}
         />
       </div>
-
-      {/* Related Products */}
-      <RelatedProducts 
-        currentProductId={product.id} 
-        category={product.category} 
-      />
-    </div>
     </>
   );
 }

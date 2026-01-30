@@ -8,9 +8,14 @@ import { useState } from "react";
 interface ProductCardProps {
   product: Product;
   showNewTag?: boolean;
+  variant?: "default" | "grid";
 }
 
-export function ProductCard({ product, showNewTag = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  showNewTag = false,
+  variant = "default",
+}: ProductCardProps) {
   const { addItem } = useCart();
   const [isHovered, setIsHovered] = useState(false);
   const images = product.images || [];
@@ -31,7 +36,11 @@ export function ProductCard({ product, showNewTag = false }: ProductCardProps) {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      className="group/card card-container relative flex flex-col bg-white dark:bg-[#1a1a2e] rounded-xl overflow-hidden w-[350px] h-[500px]"
+      className={`group/card card-container relative flex flex-col bg-white dark:bg-[#1a1a2e] rounded-xl overflow-hidden ${
+        variant === "grid"
+          ? "w-full max-w-[320px] lg:max-w-[300px] h-[470px] md:h-[480px]"
+          : "w-[300px] sm:w-[330px] h-[440px] sm:h-[470px]"
+      }`}
       style={{ boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px" }}
       data-testid={`card-product-${product.id}`}
     >

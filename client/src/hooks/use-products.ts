@@ -84,6 +84,8 @@ export interface ExtendedProduct extends Product {
   descriptionHtml?: string;
   options?: ProductOption[];
   variants?: ProductVariant[];
+  productType?: string;
+  tags?: string[];
 }
 
 export type { Product };
@@ -119,7 +121,7 @@ function mapShopifyProduct(
     description: node.description,
     descriptionHtml: node.descriptionHtml,
     price: node.priceRange.minVariantPrice.amount,
-    originalPrice: variant?.compareAtPrice?.amount || null,
+    originalPrice: variant?.compareAtPriceV2?.amount || null,
     brand: node.vendor || "MR. GADGETZ",
     category: collectionTitle || "All Products",
     rating: "5.0",
@@ -135,6 +137,8 @@ function mapShopifyProduct(
     stock: variant?.availableForSale ? 100 : 0,
     createdAt: node.createdAt,
     variantId: variant?.id || "",
+    productType: node.productType,
+    tags: node.tags || [],
     options: filteredOptions,
     variants: mappedVariants,
   };
@@ -216,6 +220,40 @@ export function useProductsFromHandles(handles: string[]) {
       return allProducts;
     },
     enabled: handles.length > 0,
+  });
+}
+
+export function useCollectionProducts(handle: string) {
+  return useQuery({
+    queryKey: ["collection", handle],
+    enabled: !!handle,
+    queryFn: async () => {
+      const data = await shopifyFetch<{
+        collection: {
+          title: string;
+          products: { edges: Array<{ node: ShopifyProductNode }> };
+        } | null;
+      }>({
+        query: PRODUCTS_BY_COLLECTION_QUERY,
+        variables: {
+          handle,
+          first: 100,
+          sortKey: "BEST_SELLING",
+          reverse: false,
+        },
+      });
+
+      const products = data.collection
+        ? data.collection.products.edges.map((edge) =>
+            mapShopifyProduct(
+              edge.node,
+              sanitizeCollectionTitle(data.collection!.title),
+            ),
+          )
+        : [];
+
+      return { products };
+    },
   });
 }
 

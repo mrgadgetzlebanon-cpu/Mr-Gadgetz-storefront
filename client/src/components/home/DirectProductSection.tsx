@@ -1,10 +1,19 @@
 import { useCallback, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { ArrowRight, ChevronLeft, ChevronRight, Grid, LayoutList } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Grid,
+  LayoutList,
+} from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ProductCard } from "@/components/ProductCard";
-import { usePaginatedProducts, useGroupedCollections } from "@/hooks/use-products";
+import {
+  usePaginatedProducts,
+  useGroupedCollections,
+} from "@/hooks/use-products";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -32,17 +41,19 @@ export function DirectProductSection({
 
   const categoryHandles = useMemo(() => {
     if (!categoryStructure) return [];
-    
-    const categoriesToSearch = parentCategories || (parentCategory ? [parentCategory] : []);
+
+    const categoriesToSearch =
+      parentCategories || (parentCategory ? [parentCategory] : []);
     if (categoriesToSearch.length === 0) return [];
-    
+
     const handles: string[] = [];
     for (const cat of categoriesToSearch) {
-      const category = categoryStructure.grouped.find(
-        (g) => g.parent === cat
-      );
+      const category = categoryStructure.grouped.find((g) => g.parent === cat);
+
       if (category) {
         handles.push(...category.parentHandles);
+      } else {
+        handles.push(cat);
       }
     }
     return handles;
@@ -62,7 +73,7 @@ export function DirectProductSection({
         .filter(
           (p) =>
             p.brand?.toLowerCase().includes(brandLower) ||
-            p.name.toLowerCase().includes(brandLower)
+            p.name.toLowerCase().includes(brandLower),
         )
         .slice(0, 15);
     }
@@ -100,7 +111,9 @@ export function DirectProductSection({
           transition={{ duration: 0.5 }}
           className="flex flex-wrap items-center justify-between gap-4 mb-6"
         >
-          <h2 className="text-2xl md:text-3xl font-display font-bold">{title}</h2>
+          <h2 className="text-2xl md:text-3xl font-display font-bold">
+            {title}
+          </h2>
           <div className="flex items-center gap-3">
             <div className="flex bg-muted p-1 rounded-full">
               <Button
@@ -152,7 +165,7 @@ export function DirectProductSection({
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: index * 0.03 }}
-                      className="flex-shrink-0 w-[350px]"
+                      className="flex-shrink-0 w-[300px] sm:w-[330px]"
                     >
                       <ProductCard product={product} />
                     </motion.div>
@@ -168,7 +181,7 @@ export function DirectProductSection({
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
               {products.map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -177,7 +190,7 @@ export function DirectProductSection({
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.03 }}
                 >
-                  <ProductCard product={product} />
+                  <ProductCard product={product} variant="grid" />
                 </motion.div>
               ))}
             </div>
@@ -187,7 +200,7 @@ export function DirectProductSection({
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-[350px] h-[500px] bg-muted rounded-xl animate-pulse"
+                className="flex-shrink-0 w-[300px] sm:w-[330px] h-[440px] sm:h-[470px] bg-muted rounded-xl animate-pulse"
               />
             ))}
           </div>

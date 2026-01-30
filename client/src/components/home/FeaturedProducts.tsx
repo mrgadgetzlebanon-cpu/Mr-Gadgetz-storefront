@@ -12,7 +12,10 @@ interface FeaturedProductsProps {
   isLoading: boolean;
 }
 
-export function FeaturedProducts({ products, isLoading }: FeaturedProductsProps) {
+export function FeaturedProducts({
+  products,
+  isLoading,
+}: FeaturedProductsProps) {
   const [viewMode, setViewMode] = useState<"grid" | "slider">("grid");
   const [emblaRef] = useEmblaCarousel({ dragFree: true, align: "start" });
 
@@ -60,22 +63,25 @@ export function FeaturedProducts({ products, isLoading }: FeaturedProductsProps)
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
             {[...Array(8)].map((_, i) => (
-              <ProductCardSkeleton key={i} />
+              <ProductCardSkeleton key={i} variant="grid" />
             ))}
           </div>
         ) : viewMode === "grid" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
             {products.slice(0, 8).map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} variant="grid" />
             ))}
           </div>
         ) : (
           <div className="overflow-hidden py-4" ref={emblaRef}>
             <div className="flex gap-8 px-2">
               {products.slice(0, 8).map((product) => (
-                <div key={product.id} className="flex-[0_0_350px] min-w-0">
+                <div
+                  key={product.id}
+                  className="flex-[0_0_320px] sm:flex-[0_0_350px] min-w-0"
+                >
                   <ProductCard product={product} />
                 </div>
               ))}
