@@ -50,7 +50,7 @@ function ProductSlider({
   if (products.length === 0) return null;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <div className="flex items-center justify-between">
         <h3 className="font-display font-bold text-lg">{title}</h3>
         <div className="flex gap-2">
@@ -84,12 +84,11 @@ function ProductSlider({
       </div>
 
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-8">
+        <div className="flex gap-8 pb-4">
           {products.map((product) => (
             <div
               key={product.id}
-              className="flex-shrink-0 w-[350px]"
-              style={{ height: "500px" }}
+              className="flex-shrink-0 w-[220px] sm:w-[240px]"
             >
               <ProductCard product={product} />
             </div>

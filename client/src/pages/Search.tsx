@@ -61,16 +61,16 @@ export default function SearchPage() {
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 xl:gap-6 justify-items-center">
             {[...Array(8)].map((_, i) => (
               <div
                 key={i}
-                className="bg-muted/20 rounded-xl w-full max-w-[320px] lg:max-w-[300px] h-[470px] md:h-[480px] animate-pulse"
+                className="bg-muted/20 rounded-xl w-full max-w-[220px] lg:max-w-[240px] h-[380px] animate-pulse"
               />
             ))}
           </div>
         ) : filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 xl:gap-6 justify-items-center">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} variant="grid" />
             ))}

@@ -14,7 +14,13 @@ interface ProductRowProps {
   showNewTag?: boolean;
 }
 
-export function ProductRow({ title, products, isLoading, viewAllLink, showNewTag = false }: ProductRowProps) {
+export function ProductRow({
+  title,
+  products,
+  isLoading,
+  viewAllLink,
+  showNewTag = false,
+}: ProductRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -65,12 +71,14 @@ export function ProductRow({ title, products, isLoading, viewAllLink, showNewTag
       className="py-8"
     >
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{title}</h2>
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+          {title}
+        </h2>
         {viewAllLink && (
-          <Link 
+          <Link
             href={viewAllLink}
             className="flex items-center gap-1 text-sm font-medium text-brand-blue hover:text-brand-azure transition-colors group"
-            data-testid={`view-all-${title.toLowerCase().replace(/\s+/g, '-')}`}
+            data-testid={`view-all-${title.toLowerCase().replace(/\s+/g, "-")}`}
           >
             View All
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -84,7 +92,7 @@ export function ProductRow({ title, products, isLoading, viewAllLink, showNewTag
             onClick={() => scroll("left")}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-background/90 border border-border shadow-lg flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity hover:bg-muted"
             aria-label="Scroll left"
-            data-testid={`scroll-left-${title.toLowerCase().replace(/\s+/g, '-')}`}
+            data-testid={`scroll-left-${title.toLowerCase().replace(/\s+/g, "-")}`}
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -103,7 +111,7 @@ export function ProductRow({ title, products, isLoading, viewAllLink, showNewTag
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-20px" }}
               transition={{ delay: index * 0.03, duration: 0.3 }}
-              className="min-w-[300px] md:min-w-[350px] snap-start"
+              className="min-w-[220px] sm:min-w-[240px] snap-start"
             >
               <ProductCard product={product} showNewTag={showNewTag} />
             </motion.div>
@@ -115,7 +123,7 @@ export function ProductRow({ title, products, isLoading, viewAllLink, showNewTag
             onClick={() => scroll("right")}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-background/90 border border-border shadow-lg flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity hover:bg-muted"
             aria-label="Scroll right"
-            data-testid={`scroll-right-${title.toLowerCase().replace(/\s+/g, '-')}`}
+            data-testid={`scroll-right-${title.toLowerCase().replace(/\s+/g, "-")}`}
           >
             <ChevronRight className="w-5 h-5" />
           </button>

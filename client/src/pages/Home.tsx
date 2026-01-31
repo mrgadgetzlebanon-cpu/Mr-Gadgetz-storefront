@@ -4,9 +4,10 @@ import Hero from "@/components/home/Hero";
 import Features from "@/components/home/Features";
 import { NewArrivals } from "@/components/home/NewArrivals";
 import { GlobalCategorySelection } from "@/components/home/GlobalCategorySelection";
-import { BrandSpheres } from "@/components/home/BrandSpheres";
+// import { BrandSpheres } from "@/components/home/BrandSpheres";
 import { BrandProductSection } from "@/components/home/BrandProductSection";
 import { DirectProductSection } from "@/components/home/DirectProductSection";
+import { PromoBanner } from "@/components/home";
 
 // 1. APPLE CONFIGURATION (direct collection handles)
 const appleTabs = [
@@ -23,9 +24,47 @@ const appleTabs = [
   },
 ];
 
-// 2. LAPTOP CONFIGURATION (single handle)
+// 2. LAPTOP CONFIGURATION
 const laptopTabs = [
-  { id: "all", label: "All Laptops", collectionHandle: "pc-and-laptops" },
+  {
+    id: "dell",
+    label: "Dell",
+    // Use the long handle from your JSON, OR 'dell-laptops' if you created the new clean collection
+    collectionHandle:
+      "gaming-gaming-laptops-dell-gaming-laptops-gaming-gaming-laptops-laptops-laptops-dell",
+  },
+  {
+    id: "hp",
+    label: "HP",
+    // Use the long handle from your JSON, OR 'hp-laptops' if you created the new clean collection
+    collectionHandle:
+      "gaming-gaming-laptops-gaming-gaming-laptops-hp-gaming-laptops-laptops-laptops-hp",
+  },
+  {
+    id: "apple",
+    label: "MacBook",
+    collectionHandle: "macbook",
+  },
+  {
+    id: "msi",
+    label: "MSI",
+    collectionHandle: "msi-laptops",
+  },
+  {
+    id: "lenovo",
+    label: "Lenovo",
+    collectionHandle: "lenovo-laptops",
+  },
+  {
+    id: "asus",
+    label: "Asus",
+    collectionHandle: "asus-laptops",
+  },
+  {
+    id: "acer",
+    label: "Acer",
+    collectionHandle: "acer-laptops",
+  },
 ];
 
 // 3. SAMSUNG CONFIGURATION (direct collection handles)
@@ -79,7 +118,7 @@ export default function Home() {
         <GlobalCategorySelection />
 
         {/* 5. Brand Balls Stack */}
-        <BrandSpheres />
+        {/* <BrandSpheres /> */}
 
         {/* 6. Apple Categories */}
         <BrandProductSection
@@ -87,6 +126,15 @@ export default function Home() {
           tabs={appleTabs}
           viewAllLink="/shop?search=apple"
           bgClassName="bg-white"
+        />
+
+        <PromoBanner
+          imageSrc="/promo/Apple-Promo.webp"
+          title="Discover the Apple Lineup"
+          description="From iPhone to MacBook, explore our latest Apple collection with curated deals."
+          buttonLabel="Shop Apple"
+          buttonHref="/shop?search=apple"
+          bgLight
         />
 
         {/* 7. Laptops Categories */}
@@ -97,12 +145,27 @@ export default function Home() {
           bgClassName="bg-white"
         />
 
+        <PromoBanner
+          imageSrc="/promo/Laptop-Promo.png"
+          title="Power Your Next Build"
+          buttonLabel="Shop Laptops & PCs"
+          buttonHref="/shop?category=parent%3Apc+and+laptops"
+        />
+
         {/* 8. Samsung Categories */}
         <BrandProductSection
           title="Samsung Products"
           tabs={samsungTabs}
           viewAllLink="/shop?search=samsung"
           bgClassName="bg-white"
+        />
+
+        <PromoBanner
+          imageSrc="/promo/Samsung-Promo.png"
+          title="Samsung Essentials"
+          description="Galaxy phones, tablets, audio, and wearables — all in one place."
+          buttonLabel="Shop Samsung"
+          buttonHref="/shop?search=samsung"
         />
 
         {/* 9. Premium Audio */}
@@ -125,15 +188,23 @@ export default function Home() {
 
         {/* 12. Dyson Products (Direct) */}
         <DirectProductSection
-          title="Dyson Products"
-          // FETCHING: Using exact Handle 'dyson-1'
-          parentCategories={["dyson-1"]}
-          viewAllLink="/shop?category=dyson-1"
+          title="Home Appliances"
+          // FETCHING: Using exact Handle 'home-appliances-1'
+          parentCategories={["home-appliances"]}
+          viewAllLink="/shop?category=home-appliances"
           bgClassName="bg-white"
         />
 
+        <PromoBanner
+          imageSrc="/promo/Dyson-Promo.jpg"
+          title="Dyson Home Innovations"
+          description="Elevate your space with Dyson vacuums, air purifiers, and more premium home tech."
+          buttonLabel="Shop Dyson"
+          buttonHref="/shop?category=home-appliances"
+        />
+
         {/* Features Grid */}
-        <Features />
+        {/* <Features /> */}
       </main>
     </>
   );

@@ -21,7 +21,7 @@ export function ProductGrid({
   return (
     <div
       className={cn(
-        "product-grid-cq grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8 justify-items-center transition-opacity duration-200",
+        "product-grid-cq grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-5 xl:gap-6 justify-items-center transition-opacity duration-200",
         isFetching && "opacity-50",
       )}
     >

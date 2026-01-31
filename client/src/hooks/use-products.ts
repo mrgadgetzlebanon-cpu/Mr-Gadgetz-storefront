@@ -26,6 +26,8 @@ interface ShopifyProductNode {
   description: string;
   descriptionHtml?: string;
   createdAt: string;
+  productType?: string;
+  tags?: string[];
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -47,6 +49,7 @@ interface ShopifyProductNode {
         id: string;
         title: string;
         availableForSale: boolean;
+        image?: { url: string | null } | null;
         priceV2?: { amount: string; currencyCode?: string };
         compareAtPriceV2?: { amount: string; currencyCode?: string } | null;
         selectedOptions?: Array<{
@@ -72,6 +75,7 @@ export interface ProductVariant {
   id: string;
   title: string;
   availableForSale: boolean;
+  image?: string | null;
   selectedOptions?: Array<{ name: string; value: string }>;
   price?: string;
   compareAtPrice?: string | null;
@@ -108,6 +112,7 @@ function mapShopifyProduct(
     id: e.node.id,
     title: e.node.title,
     availableForSale: e.node.availableForSale,
+    image: e.node.image?.url || null,
     selectedOptions: e.node.selectedOptions,
     priceV2: e.node.priceV2,
     compareAtPriceV2: e.node.compareAtPriceV2,
@@ -267,7 +272,7 @@ interface PageInfo {
 }
 
 export interface PaginatedProductsResult {
-  products: Product[];
+  products: ExtendedProduct[];
   pageInfo: PageInfo;
 }
 

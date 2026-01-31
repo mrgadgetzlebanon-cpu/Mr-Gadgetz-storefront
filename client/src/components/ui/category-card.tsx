@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type CategoryCardProps = {
   text: string;
@@ -29,74 +29,47 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
     }
   };
 
-  const containerClasses = [
-    "category-card-container relative",
-    isActive ? "category-card-active" : "",
-    className || "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const renderButton = () => {
-    // Show the corner button when either a URL or click handler is provided.
-    if (url) {
-      return (
-        <a
-          href={url}
-          className="category-card-button"
-          aria-label={`Open ${text}`}
-        >
-          <ChevronRight />
-        </a>
-      );
-    }
-
-    if (onClick) {
-      return (
-        <button
-          type="button"
-          className="category-card-button"
-          aria-label={`Open ${text}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onClick();
-          }}
-        >
-          <ChevronRight />
-        </button>
-      );
-    }
-
-    return null;
-  };
-
   return (
     <div
       {...rest}
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      aria-pressed={onClick ? isActive : undefined}
+      role="button"
+      tabIndex={0}
+      aria-pressed={isActive}
       onClick={onClick}
-      onKeyDown={onClick ? handleKeyDown : undefined}
-      className={containerClasses}
+      onKeyDown={handleKeyDown}
+      className={cn(
+        "group flex flex-col items-center gap-3 cursor-pointer outline-none select-none w-[250px] h-[250px]",
+        className,
+      )}
       style={style}
     >
-      <div className="shape relative overflow-hidden">
+      {/* 1. The White Icon Box */}
+      <div
+        className={cn(
+          "relative w-[200px] h-[200px] bg-white rounded-[2rem] flex items-center justify-center p-6 overflow-hidden transition-all duration-300 ease-out",
+          "border border-border/60 shadow-[0_2px_8px_rgba(99,99,99,0.2)] group-hover:shadow-md group-hover:scale-[1.02]",
+          isActive
+            ? "ring-2 ring-[#0c57ef] shadow-[0_0_20px_rgba(12,87,239,0.25)] scale-[1.02]"
+            : "",
+        )}
+      >
         <img
           src={imageSrc}
           alt={text}
           draggable="false"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
         />
-
-        <div className="absolute inset-0 pointer-events-none" />
-
-        <div className="category-card-title relative z-10">
-          <p>{text}</p>
-        </div>
       </div>
 
-      {renderButton()}
+      {/* 2. The Label (Below the card) */}
+      <span
+        className={cn(
+          "text-sm font-semibold text-center tracking-wide transition-colors duration-300",
+          isActive ? "text-[#0c57ef]" : "text-gray-700 dark:text-gray-300",
+        )}
+      >
+        {text}
+      </span>
     </div>
   );
 };

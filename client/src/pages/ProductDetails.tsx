@@ -9,12 +9,39 @@ import { ProductImageSlider } from "@/components/product/ProductImageSlider";
 import { ProductInfo } from "@/components/product/ProductInfo";
 import { ProductDescription } from "@/components/product/ProductDescription";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
+import { useProductVariant } from "@/hooks/use-product-variant";
 
 export default function ProductDetails() {
   const [match, params] = useRoute("/product/:handle");
   const [, setLocation] = useLocation();
   const handle = params?.handle || "";
   const { data: product, isLoading, error } = useProductByHandle(handle);
+
+  const fallbackProduct =
+    product ||
+    ({
+      id: "placeholder",
+      handle: "",
+      name: "",
+      price: "0",
+      originalPrice: null,
+      options: [],
+      variants: [],
+      images: [],
+      image: "",
+    } as any);
+
+  const {
+    activeVariant,
+    selectedOptions,
+    handleOptionSelect,
+    displayPrice,
+    displayCompareAt,
+    currencyCode,
+    hasComparePrice,
+    resolvedVariantId,
+    selectedOptionsText,
+  } = useProductVariant(fallbackProduct);
 
   const handleGoBack = () => {
     if (window.history.length > 1) {
@@ -40,6 +67,10 @@ export default function ProductDetails() {
   }
 
   const allImages = [product.image, ...(product.images || [])];
+  const variantImage = activeVariant?.image || null;
+  const imagesWithVariant = variantImage
+    ? [variantImage, ...allImages.filter((img) => img !== variantImage)]
+    : allImages;
   const productTitle = `${product.name} | Mr. Gadgetz`;
   const productDescription = `Buy ${product.name} at Mr. Gadgetz. ${product.brand} - Premium quality electronics with fast shipping.`;
 
@@ -56,7 +87,7 @@ export default function ProductDetails() {
         <meta name="twitter:description" content={productDescription} />
         <meta name="twitter:image" content={product.image} />
       </Helmet>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 bg-white">
         <button
           onClick={handleGoBack}
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
@@ -68,10 +99,25 @@ export default function ProductDetails() {
         {/* Upper Content - Two Columns */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Left - Image Slider */}
-          <ProductImageSlider images={allImages} productName={product.name} />
+          <ProductImageSlider
+            images={imagesWithVariant}
+            productName={product.name}
+            activeVariant={activeVariant}
+          />
 
           {/* Right - Product Info */}
-          <ProductInfo product={product} />
+          <ProductInfo
+            product={product}
+            activeVariant={activeVariant}
+            selectedOptions={selectedOptions}
+            onSelectOption={handleOptionSelect}
+            displayPrice={displayPrice}
+            displayCompareAt={displayCompareAt}
+            currencyCode={currencyCode}
+            hasComparePrice={hasComparePrice}
+            resolvedVariantId={resolvedVariantId}
+            selectedOptionsText={selectedOptionsText}
+          />
         </div>
 
         {/* Lower Content - Description & Specs */}

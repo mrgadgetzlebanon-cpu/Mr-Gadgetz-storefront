@@ -213,7 +213,9 @@ export function Navigation() {
                 className={cn("w-5 h-5", useWhiteLogo && "text-white")}
               />
               {itemCount > 0 && (
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-[#48bfef] rounded-full border-2 border-background animate-pulse" />
+                <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full bg-[#0c57ef] text-[10px] font-semibold text-white">
+                  {itemCount}
+                </span>
               )}
             </Button>
 
@@ -248,7 +250,6 @@ export function Navigation() {
           )}
         >
           <NavigationMenu
-            categoryStructure={categoryStructure}
             useWhiteLogo={useWhiteLogo}
             variant="mobile"
             expandedMobileMenu={expandedMobileMenu}

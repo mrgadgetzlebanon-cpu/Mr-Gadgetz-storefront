@@ -20,6 +20,7 @@ export interface ProductVariantNode {
   id: string;
   title: string;
   availableForSale: boolean;
+  image?: string | null;
   priceV2?: MoneyV2;
   compareAtPriceV2?: MoneyV2 | null;
   price?: string | MoneyV2;
@@ -31,7 +32,7 @@ export interface ProductWithVariants {
   id: string | number;
   title?: string;
   name?: string;
-  handle?: string;
+  handle?: string | null;
   price?: string;
   originalPrice?: string | null;
   options?: ProductOptionNode[];

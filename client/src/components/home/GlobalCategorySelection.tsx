@@ -550,7 +550,7 @@ export function GlobalCategorySelection() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.03 }}
-                            className="flex-shrink-0 w-[300px] sm:w-[330px]"
+                            className="flex-shrink-0 w-[220px] sm:w-[240px]"
                           >
                             <ProductCard product={product} />
                           </motion.div>
@@ -566,7 +566,7 @@ export function GlobalCategorySelection() {
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 xl:gap-8 justify-items-center">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 xl:gap-6 justify-items-center">
                     {sortedProducts.map((product, index) => (
                       <motion.div
                         key={product.id}
@@ -584,7 +584,7 @@ export function GlobalCategorySelection() {
                   {[...Array(5)].map((_, i) => (
                     <div
                       key={i}
-                      className="flex-shrink-0 w-[300px] sm:w-[330px] h-[440px] sm:h-[470px] bg-muted rounded-xl animate-pulse"
+                      className="flex-shrink-0 w-[220px] sm:w-[240px] h-[360px] sm:h-[400px] bg-muted rounded-xl animate-pulse"
                     />
                   ))}
                 </div>

@@ -17,7 +17,7 @@ export function Footer() {
   const secondaryLinks = navItems.slice(midpoint);
 
   return (
-    <footer className="bg-[#f5f5f5] text-gray-900 pt-16 pb-8">
+    <footer className="bg-[#fff] text-gray-900 pt-16 pb-8">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Logo & Description */}
@@ -135,7 +135,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-300 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-          <p>&copy; 2026 MR GADGET. All rights reserved.</p>
+          <p>&copy; 2026 MR GADGETZ. All rights reserved.</p>
           <div className="flex gap-6">
             <span>Made for the World</span>
           </div>

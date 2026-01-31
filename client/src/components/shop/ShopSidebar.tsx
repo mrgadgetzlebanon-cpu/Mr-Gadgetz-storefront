@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useSearch } from "wouter";
+import { useMemo, useState } from "react";
+import { Link, useLocation, useSearch } from "wouter";
 import { Slider } from "@/components/ui/slider";
 import { ArrowLeft } from "lucide-react";
 import {
@@ -9,91 +9,106 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
-import { SIDEBAR_CONFIG, type SidebarLink } from "@/config/navigationMap";
-import { categoryStructure } from "@/config/categoryStructure";
 
 interface ShopSidebarProps {
   localPriceRange: number[];
   onPriceRangeChange: (value: number[]) => void;
 }
 
-function slugify(value: string) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+// Mirrors COLLECTION_MAP keys from utils.ts (lowercase IDs)
+const SIDEBAR_TREE: Array<{ id: string; label: string; children?: string[] }> =
+  [
+    {
+      id: "phones",
+      label: "Phones",
+      children: ["Mobile Phones", "Mobile Accessories"],
+    },
+    {
+      id: "tablets",
+      label: "Tablets",
+      children: ["Tablets", "Tablet Accessories"],
+    },
+    {
+      id: "pc and laptops",
+      label: "Laptops & PCs",
+      children: [
+        "Laptops",
+        "Dell",
+        "HP",
+        "MacBook",
+        "Lenovo",
+        "Acer",
+        "Asus",
+        "Keyboards",
+        "Mice",
+        "Desktops",
+      ],
+    },
+    {
+      id: "accessories",
+      label: "Accessories",
+      children: [
+        "Wearables",
+        "Mobile Accessories",
+        "Mobile Covers",
+        "Mobile Phone Stand",
+        "Tablet Accessories",
+        "Computer Accessories",
+        "Screen Protectors",
+        "Power Bank",
+        "Touch Pen",
+        "Storage",
+        "Charger and Cable",
+        "Smart Tags",
+        "Car Accessories",
+        "E-Cigarettes",
+      ],
+    },
+    {
+      id: "audio",
+      label: "Audio",
+      children: [
+        "Headphones",
+        "Earbuds",
+        "Earphones",
+        "Speakers",
+        "Microphones",
+      ],
+    },
+    {
+      id: "watches",
+      label: "Watches",
+      children: ["Smartwatches", "Wearables"],
+    },
+    {
+      id: "cameras",
+      label: "Cameras",
+      children: ["Cameras", "Camera Accessories"],
+    },
+    {
+      id: "smart home",
+      label: "Smart Home",
+      children: ["Smart Home", "Dyson", "Home Appliances"],
+    },
+    { id: "networking", label: "Networking", children: ["Networking"] },
+  ];
+
+function getActiveCategory(searchString: string): string | null {
+  const params = new URLSearchParams(searchString);
+  const category = params.get("category");
+  return category ? decodeURIComponent(category) : null;
 }
 
-function resolveCollectionParent(collection?: string) {
-  if (!collection) return null;
-  const target = slugify(collection);
-  for (const group of categoryStructure.grouped) {
-    const match = group.children.find(
-      (child) => child.name === collection || slugify(child.name) === target,
-    );
-    if (match) {
-      return { parent: group.parent, child: match.name };
-    }
-  }
-  return null;
+function isParentActive(activeCategory: string | null, id: string) {
+  return activeCategory === `parent:${id}`;
 }
 
-function buildParams(link: SidebarLink, parent: string) {
-  const params = new URLSearchParams();
-  const resolved = resolveCollectionParent(link.collection);
-  const effectiveParent = resolved?.parent || parent;
-  const childLabel =
-    resolved?.child || link.target || link.collection || parent;
-  const parentParam = encodeURIComponent(effectiveParent);
-
-  switch (link.mode) {
-    case "STRUCTURE": {
-      const category = `child:${parentParam}:${encodeURIComponent(link.target || "")}`;
-      params.set("category", category);
-      break;
-    }
-    case "FILTER": {
-      const category = `child:${parentParam}:${encodeURIComponent(childLabel)}`;
-      params.set("category", category);
-      if (link.type) params.set("search", link.type);
-      break;
-    }
-    case "VENDOR": {
-      const category = `parent:${parentParam}`;
-      params.set("category", category);
-      if (link.query) params.set("search", link.query);
-      break;
-    }
-    case "TAG": {
-      const category = `child:${parentParam}:${encodeURIComponent(childLabel)}`;
-      params.set("category", category);
-      if (link.tag) params.set("search", link.tag);
-      break;
-    }
-    default:
-      break;
-  }
-
-  return params;
-}
-
-function buildHref(params: URLSearchParams) {
-  const qs = params.toString();
-  return qs ? `/shop?${qs}` : "/shop";
-}
-
-function extractParent(category: string | null) {
-  if (!category) return null;
-  const decoded = decodeURIComponent(category);
-  if (decoded.startsWith("child:")) {
-    const [, parent] = decoded.split(":");
-    return parent || null;
-  }
-  if (decoded.startsWith("parent:")) {
-    return decoded.substring(7) || null;
-  }
-  return null;
+function isChildActive(
+  activeCategory: string | null,
+  parentId: string,
+  child: string,
+) {
+  return activeCategory === `child:${parentId}:${child}`;
 }
 
 export function ShopSidebar({
@@ -101,38 +116,42 @@ export function ShopSidebar({
   onPriceRangeChange,
 }: ShopSidebarProps) {
   const searchString = useSearch();
-  const searchParams = useMemo(
-    () => new URLSearchParams(searchString),
+  const [, setLocation] = useLocation();
+  const activeCategory = useMemo(
+    () => getActiveCategory(searchString),
     [searchString],
   );
-  const currentCategory = searchParams.get("category")
-    ? decodeURIComponent(searchParams.get("category") as string)
-    : "parent:ALL_PRODUCTS";
-  const currentSearch = searchParams.get("search") || "";
 
-  const initialParent = useMemo(
-    () => extractParent(currentCategory),
-    [currentCategory],
-  );
-  const [openAccordions, setOpenAccordions] = useState<string[]>(
-    initialParent ? [initialParent] : [],
-  );
-
-  useEffect(() => {
-    const parent = extractParent(currentCategory);
-    if (parent) {
-      setOpenAccordions((prev) =>
-        prev.includes(parent) ? prev : [...prev, parent],
-      );
+  const initialExpanded = useMemo(() => {
+    if (!activeCategory) return [] as string[];
+    if (activeCategory.startsWith("child:")) {
+      const [, parentId] = activeCategory.split(":");
+      return [parentId];
     }
-  }, [currentCategory]);
+    if (activeCategory.startsWith("parent:")) {
+      return [activeCategory.replace("parent:", "")];
+    }
+    return [] as string[];
+  }, [activeCategory]);
 
-  const isActiveParams = (params: URLSearchParams) => {
-    const targetCategory = params.get("category")
-      ? decodeURIComponent(params.get("category") as string)
-      : "";
-    const targetSearch = params.get("search") || "";
-    return targetCategory === currentCategory && targetSearch === currentSearch;
+  const [expandedParents, setExpandedParents] =
+    useState<string[]>(initialExpanded);
+
+  const navigateWithCategory = (category: string) => {
+    const params = new URLSearchParams(searchString);
+    params.set("category", category);
+    params.delete("page");
+    params.delete("cursor");
+    const qs = params.toString();
+    setLocation(qs ? `/shop?${qs}` : "/shop");
+  };
+
+  const handleParentClick = (parentId: string) => {
+    navigateWithCategory(`parent:${parentId}`);
+  };
+
+  const handleChildClick = (parentId: string, child: string) => {
+    navigateWithCategory(`child:${parentId}:${child}`);
   };
 
   return (
@@ -151,110 +170,79 @@ export function ShopSidebar({
           Categories
         </h3>
         <div className="space-y-1 max-h-[50vh] overflow-y-auto pr-1">
-          <Link
-            href="/shop?category=parent%3AALL_PRODUCTS"
+          <button
+            onClick={() => handleParentClick("ALL_PRODUCTS")}
             className={cn(
               "flex items-center w-full py-2 px-3 rounded-lg text-sm transition-colors hover-elevate text-left",
-              currentCategory === "parent:ALL_PRODUCTS"
+              activeCategory === "parent:ALL_PRODUCTS"
                 ? "bg-primary text-primary-foreground font-medium"
                 : "text-foreground hover:bg-muted",
             )}
             data-testid="button-all-products"
           >
             <span>All Products</span>
-          </Link>
+          </button>
 
           <Accordion
             type="multiple"
-            value={openAccordions}
-            onValueChange={setOpenAccordions}
+            value={expandedParents}
+            onValueChange={setExpandedParents}
             className="space-y-1"
           >
-            {SIDEBAR_CONFIG.map((group) => {
-              const parentParams = new URLSearchParams();
-              parentParams.set(
-                "category",
-                `parent:${encodeURIComponent(group.title)}`,
-              );
-              const parentHref = buildHref(parentParams);
-              const isParentActive = isActiveParams(parentParams);
+            {SIDEBAR_TREE.map((group) => {
+              const parentActive = isParentActive(activeCategory, group.id);
 
               return (
                 <AccordionItem
-                  key={group.title}
-                  value={group.title}
+                  key={group.id}
+                  value={group.id}
                   className="border-0"
                 >
                   <div className="flex items-center gap-1">
-                    <Link
-                      href={parentHref}
+                    <button
+                      onClick={() => handleParentClick(group.id)}
                       className={cn(
                         "flex-1 flex items-center py-2 px-3 rounded-lg text-sm transition-colors hover-elevate text-left",
-                        isParentActive
+                        parentActive
                           ? "bg-primary text-primary-foreground font-medium"
                           : "text-foreground hover:bg-muted",
                       )}
-                      data-testid={`button-category-${group.title.toLowerCase().replace(/\s+/g, "-")}`}
+                      data-testid={`button-category-${group.id.replace(/\s+/g, "-")}`}
                     >
-                      <span>{group.title}</span>
-                    </Link>
-                    <AccordionTrigger className="p-2 hover:bg-muted rounded-lg [&[data-state=open]>svg]:rotate-180"></AccordionTrigger>
+                      <span>{group.label}</span>
+                    </button>
+                    {group.children && group.children.length > 0 && (
+                      <AccordionTrigger className="p-2 hover:bg-muted rounded-lg [&[data-state=open]>svg]:rotate-180" />
+                    )}
                   </div>
-                  <AccordionContent className="pb-0 pt-1">
-                    <div className="ml-3 pl-3 border-l border-border/50 space-y-1">
-                      {group.links.map((link) => {
-                        if (link.subLinks?.length) {
-                          return (
-                            <div key={link.label} className="space-y-1">
-                              <div className="px-3 pt-2 text-[11px] uppercase tracking-wide text-muted-foreground/70">
-                                {link.label}
-                              </div>
-                              {link.subLinks.map((sub) => {
-                                const subParams = buildParams(sub, group.title);
-                                const subHref = buildHref(subParams);
-                                const isActive = isActiveParams(subParams);
-                                return (
-                                  <Link
-                                    key={sub.label}
-                                    href={subHref}
-                                    className={cn(
-                                      "flex items-center justify-between w-full py-2 px-3 rounded-lg text-sm transition-colors hover-elevate text-left",
-                                      isActive
-                                        ? "bg-primary text-primary-foreground font-medium"
-                                        : "text-foreground hover:bg-muted",
-                                    )}
-                                    data-testid={`button-subcategory-${sub.label.toLowerCase().replace(/\s+/g, "-")}`}
-                                  >
-                                    <span>{sub.label}</span>
-                                  </Link>
-                                );
-                              })}
-                            </div>
+                  {group.children && group.children.length > 0 && (
+                    <AccordionContent className="pb-0 pt-1">
+                      <div className="ml-3 pl-3 border-l border-border/50 space-y-1">
+                        {group.children.map((child) => {
+                          const childActive = isChildActive(
+                            activeCategory,
+                            group.id,
+                            child,
                           );
-                        }
-
-                        const params = buildParams(link, group.title);
-                        const href = buildHref(params);
-                        const isActive = isActiveParams(params);
-
-                        return (
-                          <Link
-                            key={link.label}
-                            href={href}
-                            className={cn(
-                              "flex items-center justify-between w-full py-2 px-3 rounded-lg text-sm transition-colors hover-elevate text-left",
-                              isActive
-                                ? "bg-primary text-primary-foreground font-medium"
-                                : "text-foreground hover:bg-muted",
-                            )}
-                            data-testid={`button-subcategory-${link.label.toLowerCase().replace(/\s+/g, "-")}`}
-                          >
-                            <span>{link.label}</span>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </AccordionContent>
+                          return (
+                            <button
+                              key={child}
+                              onClick={() => handleChildClick(group.id, child)}
+                              className={cn(
+                                "flex items-center justify-between w-full py-2 px-3 rounded-lg text-sm transition-colors hover-elevate text-left",
+                                childActive
+                                  ? "bg-primary text-primary-foreground font-medium"
+                                  : "text-foreground hover:bg-muted",
+                              )}
+                              data-testid={`button-subcategory-${child.replace(/\s+/g, "-")}`}
+                            >
+                              <span>{child}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </AccordionContent>
+                  )}
                 </AccordionItem>
               );
             })}

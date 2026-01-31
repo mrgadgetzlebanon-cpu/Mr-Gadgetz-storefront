@@ -101,7 +101,10 @@ export const BentoCard = ({
 };
 
 const Features = () => (
-  <section data-testid="features-section" className="bg-black pb-52">
+  <section
+    data-testid="features-section"
+    className="hidden bg-black pb-52 md:block"
+  >
     <div className="container mx-auto px-3 md:px-10">
       <div className="px-5 py-32">
         <p className="font-circular-web text-lg text-blue-50">

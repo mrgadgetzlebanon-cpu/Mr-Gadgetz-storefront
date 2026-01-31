@@ -9,11 +9,11 @@ export function ProductCardSkeleton({
 }: ProductCardSkeletonProps) {
   const sizeClasses =
     variant === "grid"
-      ? "w-full max-w-[320px] lg:max-w-[300px]"
-      : "w-full max-w-[300px] sm:max-w-[330px]";
+      ? "w-full max-w-[220px] lg:max-w-[240px]"
+      : "w-full max-w-[220px] sm:max-w-[240px]";
   const heightClasses =
-    variant === "grid" ? "h-[470px] md:h-[480px]" : "h-[440px] sm:h-[470px]";
-  const mediaHeightClasses = variant === "grid" ? "h-[68%]" : "h-[70%]";
+    variant === "grid" ? "h-[380px]" : "h-[360px] sm:h-[400px]";
+  const mediaHeightClasses = variant === "grid" ? "h-[66%]" : "h-[70%]";
 
   return (
     <div
@@ -41,7 +41,7 @@ export function ProductCardSkeleton({
 
 export function ProductGridSkeleton({ count = 6 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8 justify-items-center">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-5 xl:gap-6 justify-items-center">
       {[...Array(count)].map((_, i) => (
         <ProductCardSkeleton key={i} variant="grid" />
       ))}

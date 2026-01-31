@@ -73,7 +73,9 @@ export function ShopCategoryView({
 
   const debouncedPriceRange = useDebounce(localPriceRange, 300);
   const debouncedSearch = useDebounce(search, 400);
-  const isAllProducts = selection.handles.length === 0;
+  const hasSearch = debouncedSearch.trim().length > 0;
+  const effectiveHandles = hasSearch ? [] : selection.handles;
+  const isAllProducts = effectiveHandles.length === 0;
   const currentCursor =
     isAllProducts && urlPage > 1
       ? cursorParam || cursorMap.get(urlPage) || null
@@ -104,11 +106,11 @@ export function ShopCategoryView({
     isLoading: productsLoading,
     isFetching,
   } = usePaginatedProducts({
-    handles: selection.handles,
+    handles: effectiveHandles,
     sortKey,
     cursor: currentCursor,
     first: ITEMS_PER_PAGE,
-    searchQuery: isAllProducts ? debouncedSearch : "",
+    searchQuery: debouncedSearch,
   });
 
   const allFetchedProducts = paginatedResult?.products || [];
@@ -117,21 +119,15 @@ export function ShopCategoryView({
 
   const selectionKey = `${selection.type}-${selection.parent || ""}-${selection.childName || ""}`;
 
-  const selectionFilters = useMemo(() => {
-    if (selection.type === "child" && selection.parent && selection.childName) {
-      const child = categoryStructure.byParent[selection.parent]?.children.find(
-        (entry) => entry.name === selection.childName,
-      );
-      return child?.filters || [];
-    }
-
-    if (selection.type === "parent" && selection.parent) {
-      return categoryStructure.byParent[selection.parent]?.filters || [];
-    }
-
-    // For "all" we intentionally show no type/tag filters to keep them scoped to the chosen category
-    return [];
-  }, [categoryStructure, selection]);
+  const dynamicFilters = useMemo(() => {
+    const set = new Set<string>();
+    allFetchedProducts.forEach((product) => {
+      if (product.productType) {
+        set.add(product.productType);
+      }
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [allFetchedProducts]);
 
   const {
     filteredProducts: hybridFilteredProducts,
@@ -167,11 +163,12 @@ export function ShopCategoryView({
   const hasPrevPage = urlPage > 1;
 
   const pageTitle = useMemo(() => {
+    if (hasSearch) return `Search: ${search.trim()}`;
     if (selection.type === "all") return "All Products";
     if (selection.type === "parent") return selection.parent || "Shop";
     if (selection.type === "child") return selection.childName || "Shop";
     return "Shop";
-  }, [selection]);
+  }, [hasSearch, search, selection]);
 
   const navigateToShop = useCallback(
     (options: {
@@ -327,7 +324,7 @@ export function ShopCategoryView({
           onPrevPage={handlePrevPage}
         />
         <FilterBar
-          filters={selectionFilters}
+          filters={dynamicFilters}
           activeFilters={activeFilters}
           onToggle={toggleFilter}
           onClear={clearFilters}

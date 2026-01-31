@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Package, CheckCircle } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import type { ExtendedProduct } from "@/hooks/use-products";
-import {
-  useProductVariant,
-  type ProductWithVariants,
+import type {
+  ProductWithVariants,
+  ProductVariantNode,
 } from "@/hooks/use-product-variant";
 import { ProductPrice } from "./ProductPrice";
 import { OptionSelector } from "./OptionSelector";
@@ -17,23 +17,31 @@ type ProductInfoProduct = (ExtendedProduct & ProductWithVariants) & {
 
 interface ProductInfoProps {
   product: ProductInfoProduct;
+  activeVariant: ProductVariantNode | null;
+  selectedOptions: Record<string, string>;
+  onSelectOption: (optionName: string, value: string) => void;
+  displayPrice: string;
+  displayCompareAt?: string | null;
+  currencyCode?: string;
+  hasComparePrice: boolean;
+  resolvedVariantId: string;
+  selectedOptionsText: string;
 }
 
-export function ProductInfo({ product }: ProductInfoProps) {
+export function ProductInfo({
+  product,
+  activeVariant,
+  selectedOptions,
+  onSelectOption,
+  displayPrice,
+  displayCompareAt,
+  currencyCode,
+  hasComparePrice,
+  resolvedVariantId,
+  selectedOptionsText,
+}: ProductInfoProps) {
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
-
-  const {
-    activeVariant,
-    selectedOptions,
-    handleOptionSelect,
-    displayPrice,
-    displayCompareAt,
-    currencyCode,
-    hasComparePrice,
-    resolvedVariantId,
-    selectedOptionsText,
-  } = useProductVariant(product);
 
   const handleAddToCart = () => {
     addItem(
@@ -56,7 +64,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <OptionSelector
         options={product.options}
         selectedOptions={selectedOptions}
-        onSelect={handleOptionSelect}
+        onSelect={onSelectOption}
       />
 
       <AddToCartButton

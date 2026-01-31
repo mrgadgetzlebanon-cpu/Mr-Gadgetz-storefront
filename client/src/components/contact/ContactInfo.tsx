@@ -18,7 +18,13 @@ export function ContactInfo() {
             </div>
             <div>
               <h3 className="font-semibold text-white">Email Us</h3>
-              <p className="text-white/70">support@mrgadgetz.net</p>
+              <a
+                href="mailto:info@mrgadgetz.net"
+                className="text-white/70 hover:text-white transition-colors"
+                aria-label="Email info@mrgadgetz.net"
+              >
+                info@mrgadgetz.net
+              </a>
             </div>
           </div>
 
@@ -28,7 +34,27 @@ export function ContactInfo() {
             </div>
             <div>
               <h3 className="font-semibold text-white">Call Us</h3>
-              <p className="text-white/70">+961 3 797 772</p>
+              <div className="flex flex-wrap items-center gap-3 text-white/70">
+                <a
+                  href="https://wa.me/9613797772"
+                  className="hover:text-white transition-colors"
+                  aria-label="Chat on WhatsApp +961 3 797 772"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  +961 3 797 772
+                </a>
+                <span className="text-white/40">•</span>
+                <a
+                  href="https://wa.me/96178880120"
+                  className="hover:text-white transition-colors"
+                  aria-label="Chat on WhatsApp +961 78 880 120"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  +961 78 880 120
+                </a>
+              </div>
               <p className="text-white/70">Mon-Sat: 9am - 6pm</p>
               <p className="text-white/70">Sat: 9am - 4pm</p>
             </div>

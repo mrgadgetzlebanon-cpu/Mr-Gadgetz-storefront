@@ -1,55 +1,94 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import type { ProductVariantNode } from "@/hooks/use-product-variant";
 
 interface ProductImageSliderProps {
   images: string[];
   productName: string;
+  activeVariant?: ProductVariantNode | null;
 }
 
-export function ProductImageSlider({ images, productName }: ProductImageSliderProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+export function ProductImageSlider({
+  images,
+  productName,
+  activeVariant,
+}: ProductImageSliderProps) {
+  const normalizedImages = useMemo(() => {
+    // Dedupe while preserving order
+    const seen = new Set<string>();
+    return images.filter((img) => {
+      if (!img || seen.has(img)) return false;
+      seen.add(img);
+      return true;
+    });
+  }, [images]);
+
+  const hasMultiple = normalizedImages.length > 1;
+
+  const autoplayPlugin = useMemo(
+    () =>
+      Autoplay({
+        delay: 3000,
+        stopOnInteraction: false,
+        stopOnMouseEnter: true,
+      }),
+    [],
+  );
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: hasMultiple, watchDrag: hasMultiple },
+    hasMultiple ? [autoplayPlugin] : [],
+  );
+
+  const resetAutoplay = useCallback(() => {
+    const plugins = emblaApi?.plugins?.();
+    const autoplay = plugins?.autoplay;
+    autoplay?.reset?.();
+  }, [emblaApi]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollPrev();
+      resetAutoplay();
     }
-  }, [emblaApi]);
+  }, [emblaApi, resetAutoplay]);
 
   const scrollNext = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollNext();
+      resetAutoplay();
     }
-  }, [emblaApi]);
+  }, [emblaApi, resetAutoplay]);
 
   useEffect(() => {
-    if (!emblaApi) return;
-
-    const autoSlide = setInterval(() => {
-      emblaApi.scrollNext();
-    }, 3000);
-
-    return () => {
-      clearInterval(autoSlide);
-    };
-  }, [emblaApi]);
+    if (!emblaApi || !activeVariant?.image) return;
+    const index = normalizedImages.findIndex(
+      (img) => img === activeVariant.image,
+    );
+    if (index >= 0) {
+      emblaApi.scrollTo(index);
+      resetAutoplay();
+    }
+  }, [activeVariant?.image, emblaApi, normalizedImages, resetAutoplay]);
 
   return (
     <div className="space-y-4">
       <div className="relative z-10">
-        <div 
-          className="overflow-hidden rounded-2xl bg-transparent" 
+        <div
+          className="overflow-hidden rounded-2xl bg-transparent"
           ref={emblaRef}
         >
           <div className="flex">
-            {images.map((img, i) => (
+            {normalizedImages.map((img, i) => (
               <div key={i} className="flex-[0_0_100%] min-w-0">
                 <div className="aspect-square p-6 flex items-center justify-center bg-zinc-50 dark:bg-zinc-900/30">
-                  <img 
-                    src={img} 
-                    alt={`${productName} ${i + 1}`} 
+                  <img
+                    src={img}
+                    alt={`${productName} ${i + 1}`}
                     className="w-full h-full object-contain"
-                    style={{ mixBlendMode: 'multiply' }}
+                    style={{ mixBlendMode: "multiply" }}
                   />
                 </div>
               </div>
@@ -57,7 +96,7 @@ export function ProductImageSlider({ images, productName }: ProductImageSliderPr
           </div>
         </div>
 
-        {images.length > 1 && (
+        {hasMultiple && (
           <>
             <button
               onClick={scrollPrev}
@@ -76,7 +115,6 @@ export function ProductImageSlider({ images, productName }: ProductImageSliderPr
           </>
         )}
       </div>
-
     </div>
   );
 }

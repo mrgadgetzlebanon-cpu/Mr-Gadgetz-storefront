@@ -38,8 +38,8 @@ export function ProductCard({
       viewport={{ once: true, margin: "-50px" }}
       className={`group/card card-container relative flex flex-col bg-white dark:bg-[#1a1a2e] rounded-xl overflow-hidden ${
         variant === "grid"
-          ? "w-full max-w-[320px] lg:max-w-[300px] h-[470px] md:h-[480px]"
-          : "w-[300px] sm:w-[330px] h-[440px] sm:h-[470px]"
+          ? "w-full max-w-[220px] lg:max-w-[240px] h-[380px]"
+          : "w-[220px] sm:w-[240px] h-[360px] sm:h-[400px]"
       }`}
       style={{ boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px" }}
       data-testid={`card-product-${product.id}`}
@@ -49,7 +49,7 @@ export function ProductCard({
         className="h-full flex flex-col"
       >
         <div
-          className="img-wrapper relative overflow-hidden bg-[#f5f5f7] dark:bg-[#252540]"
+          className="img-wrapper relative overflow-hidden dark:bg-[#252540]"
           style={{ height: "70%" }}
         >
           <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
@@ -132,7 +132,7 @@ export function ProductCard({
                 ${isHovered ? "text-[#0c57ef]" : "text-white"}
               `}
             >
-              Add to Cart
+              Add
             </span>
           </button>
         </div>

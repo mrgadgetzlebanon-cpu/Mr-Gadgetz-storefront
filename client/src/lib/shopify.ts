@@ -233,6 +233,10 @@ export const PRODUCT_BY_HANDLE_QUERY = `
             id
             title
             availableForSale
+            image {
+              url
+              altText
+            }
             priceV2 {
               amount
               currencyCode

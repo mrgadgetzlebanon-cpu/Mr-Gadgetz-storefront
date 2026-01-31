@@ -106,7 +106,7 @@ export function CategoryProductSection({
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-[350px] h-[500px] bg-muted rounded-xl animate-pulse"
+                className="flex-shrink-0 w-[220px] sm:w-[240px] h-[360px] sm:h-[400px] bg-muted rounded-xl animate-pulse"
               />
             ))}
           </div>
@@ -194,7 +194,7 @@ export function CategoryProductSection({
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: index * 0.03 }}
-                          className="flex-shrink-0 w-[260px] sm:w-[300px] lg:w-[350px]"
+                          className="flex-shrink-0 w-[220px] sm:w-[240px]"
                         >
                           <ProductCard product={product} />
                         </motion.div>
@@ -214,7 +214,7 @@ export function CategoryProductSection({
                   {[...Array(5)].map((_, i) => (
                     <div
                       key={i}
-                      className="flex-shrink-0 w-[300px] sm:w-[330px] h-[440px] sm:h-[470px] bg-muted rounded-xl animate-pulse"
+                      className="flex-shrink-0 w-[220px] sm:w-[240px] h-[360px] sm:h-[400px] bg-muted rounded-xl animate-pulse"
                     />
                   ))}
                 </div>
