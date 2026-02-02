@@ -15,6 +15,7 @@ interface ShopifyProductNode {
       currencyCode: string;
     };
   };
+  warranty?: { value?: string | null } | null;
   images: {
     edges: Array<{
       node: {
@@ -41,9 +42,13 @@ export interface ExtendedProduct extends Product {
   createdAt: string;
   descriptionHtml?: string;
   variantId: string;
+  warranty?: string | null;
 }
 
-function mapShopifyProduct(node: ShopifyProductNode, collectionTitle?: string): ExtendedProduct {
+function mapShopifyProduct(
+  node: ShopifyProductNode,
+  collectionTitle?: string,
+): ExtendedProduct {
   const variant = node.variants.edges[0]?.node;
   return {
     id: parseInt(node.id.split("/").pop() || "0"),
@@ -58,14 +63,17 @@ function mapShopifyProduct(node: ShopifyProductNode, collectionTitle?: string): 
     rating: "5.0",
     reviewCount: 0,
     image: node.images.edges[0]?.node.url || "",
-    images: node.images.edges.map(e => e.node.url),
-    colors: node.variants.edges.map(v => v.node.title).filter(t => t !== "Default Title"),
+    images: node.images.edges.map((e) => e.node.url),
+    colors: node.variants.edges
+      .map((v) => v.node.title)
+      .filter((t) => t !== "Default Title"),
     specs: {},
     isNew: true,
     isFeatured: true,
     stock: variant?.availableForSale ? 100 : 0,
     createdAt: node.createdAt,
     variantId: variant?.id || "",
+    warranty: node.warranty?.value || null,
   };
 }
 
@@ -254,7 +262,7 @@ export function useProductsByTag(tag: string, first: number = 15) {
         query: PRODUCTS_BY_TAG_QUERY,
         variables: { tag: `tag:${tag}`, first },
       });
-      return data.products.edges.map(edge => mapShopifyProduct(edge.node));
+      return data.products.edges.map((edge) => mapShopifyProduct(edge.node));
     },
     enabled: !!tag,
   });
@@ -275,8 +283,8 @@ export function useProductsByCollection(handle: string, first: number = 15) {
       });
       if (!data.collection) return [];
       const collectionTitle = sanitizeCollectionTitle(data.collection.title);
-      return data.collection.products.edges.map(edge => 
-        mapShopifyProduct(edge.node, collectionTitle)
+      return data.collection.products.edges.map((edge) =>
+        mapShopifyProduct(edge.node, collectionTitle),
       );
     },
     enabled: !!handle,
@@ -293,7 +301,7 @@ export function useNewArrivals(first: number = 15) {
         query: NEWEST_PRODUCTS_QUERY,
         variables: { first },
       });
-      return data.products.edges.map(edge => mapShopifyProduct(edge.node));
+      return data.products.edges.map((edge) => mapShopifyProduct(edge.node));
     },
   });
 }
@@ -308,7 +316,7 @@ export function useBestSellers(first: number = 15) {
         query: BEST_SELLING_PRODUCTS_QUERY,
         variables: { first },
       });
-      return data.products.edges.map(edge => mapShopifyProduct(edge.node));
+      return data.products.edges.map((edge) => mapShopifyProduct(edge.node));
     },
   });
 }

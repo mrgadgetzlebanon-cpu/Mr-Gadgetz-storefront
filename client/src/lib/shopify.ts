@@ -206,6 +206,9 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       vendor
       productType
       tags
+      warranty: metafield(namespace: "custom", key: "warranty") {
+        value
+      }
       createdAt
       priceRange {
         minVariantPrice {

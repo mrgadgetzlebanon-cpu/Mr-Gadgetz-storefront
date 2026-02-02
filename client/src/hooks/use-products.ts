@@ -43,6 +43,7 @@ interface ShopifyProductNode {
       };
     }>;
   };
+  warranty?: { value?: string | null } | null;
   variants: {
     edges: Array<{
       node: {
@@ -90,6 +91,7 @@ export interface ExtendedProduct extends Product {
   variants?: ProductVariant[];
   productType?: string;
   tags?: string[];
+  warranty?: string | null;
 }
 
 export type { Product };
@@ -146,6 +148,7 @@ function mapShopifyProduct(
     tags: node.tags || [],
     options: filteredOptions,
     variants: mappedVariants,
+    warranty: node.warranty?.value || null,
   };
 }
 
@@ -282,6 +285,7 @@ interface PaginatedQueryParams {
   cursor?: string | null;
   first?: number;
   searchQuery?: string;
+  enabled?: boolean;
 }
 
 function getSortVariables(sortKey: SortOption): {
@@ -307,6 +311,7 @@ export function usePaginatedProducts({
   cursor = null,
   first = 24,
   searchQuery = "",
+  enabled = true,
 }: PaginatedQueryParams) {
   return useQuery({
     queryKey: [
@@ -321,6 +326,13 @@ export function usePaginatedProducts({
     queryFn: async (): Promise<PaginatedProductsResult> => {
       const { sortKey: gqlSortKey, reverse } = getSortVariables(sortKey);
 
+      const processedSearchQuery = (() => {
+        if (!searchQuery) return "";
+        // Structured filters (e.g., vendor:Apple) should be passed as-is to avoid wildcard corruption
+        if (searchQuery.includes(":")) return searchQuery;
+        return `${searchQuery}*`;
+      })();
+
       if (handles.length === 0) {
         const data = await shopifyFetch<{
           products: {
@@ -334,7 +346,7 @@ export function usePaginatedProducts({
             after: cursor,
             sortKey: gqlSortKey,
             reverse,
-            query: searchQuery || undefined,
+            query: processedSearchQuery || undefined,
           },
         });
 
@@ -403,6 +415,7 @@ export function usePaginatedProducts({
         },
       };
     },
+    enabled,
   });
 }
 

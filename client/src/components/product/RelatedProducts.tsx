@@ -2,12 +2,17 @@ import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProductCard } from "@/components/ProductCard";
-import { useProducts, type ExtendedProduct } from "@/hooks/use-products";
+import {
+  usePaginatedProducts,
+  useProducts,
+  type ExtendedProduct,
+} from "@/hooks/use-products";
 import useEmblaCarousel from "embla-carousel-react";
 
 interface RelatedProductsProps {
   currentProductId: number;
-  category?: string;
+  productType?: string | null;
+  vendor?: string | null;
 }
 
 type ProductWithVariant = ExtendedProduct & { variantId?: string };
@@ -101,9 +106,25 @@ function ProductSlider({
 
 export function RelatedProducts({
   currentProductId,
-  category,
+  productType,
+  vendor,
 }: RelatedProductsProps) {
   const { data: allProducts } = useProducts();
+  const normalizedVendor = vendor?.trim();
+  const normalizedType = productType?.trim();
+
+  const escapeValue = (value: string) => value.replace(/'/g, "\\'");
+  const strictQuery =
+    normalizedVendor && normalizedType
+      ? `product_type:'${escapeValue(normalizedType)}' AND vendor:'${escapeValue(normalizedVendor)}'`
+      : "";
+
+  const { data: strictResult } = usePaginatedProducts({
+    handles: [],
+    searchQuery: strictQuery,
+    first: 12,
+    enabled: !!strictQuery,
+  });
 
   const [recentlyViewed, setRecentlyViewed] = useState<ProductWithVariant[]>(
     [],
@@ -147,13 +168,11 @@ export function RelatedProducts({
     localStorage.setItem("recentlyViewed", JSON.stringify(ids));
   }, [currentProductId]);
 
-  const youMayAlsoLike =
-    allProducts
-      ?.filter((p) => p.id !== currentProductId)
-      .filter((p) => !category || p.category === category)
-      .slice(0, 8) || [];
+  const youMayAlsoLike = (strictResult?.products || [])
+    .filter((p) => p.id !== currentProductId)
+    .slice(0, 8);
 
-  const hasContent = recentlyViewed.length > 0 || youMayAlsoLike.length > 0;
+  const hasContent = youMayAlsoLike.length > 0 || recentlyViewed.length > 0;
 
   if (!hasContent) return null;
 
@@ -163,12 +182,12 @@ export function RelatedProducts({
         <h2 className="text-2xl font-display font-bold">You Might Also Like</h2>
       </div>
 
-      {recentlyViewed.length > 0 && (
-        <ProductSlider products={recentlyViewed} title="Recently Viewed" />
+      {youMayAlsoLike.length > 0 && (
+        <ProductSlider products={youMayAlsoLike} title="Similar Products" />
       )}
 
-      {youMayAlsoLike.length > 0 && (
-        <ProductSlider products={youMayAlsoLike} title="Best Sellers" />
+      {recentlyViewed.length > 0 && (
+        <ProductSlider products={recentlyViewed} title="Recently Viewed" />
       )}
     </div>
   );

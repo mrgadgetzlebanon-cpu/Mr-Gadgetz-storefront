@@ -126,13 +126,15 @@ export default function ProductDetails() {
             descriptionHtml={product.descriptionHtml}
             description={product.description}
             specs={product.specs as Record<string, string> | undefined}
+            warranty={product.warranty}
           />
         </div>
 
         {/* Related Products */}
         <RelatedProducts
           currentProductId={product.id}
-          category={product.category}
+          productType={product.productType}
+          vendor={product.brand}
         />
       </div>
     </>
