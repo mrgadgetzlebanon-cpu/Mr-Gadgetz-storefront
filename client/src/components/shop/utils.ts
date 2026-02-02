@@ -94,9 +94,26 @@ export function deserializeSelection(
 ): CategorySelection {
   if (!param) return { type: "all", handles: [] };
 
+  // Decode first so we can inspect the raw value
+  const decoded = decodeURIComponent(param);
+
+  // Support bare handle URLs like `/shop?category=apple` (not tied to sidebar)
+  if (!decoded.includes(":")) {
+    const handles = decoded
+      .split(",")
+      .map((h) => h.trim())
+      .filter(Boolean);
+    if (handles.length === 0) return { type: "all", handles: [] };
+    return {
+      type: "parent",
+      parent: handles.join(", "),
+      handles,
+    };
+  }
+
   // Parse "type:parent:child" or "type:parent"
   // decodeURIComponent ensures "PC+and+Laptops" becomes "PC and Laptops"
-  const parts = decodeURIComponent(param).split(":");
+  const parts = decoded.split(":");
   const type = parts[0];
 
   // 1. ALL PRODUCTS

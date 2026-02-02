@@ -229,10 +229,10 @@ export default function NotFound() {
 
                 hover:before:h-[300%] hover:before:top-1/2
               "
-              data-testid="button-back-to-base"
+              data-testid="button-back-to-shop"
             >
               <ChevronLeft className="w-5 h-5 mr-2" />
-              Back to Base
+              Back to Shop
             </button>
           </Link>
         </div>
