@@ -76,7 +76,7 @@ export function ProductCard({
               <img
                 src={product.image}
                 alt={product.name}
-                className={`w-full h-full object-cover transition-transform duration-500 ease-out ${
+                className={`w-full h-full object-contain transition-transform duration-500 ease-out ${
                   hasSecondImage
                     ? "translate-x-0 group-hover/card:-translate-x-full"
                     : "group-hover/card:scale-105"
@@ -87,7 +87,7 @@ export function ProductCard({
                 <img
                   src={images[1]}
                   alt={`${product.name} secondary view`}
-                  className="absolute inset-0 h-full w-full object-cover translate-x-full group-hover/card:translate-x-0 transition-transform duration-500 ease-out"
+                  className="absolute inset-0 h-full w-full object-contain translate-x-full group-hover/card:translate-x-0 transition-transform duration-500 ease-out"
                 />
               )}
             </div>
@@ -138,11 +138,11 @@ export function ProductCard({
         </div>
 
         <div
-          className="content-wrapper flex flex-col justify-center items-center text-center px-4 py-3 bg-[#fafafa] dark:bg-[#1e1e32]"
+          className="content-wrapper flex flex-col justify-center items-center text-center px-4 py-3 dark:bg-[#1e1e32]"
           style={{ height: "30%" }}
         >
           <h3
-            className="font-display text-base font-semibold leading-tight text-gray-900 dark:text-white transition-colors"
+            className="font-display text-base leading-tight text-gray-900 dark:text-white transition-colors"
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 2,

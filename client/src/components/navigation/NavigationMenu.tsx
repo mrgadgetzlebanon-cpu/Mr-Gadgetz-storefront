@@ -219,7 +219,13 @@ export function NavigationMenu({
   onToggleMobileMenu,
   onNavigate,
 }: NavigationMenuProps) {
-  const navItems = useMemo(() => buildNavItems(), []);
+  const navItems = useMemo(
+    () => [
+      ...buildNavItems(),
+      { label: "Used", href: "/shop?category=used", children: [] },
+    ],
+    [],
+  );
 
   if (variant === "mobile") {
     return (
@@ -300,7 +306,7 @@ export function NavigationMenu({
   }
 
   return (
-    <div className="hidden lg:flex items-center gap-2 flex-nowrap overflow-visible max-w-full px-2 relative z-[60]">
+    <div className="hidden lg:flex flex-wrap justify-center items-center gap-2 md:gap-3 overflow-visible max-w-full px-2 relative z-[60]">
       {navItems.map((item) => (
         <NavDropdown key={item.label} item={item} useWhiteLogo={useWhiteLogo} />
       ))}

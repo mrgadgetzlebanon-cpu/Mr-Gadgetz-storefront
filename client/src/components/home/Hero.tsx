@@ -63,13 +63,13 @@ const Hero = () => {
     {
       dependencies: [currentIndex],
       revertOnUpdate: true,
-    }
+    },
   );
 
   useGSAP(() => {
     const frame = videoFrameRef.current;
     if (!frame) return;
-    
+
     gsap.set(frame, {
       clipPath: "polygon(14% 0, 72% 0, 88% 90%, 0 95%)",
       borderRadius: "0% 0% 40% 10%",
@@ -90,7 +90,10 @@ const Hero = () => {
   const getVideoSrc = (index: number) => `videos/hero-${index}.mp4`;
 
   return (
-    <div data-testid="hero-section" className="relative h-dvh w-screen overflow-x-hidden">
+    <div
+      data-testid="hero-section"
+      className="relative h-dvh w-screen overflow-x-hidden"
+    >
       {loading && (
         <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
           <div className="three-body">
@@ -134,9 +137,7 @@ const Hero = () => {
             onLoadedData={handleVideoLoad}
           />
           <video
-            src={getVideoSrc(
-              currentIndex === totalVideos ? 1 : currentIndex
-            )}
+            src={getVideoSrc(currentIndex === totalVideos ? 1 : currentIndex)}
             autoPlay
             loop
             muted
@@ -151,7 +152,7 @@ const Hero = () => {
               <b>M</b>R.G<b>A</b>DGET<b>Z</b>
             </h1>
 
-            <p className="mb-5 max-w-64 font-robert-regular text-blue-100">
+            <p className="mb-5 max-w-64 font-robert-regular text-white mix-blend-exclusion">
               Premium Tech & Electronics <br /> Discover Innovation Today
             </p>
 

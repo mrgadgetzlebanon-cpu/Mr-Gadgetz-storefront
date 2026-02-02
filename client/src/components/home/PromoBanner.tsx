@@ -21,7 +21,7 @@ export function PromoBanner({
   return (
     <section className="py-12">
       <div className="container px-4 mx-auto">
-        <div className="relative rounded-[2.5rem] overflow-hidden bg-[#020617] text-white h-[500px] flex items-center">
+        <div className="relative rounded-[1rem] overflow-hidden text-white h-[500px] flex items-center">
           <div className="absolute inset-0">
             <img
               src={imageSrc}

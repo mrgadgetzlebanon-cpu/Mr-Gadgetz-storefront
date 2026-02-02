@@ -83,7 +83,7 @@ export function ProductImageSlider({
           <div className="flex">
             {normalizedImages.map((img, i) => (
               <div key={i} className="flex-[0_0_100%] min-w-0">
-                <div className="aspect-square p-6 flex items-center justify-center bg-zinc-50 dark:bg-zinc-900/30">
+                <div className="aspect-square p-6 flex items-center justify-center">
                   <img
                     src={img}
                     alt={`${productName} ${i + 1}`}

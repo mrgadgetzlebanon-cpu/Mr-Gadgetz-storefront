@@ -13,7 +13,6 @@ import {
   serializeSelection,
   deserializeSelection,
   buildShopUrl,
-  FilterBar,
 } from "@/components/shop";
 
 const ITEMS_PER_PAGE = 24;
@@ -303,7 +302,7 @@ export function ShopCategoryView({
 
   return (
     <div className="container mx-auto px-4 py-8 pt-16">
-      <div className="sticky top-16 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 -mx-4 px-4 pb-4 md:static md:bg-transparent md:backdrop-blur-none md:pb-0 md:mx-0 md:px-0">
+      <div className="z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 -mx-4 px-4 pb-4 md:static md:bg-transparent md:backdrop-blur-none md:pb-0 md:mx-0 md:px-0">
         <ShopHeader
           pageTitle={pageTitle}
           productCount={filteredProducts.length}
@@ -323,12 +322,15 @@ export function ShopCategoryView({
           onNextPage={handleNextPage}
           onPrevPage={handlePrevPage}
         />
-        <FilterBar
-          filters={dynamicFilters}
-          activeFilters={activeFilters}
-          onToggle={toggleFilter}
-          onClear={clearFilters}
-        />
+          {/*
+            Filter by tag section temporarily disabled.
+          <FilterBar
+            filters={dynamicFilters}
+            activeFilters={activeFilters}
+            onToggle={toggleFilter}
+            onClear={clearFilters}
+          />
+          */}
 
         <MobileCategoryScroll
           categoryStructure={categoryStructure}
