@@ -16,6 +16,7 @@ export function ProductCard({
   showNewTag = false,
   variant = "default",
 }: ProductCardProps) {
+  const isGrid = variant === "grid";
   const { addItem } = useCart();
   const [isHovered, setIsHovered] = useState(false);
   const images = product.images || [];
@@ -30,6 +31,7 @@ export function ProductCard({
       ? Math.round(((comparePrice - currentPrice) / comparePrice) * 100)
       : 0;
   const hasDiscount = discountPercent > 0;
+  const isUsed = product.productType === "Used";
 
   return (
     <motion.div
@@ -37,9 +39,9 @@ export function ProductCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       className={`group/card card-container relative flex flex-col bg-white dark:bg-[#1a1a2e] rounded-xl overflow-hidden ${
-        variant === "grid"
+        isGrid
           ? "w-full max-w-[220px] lg:max-w-[240px] h-[380px]"
-          : "w-[220px] sm:w-[240px] h-[360px] sm:h-[400px]"
+          : "w-[150px] sm:w-[220px] h-[340px] sm:h-[400px]"
       }`}
       style={{ boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px" }}
       data-testid={`card-product-${product.id}`}
@@ -50,7 +52,7 @@ export function ProductCard({
       >
         <div
           className="img-wrapper relative overflow-hidden dark:bg-[#252540]"
-          style={{ height: "70%" }}
+          style={{ height: isGrid ? "65%" : "55%" }}
         >
           <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
             {showNewTag && (
@@ -59,6 +61,14 @@ export function ProductCard({
                 data-testid={`badge-new-${product.id}`}
               >
                 New
+              </Badge>
+            )}
+            {isUsed && (
+              <Badge
+                className="bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md"
+                data-testid={`badge-used-${product.id}`}
+              >
+                Used
               </Badge>
             )}
             {hasDiscount && (
@@ -139,7 +149,7 @@ export function ProductCard({
 
         <div
           className="content-wrapper flex flex-col justify-center items-center text-center px-4 py-3 dark:bg-[#1e1e32]"
-          style={{ height: "30%" }}
+          style={{ height: isGrid ? "35%" : "45%" }}
         >
           <h3
             className="font-display text-base leading-tight text-gray-900 dark:text-white transition-colors"

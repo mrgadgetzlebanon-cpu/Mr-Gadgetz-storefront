@@ -102,11 +102,11 @@ export function CategoryProductSection({
       <section className={cn("py-12", className)}>
         <div className="container mx-auto px-4">
           <div className="h-8 w-48 bg-muted rounded animate-pulse mb-8" />
-          <div className="flex gap-8 overflow-hidden">
+          <div className="flex gap-4 sm:gap-6 md:gap-8 overflow-hidden">
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-[220px] sm:w-[240px] h-[360px] sm:h-[400px] bg-muted rounded-xl animate-pulse"
+                className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px] h-[360px] sm:h-[400px] bg-muted rounded-xl animate-pulse"
               />
             ))}
           </div>
@@ -187,14 +187,14 @@ export function CategoryProductSection({
                   </button>
 
                   <div className="overflow-hidden py-4" ref={emblaRef}>
-                    <div className="flex gap-8 px-2">
+                    <div className="flex gap-4 sm:gap-6 md:gap-8 px-2">
                       {filteredProducts.map((product, index) => (
                         <motion.div
                           key={product.id}
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: index * 0.03 }}
-                          className="flex-shrink-0 w-[220px] sm:w-[240px]"
+                          className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px]"
                         >
                           <ProductCard product={product} />
                         </motion.div>
@@ -210,11 +210,11 @@ export function CategoryProductSection({
                   </button>
                 </>
               ) : isLoading ? (
-                <div className="flex gap-4 overflow-hidden">
+                <div className="flex gap-4 sm:gap-6 md:gap-8 overflow-hidden">
                   {[...Array(5)].map((_, i) => (
                     <div
                       key={i}
-                      className="flex-shrink-0 w-[220px] sm:w-[240px] h-[360px] sm:h-[400px] bg-muted rounded-xl animate-pulse"
+                      className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px] h-[360px] sm:h-[400px] bg-muted rounded-xl animate-pulse"
                     />
                   ))}
                 </div>

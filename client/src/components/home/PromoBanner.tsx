@@ -19,7 +19,7 @@ export function PromoBanner({
   bgLight = false,
 }: PromoBannerProps) {
   return (
-    <section className="py-12">
+    <section className="py-12 hidden md:block">
       <div className="container px-4 mx-auto">
         <div className="relative rounded-[1rem] overflow-hidden text-white h-[500px] flex items-center">
           <div className="absolute inset-0">

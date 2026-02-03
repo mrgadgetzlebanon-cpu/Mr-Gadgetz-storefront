@@ -49,10 +49,13 @@ export function ProductRow({
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-6 w-24" />
         </div>
-        <div className="flex gap-4 overflow-hidden">
+        <div className="flex gap-3 sm:gap-4 md:gap-5 overflow-hidden">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="min-w-[250px]">
-              <Skeleton className="h-[280px] rounded-2xl" />
+            <div
+              key={i}
+              className="min-w-[170px] sm:min-w-[200px] md:min-w-[230px]"
+            >
+              <Skeleton className="h-[260px] sm:h-[280px] rounded-2xl" />
             </div>
           ))}
         </div>
@@ -101,7 +104,7 @@ export function ProductRow({
         <div
           ref={scrollRef}
           onScroll={checkScroll}
-          className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory"
+          className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {products.map((product, index) => (
@@ -111,7 +114,7 @@ export function ProductRow({
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-20px" }}
               transition={{ delay: index * 0.03, duration: 0.3 }}
-              className="min-w-[220px] sm:min-w-[240px] snap-start"
+              className="min-w-[170px] sm:min-w-[200px] md:min-w-[230px] lg:min-w-[240px] snap-start"
             >
               <ProductCard product={product} showNewTag={showNewTag} />
             </motion.div>

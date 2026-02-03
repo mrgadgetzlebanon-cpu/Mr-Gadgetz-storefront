@@ -33,13 +33,28 @@ export function Navigation() {
       searchQuery: debouncedSearchQuery.length > 1 ? debouncedSearchQuery : "",
     });
 
-  const isNotFoundPage =
-    !["/", "/shop", "/search", "/contact", "/payment"].some(
-      (path) =>
-        location === path ||
-        location.startsWith("/product/") ||
-        location.startsWith("/shop?"),
-    ) && location !== "/";
+  const infoPages = [
+    "/privacy-policy",
+    "/terms-of-service",
+    "/shipping-and-returns",
+    "/warranty",
+  ];
+
+  const isProductPage = location.startsWith("/product/");
+  const isShopQuery = location.startsWith("/shop?");
+  const isInfoPage = infoPages.includes(location);
+
+  const isStandardPage =
+    location === "/" ||
+    location === "/shop" ||
+    location === "/search" ||
+    location === "/contact" ||
+    location === "/payment" ||
+    isProductPage ||
+    isShopQuery ||
+    isInfoPage;
+
+  const isNotFoundPage = !isStandardPage;
   const isContactPage = location === "/contact";
   const useWhiteLogo = isNotFoundPage || (isContactPage && !isScrolled);
 

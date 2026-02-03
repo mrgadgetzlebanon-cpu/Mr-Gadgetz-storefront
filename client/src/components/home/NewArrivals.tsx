@@ -38,7 +38,7 @@ export function NewArrivals() {
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-muted/30">
+      <section className="py-6 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div className="h-8 w-48 bg-muted rounded animate-pulse" />
@@ -48,7 +48,7 @@ export function NewArrivals() {
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-[220px] sm:w-[240px] h-[360px] sm:h-[400px] bg-muted rounded-xl animate-pulse"
+                className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px] h-[360px] sm:h-[400px] bg-muted rounded-xl animate-pulse"
               />
             ))}
           </div>
@@ -60,7 +60,7 @@ export function NewArrivals() {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-16 bg-white" data-testid="section-new-arrivals">
+    <section className="py-6 bg-white" data-testid="section-new-arrivals">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -114,7 +114,7 @@ export function NewArrivals() {
             </button>
 
             <div className="overflow-hidden py-4" ref={emblaRef}>
-              <div className="flex gap-8 px-2">
+              <div className="flex gap-4 sm:gap-6 md:gap-8 px-2">
                 {products.map((product, index) => (
                   <motion.div
                     key={product.id}
@@ -122,7 +122,7 @@ export function NewArrivals() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex-shrink-0 w-[220px] sm:w-[240px]"
+                    className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px]"
                   >
                     <ProductCard product={product} showNewTag />
                   </motion.div>

@@ -95,12 +95,31 @@ function ProductHeader({
   currencyCode?: string;
   hasComparePrice: boolean;
 }) {
+  const isUsed = product.productType === "Used";
+  const displayType = isUsed
+    ? product.tags?.[0] || product.productType || "Used"
+    : product.productType;
   return (
     <div>
-      {product.isNew && (
-        <span className="text-[10px] font-bold uppercase tracking-wider text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full mb-3 inline-block">
-          New
-        </span>
+      {(product.isNew || isUsed) && (
+        <div className="flex items-center gap-2 mb-3">
+          {product.isNew && (
+            <span
+              className="text-[10px] font-bold uppercase tracking-wider text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full"
+              data-testid={`badge-new-${product.id}`}
+            >
+              New
+            </span>
+          )}
+          {isUsed && (
+            <span
+              className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 rounded-full"
+              data-testid={`badge-used-${product.id}`}
+            >
+              Used
+            </span>
+          )}
+        </div>
       )}
       <h1 className="text-2xl md:text-3xl font-display font-bold mb-4 leading-tight">
         {product.name}
@@ -111,7 +130,11 @@ function ProductHeader({
           Vendor: {product.brand}
         </p>
       )}
-
+      {displayType && (
+        <p className="text-sm text-muted-foreground mb-2">
+          Type: {displayType}
+        </p>
+      )}
       <ProductPrice
         price={price}
         compareAt={compareAt}
