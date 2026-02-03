@@ -69,10 +69,10 @@ export function OrderSummary({ items, total, onRemoveItem, onUpdateQuantity }: O
             <span className="text-muted-foreground">Subtotal</span>
             <span className="font-medium">${total.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-sm">
+          {/* <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Shipping</span>
             <span className="text-green-600 font-medium">Free</span>
-          </div>
+          </div> */}
           <Separator className="my-4" />
           <div className="flex justify-between items-center">
             <span className="text-lg font-bold">Total</span>

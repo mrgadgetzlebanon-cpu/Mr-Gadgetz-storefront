@@ -85,10 +85,10 @@ export function CartDrawer() {
                   <span className="text-muted-foreground">Subtotal</span>
                   <span className="tabular-nums">${total.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
+                {/* <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Shipping</span>
                   <span className="text-green-600">Free</span>
-                </div>
+                </div> */}
                 <Separator className="my-2" />
                 <div className="flex justify-between font-semibold text-lg">
                   <span>Total</span>
