@@ -145,12 +145,12 @@ export default function Home() {
           bgClassName="bg-white"
         />
 
-        <PromoBanner
+        {/* <PromoBanner
           imageSrc="/promo/Laptop-Promo.png"
           title="Power Your Next Build"
           buttonLabel="Shop Laptops & PCs"
           buttonHref="/shop?category=parent%3Apc+and+laptops"
-        />
+        /> */}
 
         {/* 8. Samsung Categories */}
         <BrandProductSection
@@ -182,8 +182,14 @@ export default function Home() {
         <DirectProductSection
           title="Smartwatches & Wearables"
           parentCategories={["wearables"]}
-          viewAllLink="/shop?category=Wearables"
+          viewAllLink="/shop?category=wearables"
           bgClassName="bg-white"
+        />
+        <PromoBanner
+          imageSrc="/promo/Watch-Banner.avif"
+          title="Smart Meets Style"
+          buttonLabel="Shop Watches"
+          buttonHref="/shop?category=wearables"
         />
 
         {/* 12. Dyson Products (Direct) */}
