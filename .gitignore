@@ -5,6 +5,10 @@ server/public
 vite.config.ts.*
 *.tar.gz
 
+shared
+server
+attached_assets
+
 .vscode
 .env
 .env.local
