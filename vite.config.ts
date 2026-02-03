@@ -23,17 +23,24 @@ export default defineConfig({
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
       "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
     },
   },
-  root: path.resolve(import.meta.dirname, "client"),
+  // ----------------------------------------------------
+  // CRITICAL FIX 1: Allow Vite to look in the ROOT for index.html
+  // We removed the line: root: path.resolve(import.meta.dirname, "client"),
+  // ----------------------------------------------------
+
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    // ----------------------------------------------------
+    // CRITICAL FIX 2: Output directly to "dist", NOT "dist/public"
+    // This allows Netlify to find index.html immediately.
+    // ----------------------------------------------------
+    outDir: path.resolve(import.meta.dirname, "dist"),
     emptyOutDir: true,
   },
   server: {
-    host: "0.0.0.0", // bind to all interfaces
-    port: 5173, // your port
+    host: "0.0.0.0",
+    port: 5173,
     fs: {
       strict: true,
       deny: ["**/.*"],
