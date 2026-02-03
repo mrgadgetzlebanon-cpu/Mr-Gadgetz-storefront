@@ -1,42 +1,27 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
-          await import("@replit/vite-plugin-dev-banner").then((m) =>
-            m.devBanner(),
-          ),
-        ]
-      : []),
-  ],
+  plugins: [react()],
+  // 1. Tell Vite the "Root" of your app is the 'client' folder
+  root: path.resolve(__dirname, "client"),
+
   resolve: {
     alias: {
-      "@": path.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+      "@": path.resolve(__dirname, "client/src"),
+      "@shared": path.resolve(__dirname, "shared"),
     },
   },
-  root: path.resolve(import.meta.dirname, "client"),
+
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    // 2. Tell Vite to step OUT of 'client' and put the final build in 'dist' at the project root
+    outDir: path.resolve(__dirname, "dist"),
     emptyOutDir: true,
   },
+
   server: {
-    host: "0.0.0.0", // bind to all interfaces
-    port: 5173, // your port
-    fs: {
-      strict: true,
-      deny: ["**/.*"],
-    },
+    host: true,
+    port: 5173,
   },
 });
