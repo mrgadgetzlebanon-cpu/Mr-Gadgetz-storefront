@@ -413,17 +413,6 @@ export function GlobalCategorySelection() {
     [categoryEmblaApi],
   );
 
-  useEffect(() => {
-    if (activeCategory === "phones") {
-      // Logs handles used and the product names returned
-      console.log("Phones handles:", resolvedHandles);
-      console.log(
-        "Phones products:",
-        products.map((p) => p.name),
-      );
-    }
-  }, [activeCategory, resolvedHandles, products]);
-
   return (
     <section className="py-6 bg-white" data-testid="section-global-categories">
       <div className="container mx-auto px-4">

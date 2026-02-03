@@ -54,7 +54,7 @@ export function ProductAIChat({ product }: ProductAIChatProps) {
 
   const handleSend = async () => {
     if (!apiKey) {
-      console.warn("VITE_GOOGLE_AI_KEY is missing; AI chat is disabled.");
+      setError("AI chat is unavailable right now.");
       return;
     }
     const trimmed = input.trim();

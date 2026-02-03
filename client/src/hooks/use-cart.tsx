@@ -4,9 +4,17 @@ import { useToast } from "@/hooks/use-toast";
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product & { variantId?: string }, quantity?: number, color?: string) => void;
+  addItem: (
+    product: Product & { variantId?: string },
+    quantity?: number,
+    color?: string,
+  ) => void;
   removeItem: (productId: number, variantId?: string) => void;
-  updateQuantity: (productId: number, quantity: number, variantId?: string) => void;
+  updateQuantity: (
+    productId: number,
+    quantity: number,
+    variantId?: string,
+  ) => void;
   clearCart: () => void;
   total: number;
   itemCount: number;
@@ -28,22 +36,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       try {
         const parsed = JSON.parse(savedCart) as CartItem[];
         // Filter out legacy items without variantId (incompatible with new checkout)
-        const validItems = parsed.filter(item => item.variantId);
+        const validItems = parsed.filter((item) => item.variantId);
         const removedCount = parsed.length - validItems.length;
         if (removedCount > 0) {
-          console.warn(`Removed ${removedCount} legacy cart items without variant IDs`);
           localStorage.setItem("cart-items", JSON.stringify(validItems));
           // Notify user about cart update
           setTimeout(() => {
             toast({
               title: "Cart Updated",
-              description: `${removedCount} item${removedCount > 1 ? 's were' : ' was'} removed from your cart. Please re-add items to continue shopping.`,
+              description: `${removedCount} item${removedCount > 1 ? "s were" : " was"} removed from your cart. Please re-add items to continue shopping.`,
             });
           }, 100);
         }
         setItems(validItems);
       } catch (e) {
-        console.error("Failed to parse cart items", e);
         localStorage.removeItem("cart-items");
       }
     }
@@ -54,7 +60,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("cart-items", JSON.stringify(items));
   }, [items]);
 
-  const addItem = (product: Product & { variantId?: string }, quantity = 1, color?: string) => {
+  const addItem = (
+    product: Product & { variantId?: string },
+    quantity = 1,
+    color?: string,
+  ) => {
     if (!product.variantId) {
       toast({
         title: "Cannot add to cart",
@@ -63,23 +73,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       });
       return;
     }
-    
+
     setItems((prev) => {
       // Key by variantId for proper multi-variant support
-      const existing = prev.find((item) => item.variantId === product.variantId);
+      const existing = prev.find(
+        (item) => item.variantId === product.variantId,
+      );
       if (existing) {
         return prev.map((item) =>
           item.variantId === product.variantId
             ? { ...item, quantity: item.quantity + quantity }
-            : item
+            : item,
         );
       }
-      return [...prev, { 
-        ...product, 
-        quantity, 
-        selectedColor: color || product.colors?.[0],
-        variantId: product.variantId,
-      }];
+      return [
+        ...prev,
+        {
+          ...product,
+          quantity,
+          selectedColor: color || product.colors?.[0],
+          variantId: product.variantId,
+        },
+      ];
     });
     setIsOpen(true);
     toast({
@@ -89,16 +104,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const removeItem = (productId: number, variantId?: string) => {
-    setItems((prev) => prev.filter((item) => {
-      // If variantId provided, match by variant; otherwise match by product ID for backward compat
-      if (variantId) {
-        return item.variantId !== variantId;
-      }
-      return item.id !== productId;
-    }));
+    setItems((prev) =>
+      prev.filter((item) => {
+        // If variantId provided, match by variant; otherwise match by product ID for backward compat
+        if (variantId) {
+          return item.variantId !== variantId;
+        }
+        return item.id !== productId;
+      }),
+    );
   };
 
-  const updateQuantity = (productId: number, quantity: number, variantId?: string) => {
+  const updateQuantity = (
+    productId: number,
+    quantity: number,
+    variantId?: string,
+  ) => {
     if (quantity < 1) {
       removeItem(productId, variantId);
       return;
@@ -109,13 +130,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           return item.variantId === variantId ? { ...item, quantity } : item;
         }
         return item.id === productId ? { ...item, quantity } : item;
-      })
+      }),
     );
   };
 
   const clearCart = () => setItems([]);
 
-  const total = items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+  const total = items.reduce(
+    (sum, item) => sum + Number(item.price) * item.quantity,
+    0,
+  );
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (

@@ -17,7 +17,8 @@ export default function Payment() {
       setLocation("/");
       toast({
         title: "Cart Empty",
-        description: "Please add items to your cart before proceeding to checkout.",
+        description:
+          "Please add items to your cart before proceeding to checkout.",
         variant: "destructive",
       });
     }
@@ -26,10 +27,10 @@ export default function Payment() {
   const handlePaymentSubmit = async () => {
     try {
       setIsRedirecting(true);
-      
+
       const lineItems = items
-        .filter(item => item.variantId)
-        .map(item => ({
+        .filter((item) => item.variantId)
+        .map((item) => ({
           variantId: item.variantId!,
           quantity: item.quantity,
         }));
@@ -37,7 +38,8 @@ export default function Payment() {
       if (lineItems.length === 0) {
         toast({
           title: "Checkout Error",
-          description: "Unable to process checkout. Please try adding items again.",
+          description:
+            "Unable to process checkout. Please try adding items again.",
           variant: "destructive",
         });
         setIsRedirecting(false);
@@ -45,14 +47,16 @@ export default function Payment() {
       }
 
       const checkoutUrl = await createCheckout(lineItems);
-      
+
       clearCart();
       window.location.href = checkoutUrl;
     } catch (error) {
-      console.error("Checkout error:", error);
       toast({
         title: "Checkout Failed",
-        description: error instanceof Error ? error.message : "Failed to create checkout. Please try again.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to create checkout. Please try again.",
         variant: "destructive",
       });
       setIsRedirecting(false);
@@ -70,8 +74,12 @@ export default function Payment() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-12"
           >
-            <h1 className="text-4xl font-display font-bold mb-2 text-center">Checkout</h1>
-            <p className="text-muted-foreground text-center">Review your order and complete payment.</p>
+            <h1 className="text-4xl font-display font-bold mb-2 text-center">
+              Checkout
+            </h1>
+            <p className="text-muted-foreground text-center">
+              Review your order and complete payment.
+            </p>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -81,7 +89,11 @@ export default function Payment() {
               onRemoveItem={removeItem}
               onUpdateQuantity={updateQuantity}
             />
-            <PaymentForm total={total} onSubmit={handlePaymentSubmit} isLoading={isRedirecting} />
+            <PaymentForm
+              total={total}
+              onSubmit={handlePaymentSubmit}
+              isLoading={isRedirecting}
+            />
           </div>
         </div>
       </div>
