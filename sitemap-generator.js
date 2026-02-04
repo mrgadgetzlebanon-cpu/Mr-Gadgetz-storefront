@@ -5,14 +5,14 @@ import fetch from "node-fetch"; // Ensure you have this installed or use Node 18
 dotenv.config();
 
 const SHOPIFY_DOMAIN = process.env.VITE_SHOPIFY_SHOP_URL;
-const SHOPIFY_ACCESS_TOKEN = process.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
-const API_VERSION = "2026-01";
+const SHOPIFY_ACCESS_TOKEN = process.env.VITE_SHOPIFY_ACCESS_TOKEN;
+const API_VERSION = process.env.VITE_SHOPIFY_API_VERSION || "2026-01";
 const SITE_URL = "https://mrgadgetz.net";
 
 // Basic env validation to fail fast with clear guidance
 if (!SHOPIFY_DOMAIN || !SHOPIFY_ACCESS_TOKEN) {
   console.error(
-    "Missing Shopify config. Please set VITE_SHOPIFY_SHOP_URL and VITE_SHOPIFY_STOREFRONT_TOKEN in your .env (domain should be your-shop.myshopify.com, token must be a Storefront access token).",
+    "Missing Shopify config. Please set VITE_SHOPIFY_SHOP_URL and VITE_SHOPIFY_ACCESS_TOKEN in your .env (domain should be your-shop.myshopify.com, token must be a Storefront access token).",
   );
   process.exit(1);
 }
@@ -195,5 +195,4 @@ async function run() {
     process.exit(1);
   }
 }
-
 run();
