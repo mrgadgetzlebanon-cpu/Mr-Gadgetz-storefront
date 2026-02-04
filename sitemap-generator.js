@@ -9,6 +9,15 @@ const SHOPIFY_ACCESS_TOKEN = process.env.VITE_SHOPIFY_ACCESS_TOKEN;
 const API_VERSION = process.env.VITE_SHOPIFY_API_VERSION || "2026-01";
 const SITE_URL = "https://mrgadgetz.net";
 
+// Basic XML escaping for text/URL fields to keep the sitemap well-formed
+const escapeXml = (value = "") =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+
 // Basic env validation to fail fast with clear guidance
 if (!SHOPIFY_DOMAIN || !SHOPIFY_ACCESS_TOKEN) {
   console.error(
@@ -129,15 +138,15 @@ function generateProductXML(products) {
     const image = node.featuredImage;
 
     xml += `  <url>
-    <loc>${url}</loc>
+    <loc>${escapeXml(url)}</loc>
     <lastmod>${date}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     ${
       image
         ? `<image:image>
-      <image:loc>${image.url}</image:loc>
-      <image:title>${image.altText || node.title}</image:title>
+      <image:loc>${escapeXml(image.url)}</image:loc>
+      <image:title>${escapeXml(image.altText || node.title)}</image:title>
     </image:image>`
         : ""
     }
@@ -158,7 +167,7 @@ function generateCollectionXML(collections) {
     const date = node.updatedAt.split("T")[0];
 
     xml += `  <url>
-    <loc>${url}</loc>
+    <loc>${escapeXml(url)}</loc>
     <lastmod>${date}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
