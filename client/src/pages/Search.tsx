@@ -20,8 +20,8 @@ export default function SearchPage() {
     return products.filter(
       (product) =>
         product.name.toLowerCase().includes(search.toLowerCase()) ||
-        product.category.toLowerCase().includes(search.toLowerCase()) ||
-        product.brand.toLowerCase().includes(search.toLowerCase()),
+        (product.category ?? "").toLowerCase().includes(search.toLowerCase()) ||
+        (product.brand ?? "").toLowerCase().includes(search.toLowerCase()),
     );
   }, [products, search]);
 

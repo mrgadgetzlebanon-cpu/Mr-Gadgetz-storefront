@@ -11,22 +11,31 @@ interface ShopProductCardProps {
 
 export function ShopProductCard({ product }: ShopProductCardProps) {
   const { addItem } = useCart();
-  const hasDiscount = product.originalPrice && Number(product.originalPrice) > Number(product.price);
+  const hasDiscount =
+    product.originalPrice &&
+    Number(product.originalPrice) > Number(product.price);
   const savings = hasDiscount
-    ? Math.round(((Number(product.originalPrice) - Number(product.price)) / Number(product.originalPrice)) * 100)
+    ? Math.round(
+        ((Number(product.originalPrice) - Number(product.price)) /
+          Number(product.originalPrice)) *
+          100,
+      )
     : 0;
 
   const variantId = (product as any).variantId;
-  const isAvailable = !!variantId && product.stock > 0;
+  const isAvailable = !!variantId && (product.stock ?? 0) > 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!variantId) return;
-    addItem({
-      ...product,
-      variantId,
-    }, 1);
+    addItem(
+      {
+        ...product,
+        variantId,
+      },
+      1,
+    );
   };
 
   return (
@@ -51,7 +60,7 @@ export function ShopProductCard({ product }: ShopProductCardProps) {
             loading="lazy"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
-          
+
           <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <Button
               size="icon"
