@@ -30,6 +30,7 @@ export function ShopCategoryView({
 
   const [search, setSearch] = useState(searchParam || "");
   const [localPriceRange, setLocalPriceRange] = useState([0, 5000]);
+  const [maxPrice, setMaxPrice] = useState(5000);
 
   useEffect(() => {
     if (searchParam) {
@@ -74,6 +75,31 @@ export function ShopCategoryView({
   const allFetchedProducts = paginatedResult?.products || [];
   const serverPageInfo = paginatedResult?.pageInfo;
   const isLoading = productsLoading;
+
+  useEffect(() => {
+    if (!allFetchedProducts.length) return;
+
+    const highest = allFetchedProducts.reduce((acc, product) => {
+      const base = Number(product.price) || 0;
+      const compare = Number((product as any).originalPrice) || 0;
+      const variantTop =
+        (product as any).variants?.reduce((vAcc: number, v: any) => {
+          const price = Number(v?.priceV2?.amount || v?.price) || 0;
+          const compareAt =
+            Number(v?.compareAtPriceV2?.amount || v?.compareAtPrice) || 0;
+          return Math.max(vAcc, price, compareAt);
+        }, 0) || 0;
+      return Math.max(acc, base, compare, variantTop);
+    }, 0);
+
+    const rounded = Math.max(50, Math.ceil((highest || 100) / 50) * 50);
+    if (rounded !== maxPrice) setMaxPrice(rounded);
+
+    setLocalPriceRange(([min, currentMax]) => {
+      if (currentMax > rounded) return [Math.min(min, rounded), rounded];
+      return [min, currentMax];
+    });
+  }, [allFetchedProducts, maxPrice]);
 
   const { filteredProducts: hybridFilteredProducts } = useHybridFilters({
     products: allFetchedProducts,
@@ -219,6 +245,7 @@ export function ShopCategoryView({
           onSortChange={handleSortChange}
           localPriceRange={localPriceRange}
           onPriceRangeChange={setLocalPriceRange}
+          maxPrice={maxPrice}
           currentPage={urlPage}
           totalPages={isCursorMode ? undefined : totalClientPages}
           hasNextPage={!!hasNextPage}

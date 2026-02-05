@@ -1,6 +1,5 @@
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -22,6 +21,7 @@ interface ShopHeaderProps {
   onSortChange: (value: string) => void;
   localPriceRange: number[];
   onPriceRangeChange: (value: number[]) => void;
+  maxPrice: number;
   currentPage: number;
   totalPages?: number;
   hasNextPage: boolean;
@@ -41,6 +41,7 @@ export function ShopHeader({
   onSortChange,
   localPriceRange,
   onPriceRangeChange,
+  maxPrice,
   currentPage,
   totalPages,
   hasNextPage,
@@ -50,7 +51,7 @@ export function ShopHeader({
 }: ShopHeaderProps) {
   const showPagination = hasNextPage || hasPrevPage;
   return (
-    <div className="flex flex-col md:flex-row justify-end items-center gap-4 mb-8">
+    <div className="flex flex-col gap-4 mb-8 md:flex-row md:items-center md:justify-end">
       {showPagination && (
         <div className="flex items-center gap-2 md:mr-auto">
           <Button
@@ -79,8 +80,7 @@ export function ShopHeader({
           </Button>
         </div>
       )}
-
-      <div className="flex gap-2 w-full md:w-auto items-center md:ml-auto">
+      <div className="hidden md:flex gap-2 items-center md:ml-auto">
         <Select value={sortKey} onValueChange={onSortChange}>
           <SelectTrigger
             className="w-[140px] rounded-full"
@@ -96,12 +96,12 @@ export function ShopHeader({
           </SelectContent>
         </Select>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">Price</span>
           <div className="w-48">
             <Slider
               min={0}
-              max={5000}
+              max={maxPrice}
               step={50}
               value={localPriceRange}
               onValueChange={onPriceRangeChange}
@@ -113,19 +113,37 @@ export function ShopHeader({
             ${localPriceRange[0]} - ${localPriceRange[1]}
           </span>
         </div>
+      </div>
 
-        {/* Mobile price filter */}
-        <div className="flex md:hidden items-center gap-2">
-          <Search className="w-4 h-4 text-muted-foreground" />
-          <div className="w-full max-w-[200px]">
-            <Slider
-              min={0}
-              max={5000}
-              step={50}
-              value={localPriceRange}
-              onValueChange={onPriceRangeChange}
-              className="py-2"
-            />
+      <div className="flex w-full flex-col gap-3 md:hidden">
+        <Select value={sortKey} onValueChange={onSortChange}>
+          <SelectTrigger
+            className="w-full rounded-full"
+            data-testid="select-sort-mobile"
+          >
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="best_selling">Top Selling</SelectItem>
+            <SelectItem value="newest">Newest</SelectItem>
+            <SelectItem value="price_low">Price: Low</SelectItem>
+            <SelectItem value="price_high">Price: High</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <div className="flex flex-col gap-1">
+          <Slider
+            min={0}
+            max={maxPrice}
+            step={50}
+            value={localPriceRange}
+            onValueChange={onPriceRangeChange}
+            className="py-2"
+            data-testid="slider-price-range-mobile"
+          />
+          <div className="flex justify-between text-[11px] text-muted-foreground">
+            <span>${localPriceRange[0]}</span>
+            <span>${localPriceRange[1]}</span>
           </div>
         </div>
       </div>
