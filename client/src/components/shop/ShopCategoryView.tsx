@@ -1,44 +1,32 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useLocation } from "wouter";
 import { usePaginatedProducts, SortOption } from "@/hooks/use-products";
-import { useDynamicCategories } from "@/hooks/use-dynamic-categories";
 import { useHybridFilters } from "@/hooks/use-hybrid-filters";
 import { useDebounce } from "@/hooks/use-debounce";
-import {
-  ShopSidebar,
-  ShopHeader,
-  ProductGrid,
-  ShopPagination,
-  MobileCategoryScroll,
-  serializeSelection,
-  deserializeSelection,
-  buildShopUrl,
-} from "@/components/shop";
+import { ShopHeader, ProductGrid, ShopPagination } from "@/components/shop";
 
 const ITEMS_PER_PAGE = 24;
 
 interface ShopCategoryViewProps {
-  categoryParam: string | null;
   sortParam: SortOption | null;
   pageParam: string | null;
   cursorParam: string | null;
   searchParam: string | null;
+  handles?: string[];
+  basePath?: string;
+  pageTitleOverride?: string;
 }
 
 export function ShopCategoryView({
-  categoryParam,
   sortParam,
   pageParam,
   cursorParam,
   searchParam,
+  handles = [],
+  basePath = "/shop",
+  pageTitleOverride,
 }: ShopCategoryViewProps) {
   const [, setLocation] = useLocation();
-  const { categoryStructure } = useDynamicCategories();
-
-  const selection = useMemo(
-    () => deserializeSelection(categoryParam, categoryStructure),
-    [categoryParam, categoryStructure],
-  );
 
   const [search, setSearch] = useState(searchParam || "");
   const [localPriceRange, setLocalPriceRange] = useState([0, 5000]);
@@ -51,10 +39,6 @@ export function ShopCategoryView({
     }
   }, [searchParam]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [categoryParam]);
-
   const sortKey: SortOption =
     sortParam &&
     ["best_selling", "newest", "price_low", "price_high"].includes(sortParam)
@@ -63,49 +47,24 @@ export function ShopCategoryView({
 
   const urlPage = pageParam ? Math.max(1, parseInt(pageParam, 10) || 1) : 1;
 
-  const [cursorMap, setCursorMap] = useState<Map<number, string>>(() => {
-    if (cursorParam && urlPage > 1) {
-      return new Map([[urlPage, cursorParam]]);
-    }
-    return new Map();
-  });
+  const [cursorMap, setCursorMap] = useState<Map<number, string>>(() =>
+    cursorParam && urlPage > 1 ? new Map([[urlPage, cursorParam]]) : new Map(),
+  );
 
   const debouncedPriceRange = useDebounce(localPriceRange, 300);
   const debouncedSearch = useDebounce(search, 400);
   const hasSearch = debouncedSearch.trim().length > 0;
-  const effectiveHandles = hasSearch ? [] : selection.handles;
-  const isAllProducts = effectiveHandles.length === 0;
+  const isCursorMode = handles.length === 1;
+  const isAllProducts = handles.length === 0;
   const currentCursor =
-    isAllProducts && urlPage > 1
-      ? cursorParam || cursorMap.get(urlPage) || null
-      : null;
-
-  const prevCategoryRef = useRef(selection.handles.join(","));
-  const prevSortRef = useRef(sortKey);
-
-  const buildCategoryParam = useCallback((category?: string | null) => {
-    if (category) return category;
-    return "parent:ALL_PRODUCTS";
-  }, []);
-
-  useEffect(() => {
-    const currentCategory = selection.handles.join(",");
-    if (
-      prevCategoryRef.current !== currentCategory ||
-      prevSortRef.current !== sortKey
-    ) {
-      setCursorMap(new Map());
-      prevCategoryRef.current = currentCategory;
-      prevSortRef.current = sortKey;
-    }
-  }, [selection.handles, sortKey]);
+    urlPage > 1 ? cursorParam || cursorMap.get(urlPage) || null : null;
 
   const {
     data: paginatedResult,
     isLoading: productsLoading,
     isFetching,
   } = usePaginatedProducts({
-    handles: effectiveHandles,
+    handles,
     sortKey,
     cursor: currentCursor,
     first: ITEMS_PER_PAGE,
@@ -116,196 +75,142 @@ export function ShopCategoryView({
   const serverPageInfo = paginatedResult?.pageInfo;
   const isLoading = productsLoading;
 
-  const selectionKey = `${selection.type}-${selection.parent || ""}-${selection.childName || ""}`;
-
-  const dynamicFilters = useMemo(() => {
-    const set = new Set<string>();
-    allFetchedProducts.forEach((product) => {
-      if (product.productType) {
-        set.add(product.productType);
-      }
-    });
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, [allFetchedProducts]);
-
-  const {
-    filteredProducts: hybridFilteredProducts,
-    activeFilters,
-    toggleFilter,
-    clearFilters,
-  } = useHybridFilters({
+  const { filteredProducts: hybridFilteredProducts } = useHybridFilters({
     products: allFetchedProducts,
     searchTerm: debouncedSearch,
     priceRange: debouncedPriceRange,
     isAllProducts,
-    resetKey: selectionKey,
+    resetKey: `${sortKey}-${debouncedSearch}-${debouncedPriceRange.join("-")}`,
   });
 
-  const totalClientPages = Math.ceil(
-    hybridFilteredProducts.length / ITEMS_PER_PAGE,
+  const totalClientPages = Math.max(
+    1,
+    Math.ceil(hybridFilteredProducts.length / ITEMS_PER_PAGE),
   );
 
+  const effectivePage = isCursorMode
+    ? urlPage
+    : Math.min(urlPage, totalClientPages);
+
   const filteredProducts = useMemo(() => {
-    if (isAllProducts) {
-      return hybridFilteredProducts;
-    }
-    const startIndex = (urlPage - 1) * ITEMS_PER_PAGE;
+    if (isCursorMode) return hybridFilteredProducts;
+
+    const startIndex = (effectivePage - 1) * ITEMS_PER_PAGE;
     return hybridFilteredProducts.slice(
       startIndex,
       startIndex + ITEMS_PER_PAGE,
     );
-  }, [hybridFilteredProducts, isAllProducts, urlPage]);
+  }, [hybridFilteredProducts, effectivePage, isCursorMode]);
 
-  const hasNextPage = isAllProducts
-    ? serverPageInfo?.hasNextPage
-    : urlPage < totalClientPages;
-  const hasPrevPage = urlPage > 1;
+  const hasNextPage = isCursorMode
+    ? !!serverPageInfo?.hasNextPage
+    : (serverPageInfo?.hasNextPage ?? effectivePage < totalClientPages);
+  const hasPrevPage = effectivePage > 1;
 
   const pageTitle = useMemo(() => {
+    if (pageTitleOverride) return pageTitleOverride;
     if (hasSearch) return `Search: ${search.trim()}`;
-    if (selection.type === "all") return "All Products";
-    if (selection.type === "parent") return selection.parent || "Shop";
-    if (selection.type === "child") return selection.childName || "Shop";
     return "Shop";
-  }, [hasSearch, search, selection]);
+  }, [hasSearch, search, pageTitleOverride]);
 
   const navigateToShop = useCallback(
     (options: {
-      category?: string;
       sort?: string;
       page?: number;
       cursor?: string;
       search?: string;
     }) => {
-      const categoryValue = buildCategoryParam(options.category);
-      const activeSearch =
-        options.search ?? (search.trim() ? search : undefined);
-      setLocation(
-        buildShopUrl({
-          ...options,
-          category: categoryValue,
-          search: activeSearch,
-        }),
-      );
+      const searchParams = new URLSearchParams();
+      const activeSearch = options.search ?? (search.trim() ? search : "");
+      if (options.sort) searchParams.set("sort", options.sort);
+      if (options.page && options.page > 1)
+        searchParams.set("page", options.page.toString());
+      if (options.cursor) searchParams.set("cursor", options.cursor);
+      if (activeSearch) searchParams.set("search", activeSearch);
+
+      const qs = searchParams.toString();
+      setLocation(qs ? `${basePath}?${qs}` : basePath);
     },
-    [buildCategoryParam, search, setLocation],
+    [search, setLocation, basePath],
   );
 
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const handleSelectAll = useCallback(() => {
-    navigateToShop({
-      category: "parent:ALL_PRODUCTS",
-      sort: sortKey,
-      search: "",
-    });
-    scrollToTop();
-  }, [navigateToShop, sortKey, scrollToTop]);
-
-  const handleSelectParent = useCallback(
-    (parent: string, _handles: string[]) => {
-      navigateToShop({
-        category: `parent:${parent}`,
-        sort: sortKey,
-        search: "",
-      });
-      scrollToTop();
-    },
-    [navigateToShop, sortKey, scrollToTop],
-  );
-
-  const handleSelectChild = useCallback(
-    (parent: string, childName: string, _handles: string[]) => {
-      navigateToShop({
-        category: `child:${parent}:${childName}`,
-        sort: sortKey,
-        search: "",
-      });
-      scrollToTop();
-    },
-    [navigateToShop, sortKey, scrollToTop],
-  );
-
   const handleSortChange = useCallback(
     (value: string) => {
-      const serialized = serializeSelection(selection) || "parent:ALL_PRODUCTS";
-      navigateToShop({ category: serialized, sort: value });
+      navigateToShop({ sort: value, search: search.trim() || undefined });
       scrollToTop();
     },
-    [navigateToShop, selection, scrollToTop],
+    [navigateToShop, scrollToTop, search],
   );
 
   const handleNextPage = useCallback(() => {
-    const serialized = serializeSelection(selection) || "parent:ALL_PRODUCTS";
+    if (!hasNextPage) return;
     const nextPage = urlPage + 1;
-
-    if (isAllProducts && serverPageInfo?.endCursor) {
-      const cursor = serverPageInfo.endCursor;
+    const cursor = serverPageInfo?.endCursor || null;
+    if (cursor) {
       setCursorMap((prev) => new Map(prev).set(nextPage, cursor));
-
-      if (serverPageInfo?.hasNextPage) {
-        navigateToShop({
-          category: serialized,
-          sort: sortKey,
-          page: nextPage,
-          cursor: cursor,
-        });
-      }
-    } else if (!isAllProducts && urlPage < totalClientPages) {
+    }
+    if (serverPageInfo?.hasNextPage) {
       navigateToShop({
-        category: serialized || undefined,
         sort: sortKey,
         page: nextPage,
+        cursor: cursor || undefined,
+        search: search.trim() || undefined,
       });
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [
-    isAllProducts,
     serverPageInfo?.endCursor,
     serverPageInfo?.hasNextPage,
     urlPage,
-    totalClientPages,
-    selection,
     sortKey,
     navigateToShop,
+    search,
+    hasNextPage,
   ]);
 
   const handlePrevPage = useCallback(() => {
-    const serialized = serializeSelection(selection) || "parent:ALL_PRODUCTS";
     if (urlPage > 1) {
       const prevPage = urlPage - 1;
-
-      if (isAllProducts && prevPage > 1) {
-        const prevCursor = cursorMap.get(prevPage);
-        if (prevCursor) {
-          navigateToShop({
-            category: serialized,
-            sort: sortKey,
-            page: prevPage,
-            cursor: prevCursor,
-          });
-        } else {
-          navigateToShop({ category: serialized, sort: sortKey });
-        }
-      } else {
-        navigateToShop({
-          category: serialized,
-          sort: sortKey,
-          page: prevPage > 1 ? prevPage : undefined,
-        });
-      }
+      const prevCursor = cursorMap.get(prevPage);
+      navigateToShop({
+        sort: sortKey,
+        page: prevPage > 1 ? prevPage : undefined,
+        cursor: prevCursor,
+        search: search.trim() || undefined,
+      });
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [urlPage, selection, sortKey, navigateToShop, isAllProducts, cursorMap]);
+  }, [urlPage, sortKey, navigateToShop, cursorMap, search]);
+
+  useEffect(() => {
+    if (
+      isCursorMode &&
+      urlPage > 1 &&
+      !cursorParam &&
+      !cursorMap.get(urlPage)
+    ) {
+      navigateToShop({ sort: sortKey, search: search.trim() || undefined });
+    }
+  }, [
+    isCursorMode,
+    urlPage,
+    cursorParam,
+    cursorMap,
+    navigateToShop,
+    sortKey,
+    search,
+  ]);
 
   return (
     <div className="container mx-auto px-4 py-8 pt-16">
       <div className="z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 -mx-4 px-4 pb-4 md:static md:bg-transparent md:backdrop-blur-none md:pb-0 md:mx-0 md:px-0">
         <ShopHeader
           pageTitle={pageTitle}
-          productCount={filteredProducts.length}
+          productCount={hybridFilteredProducts.length}
           isFetching={isFetching}
           isLoading={isLoading}
           search={search}
@@ -315,57 +220,31 @@ export function ShopCategoryView({
           localPriceRange={localPriceRange}
           onPriceRangeChange={setLocalPriceRange}
           currentPage={urlPage}
-          totalPages={totalClientPages}
+          totalPages={isCursorMode ? undefined : totalClientPages}
           hasNextPage={!!hasNextPage}
           hasPrevPage={hasPrevPage}
-          isAllProducts={isAllProducts}
           onNextPage={handleNextPage}
           onPrevPage={handlePrevPage}
         />
-          {/*
-            Filter by tag section temporarily disabled.
-          <FilterBar
-            filters={dynamicFilters}
-            activeFilters={activeFilters}
-            onToggle={toggleFilter}
-            onClear={clearFilters}
-          />
-          */}
-
-        <MobileCategoryScroll
-          categoryStructure={categoryStructure}
-          selection={selection}
-          onSelectAll={handleSelectAll}
-          onSelectParent={handleSelectParent}
-        />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="hidden lg:block col-span-1 space-y-8 sticky top-24 h-fit">
-          <ShopSidebar
-            localPriceRange={localPriceRange}
-            onPriceRangeChange={setLocalPriceRange}
-          />
-        </div>
+      <div className="space-y-8">
+        <ProductGrid
+          products={filteredProducts}
+          isLoading={isLoading}
+          isFetching={isFetching}
+        />
 
-        <div className="col-span-1 lg:col-span-3">
-          <ProductGrid
-            products={filteredProducts}
-            isLoading={isLoading}
-            isFetching={isFetching}
-          />
-
-          <ShopPagination
-            currentPage={urlPage}
-            totalPages={totalClientPages}
-            hasNextPage={!!hasNextPage}
-            hasPrevPage={hasPrevPage}
-            isFetching={isFetching}
-            isAllProducts={isAllProducts}
-            onNextPage={handleNextPage}
-            onPrevPage={handlePrevPage}
-          />
-        </div>
+        <ShopPagination
+          currentPage={urlPage}
+          totalPages={isCursorMode ? undefined : totalClientPages}
+          hasNextPage={!!hasNextPage}
+          hasPrevPage={hasPrevPage}
+          isFetching={isFetching}
+          isAllProducts={isAllProducts && !isCursorMode}
+          onNextPage={handleNextPage}
+          onPrevPage={handlePrevPage}
+        />
       </div>
     </div>
   );

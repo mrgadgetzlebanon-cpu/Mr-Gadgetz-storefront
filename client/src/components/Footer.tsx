@@ -1,46 +1,34 @@
 import { useMemo } from "react";
 import { Link } from "wouter";
-import { Instagram } from "lucide-react";
-import { useDynamicCategories } from "@/hooks/use-dynamic-categories";
+import {
+  Instagram,
+  Facebook,
+  Phone,
+  Mail,
+  MapPin,
+  MessageCircle,
+} from "lucide-react";
+import megaMenu from "@/lib/mega-menu.json";
 
 export function Footer() {
-  const { categoryStructure } = useDynamicCategories();
-
-  const dynamicShopLinks = useMemo(
-    () =>
-      categoryStructure.grouped.map((group) => ({
-        label: group.parent,
-        href: `/shop?category=parent:${encodeURIComponent(group.parent)}`,
-      })),
-    [categoryStructure],
-  );
-
-  const extraShopLinks = [
-    { label: "Gaming", href: "/shop?category=parent:Gaming" },
-    { label: "Smart Home", href: "/shop?category=parent:Smart%20Home" },
-    { label: "Networking", href: "/shop?category=parent:Networking" },
-    {
-      label: "Health & Lyfestyle",
-      href: "/shop?category=parent:Health%20%26%20Lyfestyle",
-    },
-  ];
-
   const shopLinks = useMemo(() => {
     const seen = new Set<string>();
-    return [...dynamicShopLinks, ...extraShopLinks].filter((item) => {
-      const key = item.label.toLowerCase();
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-  }, [dynamicShopLinks]);
+    return (megaMenu as Array<{ label: string; href: string }>).filter(
+      (item) => {
+        const key = item.label.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      },
+    );
+  }, []);
 
   return (
-    <footer className="bg-[#fff] text-gray-900 pt-20 pb-12">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-12 mb-14">
-          {/* Logo & Description */}
-          <div className="col-span-1">
+    <footer className="bg-[#fff] text-gray-900 pt-20 pb-12 shadow-[0_-10px_20px_rgba(0,0,0,0.12)] sm:shadow-none border-t border-gray-200 sm:border-0">
+      <div className="container mx-auto px-4 pb-24">
+        <div className="flex flex-col gap-6 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-12 mb-14">
+          {/* Logo & Description (hidden on mobile) */}
+          <div className="col-span-1 hidden sm:block">
             <Link href="/" className="inline-block mb-4">
               <img
                 src="/assets/MR-Gadgetz-Logo-horizental_1768048140632.png"
@@ -204,26 +192,66 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Location & Socials */}
-          <div className="flex flex-col gap-3 items-start">
+          {/* Customer Service */}
+          <div className="flex flex-col gap-4 items-start">
+            <h4 className="font-semibold text-sm text-gray-900">
+              Customer Service
+            </h4>
             <a
               href="https://maps.google.com/?q=MR+GADGETZ"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col text-sm text-gray-700 transition-colors hover:text-[#0c57ef]"
+              className="flex items-start gap-3 text-sm text-gray-700 transition-colors hover:text-[#0c57ef]"
             >
-              <span>El, Main Road, Baouchriyeh 1004</span>
-              <span>Beirut, Lebanon</span>
+              <MapPin className="w-4 h-4 mt-0.5" />
+              <span>
+                El, Main Road, Baouchriyeh 1004
+                <br />
+                Beirut, Lebanon
+              </span>
             </a>
-            <a
-              href="https://www.instagram.com/mrgadgetz.lb/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-gray-900 hover:text-[#0c57ef] active:text-[#0a45c4] transition-colors duration-200 transition-transform hover:-translate-y-0.5"
-              aria-label="Visit our Instagram"
-            >
-              <Instagram className="w-5 h-5" />
-            </a>
+            <div className="space-y-4 text-sm text-gray-700">
+              <a
+                href="mailto:info@mrgadgetz.net"
+                className="flex items-center gap-2 transition-colors hover:text-[#0c57ef]"
+              >
+                <Mail className="w-4 h-4" /> info@mrgadgetz.net
+              </a>
+              <a
+                href="tel:+9613797772"
+                className="flex items-center gap-2 transition-colors hover:text-[#0c57ef]"
+              >
+                <Phone className="w-4 h-4" /> +961 3 797 772
+              </a>
+              <a
+                href="https://wa.me/96178880120"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 transition-colors hover:text-[#0c57ef]"
+              >
+                <MessageCircle className="w-4 h-4" /> +961 78 880 120
+              </a>
+            </div>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://www.instagram.com/mrgadgetz.lb/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-900 hover:text-[#0c57ef] active:text-[#0a45c4] transition-colors duration-200 transition-transform hover:-translate-y-0.5"
+                aria-label="Visit our Instagram"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.facebook.com/people/Mrgadgetz-Lebanon/61567872119588/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-900 hover:text-[#0c57ef] active:text-[#0a45c4] transition-colors duration-200 transition-transform hover:-translate-y-0.5"
+                aria-label="Visit our Facebook"
+              >
+                <Facebook className="w-5 h-5" />
+              </a>
+            </div>
           </div>
         </div>
 

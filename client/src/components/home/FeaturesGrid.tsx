@@ -5,9 +5,12 @@ export function FeaturesGrid() {
     <section className="py-24 bg-muted/30">
       <div className="container px-4 mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl font-display font-bold mb-4">Why Choose Mr Gadgetz</h2>
+          <h2 className="text-[1.2rem] md:text-3xl font-display font-bold mb-4">
+            Why Choose Mr Gadgetz
+          </h2>
           <p className="text-muted-foreground">
-            We don't just sell electronics. We curate experiences that enhance your digital life.
+            We don't just sell electronics. We curate experiences that enhance
+            your digital life.
           </p>
         </div>
 
@@ -18,14 +21,19 @@ export function FeaturesGrid() {
             </div>
             <h3 className="text-xl font-bold mb-3">Premium Quality</h3>
             <p className="text-muted-foreground leading-relaxed">
-              Every product is hand-picked and tested by our experts to ensure the highest standards
-              of quality and performance.
+              Every product is hand-picked and tested by our experts to ensure
+              the highest standards of quality and performance.
             </p>
           </div>
 
           <div className="bg-background rounded-3xl p-8 shadow-sm border border-border/50">
             <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center mb-6">
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -36,14 +44,19 @@ export function FeaturesGrid() {
             </div>
             <h3 className="text-xl font-bold mb-3">Fast Shipping</h3>
             <p className="text-muted-foreground leading-relaxed">
-              Free express shipping on all orders over $50. Get your new gear delivered to your
-              doorstep in no time.
+              Free express shipping on all orders over $50. Get your new gear
+              delivered to your doorstep in no time.
             </p>
           </div>
 
           <div className="bg-background rounded-3xl p-8 shadow-sm border border-border/50">
             <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-2xl flex items-center justify-center mb-6">
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -54,8 +67,8 @@ export function FeaturesGrid() {
             </div>
             <h3 className="text-xl font-bold mb-3">2-Year Warranty</h3>
             <p className="text-muted-foreground leading-relaxed">
-              We stand behind our products. All electronics come with a comprehensive 2-year
-              warranty for peace of mind.
+              We stand behind our products. All electronics come with a
+              comprehensive 2-year warranty for peace of mind.
             </p>
           </div>
         </div>

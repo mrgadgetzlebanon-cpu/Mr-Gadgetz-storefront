@@ -305,6 +305,15 @@ function getSortVariables(sortKey: SortOption): {
   }
 }
 
+export function buildMultiFieldSearchQuery(raw: string): string {
+  const term = raw.trim();
+  if (!term) return "";
+  const escaped = term.replace(/\s+/g, " ").trim();
+  return ["title", "tag", "product_type", "vendor"]
+    .map((field) => `${field}:${escaped}*`)
+    .join(" OR ");
+}
+
 export function usePaginatedProducts({
   handles = [],
   sortKey = "best_selling",
@@ -328,7 +337,7 @@ export function usePaginatedProducts({
 
       const processedSearchQuery = (() => {
         if (!searchQuery) return "";
-        // Structured filters (e.g., vendor:Apple) should be passed as-is to avoid wildcard corruption
+        // Pre-built multi-field strings should pass through untouched
         if (searchQuery.includes(":")) return searchQuery;
         return `${searchQuery}*`;
       })();
@@ -355,6 +364,49 @@ export function usePaginatedProducts({
             mapShopifyProduct(edge.node),
           ),
           pageInfo: data.products.pageInfo,
+        };
+      }
+
+      // Single collection path: preserve server pagination
+      if (handles.length === 1) {
+        const handle = handles[0];
+        const data = await shopifyFetch<{
+          collection: {
+            title: string;
+            products: {
+              pageInfo: PageInfo;
+              edges: Array<{ node: ShopifyProductNode }>;
+            };
+          } | null;
+        }>({
+          query: PRODUCTS_BY_COLLECTION_QUERY,
+          variables: {
+            handle,
+            first,
+            after: cursor,
+            sortKey: gqlSortKey,
+            reverse,
+          },
+        });
+
+        if (!data.collection) {
+          return {
+            products: [],
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: null,
+              endCursor: null,
+            },
+          };
+        }
+
+        const collectionTitle = sanitizeCollectionTitle(data.collection.title);
+        return {
+          products: data.collection.products.edges.map((edge) =>
+            mapShopifyProduct(edge.node, collectionTitle),
+          ),
+          pageInfo: data.collection.products.pageInfo,
         };
       }
 

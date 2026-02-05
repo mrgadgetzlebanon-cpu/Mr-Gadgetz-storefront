@@ -11,16 +11,17 @@ import { PromoBanner } from "@/components/home";
 
 // 1. APPLE CONFIGURATION (direct collection handles)
 const appleTabs = [
-  { id: "iphone", label: "iPhone", collectionHandle: "iphones" },
-  { id: "ipad", label: "iPad", collectionHandle: "ipad" },
-  { id: "macbook", label: "MacBook", collectionHandle: "macbook" },
-  { id: "imac", label: "iMac", collectionHandle: "imac" },
+  { id: "iphone", label: "iPhone", collectionHandle: "apple-iphone" },
+  { id: "ipad", label: "iPad", collectionHandle: "apple-ipad" },
+  { id: "macbook", label: "MacBook", collectionHandle: "apple-macbook" },
+  { id: "imac", label: "iMac", collectionHandle: "apple-imac" },
   { id: "watch", label: "Apple Watch", collectionHandle: "apple-watch" },
+  { id: "audio", label: "AirPods & Audio", collectionHandle: "apple-airpods" },
+  { id: "home", label: "HomePod & TV", collectionHandle: "apple-homepod-tv" },
   {
     id: "accessories",
-    label: "Accessories",
-    collectionHandle:
-      "apple-apple-accessories-apple-cables-apple-apple-apple-accessories",
+    label: "Magic Mouse & Keyboard",
+    collectionHandle: "magic-mouse-keyboard",
   },
 ];
 
@@ -29,26 +30,22 @@ const laptopTabs = [
   {
     id: "dell",
     label: "Dell",
-    // Use the long handle from your JSON, OR 'dell-laptops' if you created the new clean collection
-    collectionHandle:
-      "gaming-gaming-laptops-dell-gaming-laptops-gaming-gaming-laptops-laptops-laptops-dell",
+    collectionHandle: "dell-laptops",
   },
   {
     id: "hp",
     label: "HP",
-    // Use the long handle from your JSON, OR 'hp-laptops' if you created the new clean collection
-    collectionHandle:
-      "gaming-gaming-laptops-gaming-gaming-laptops-hp-gaming-laptops-laptops-laptops-hp",
+    collectionHandle: "hp-laptops",
   },
   {
     id: "apple",
     label: "MacBook",
-    collectionHandle: "macbook",
+    collectionHandle: "apple-macbook",
   },
   {
     id: "msi",
     label: "MSI",
-    collectionHandle: "msi-laptops",
+    collectionHandle: "msi-gaming-laptops",
   },
   {
     id: "lenovo",
@@ -65,13 +62,24 @@ const laptopTabs = [
     label: "Acer",
     collectionHandle: "acer-laptops",
   },
+  {
+    id: "samsung",
+    label: "Samsung",
+    collectionHandle: "samsung-laptops",
+  },
+  {
+    id: "surface",
+    label: "Microsoft Surface",
+    collectionHandle: "microsoft-surface",
+  },
 ];
 
-// 3. SAMSUNG CONFIGURATION (direct collection handles)
+// 3. SAMSUNG CONFIGURATION (direct collection handles from Shopify)
 const samsungTabs = [
-  { id: "phones", label: "Phones", collectionHandle: "samsung-mobiles" },
+  { id: "all", label: "All Samsung", collectionHandle: "samsung" },
+  { id: "phones", label: "Phones", collectionHandle: "samsung-mobile-phones" },
   { id: "tablets", label: "Tablets", collectionHandle: "samsung-tablets" },
-  { id: "watches", label: "Watches", collectionHandle: "samsung-watch" },
+  { id: "watch", label: "Watch", collectionHandle: "samsung-watch" },
   { id: "audio", label: "Audio", collectionHandle: "samsung-audio" },
   {
     id: "accessories",
@@ -124,7 +132,7 @@ export default function Home() {
         <BrandProductSection
           title="Apple Products"
           tabs={appleTabs}
-          viewAllLink="/shop?search=apple"
+          viewAllLink="/collections/apple"
           bgClassName="bg-white"
         />
 
@@ -133,7 +141,7 @@ export default function Home() {
           title="Discover the Apple Lineup"
           description="From iPhone to MacBook, explore our latest Apple collection with curated deals."
           buttonLabel="Shop Apple"
-          buttonHref="/shop?search=apple"
+          buttonHref="/collections/apple"
           bgLight
         />
 
@@ -141,7 +149,7 @@ export default function Home() {
         <BrandProductSection
           title="Laptops & Computers"
           tabs={laptopTabs}
-          viewAllLink="/shop?category=pc-and-laptops"
+          viewAllLink="/collections/laptops"
           bgClassName="bg-white"
         />
 
@@ -156,7 +164,7 @@ export default function Home() {
         <BrandProductSection
           title="Samsung Products"
           tabs={samsungTabs}
-          viewAllLink="/shop?search=samsung"
+          viewAllLink="/collections/samsung"
           bgClassName="bg-white"
         />
 
@@ -165,7 +173,7 @@ export default function Home() {
           title="Samsung Essentials"
           description="Galaxy phones, tablets, audio, and wearables — all in one place."
           buttonLabel="Shop Samsung"
-          buttonHref="/shop?search=samsung"
+          buttonHref="/collections/samsung"
         />
 
         {/* 9. Premium Audio */}

@@ -128,7 +128,7 @@ export function CategoryProductSection({
           transition={{ duration: 0.5 }}
           className="flex items-center justify-between mb-6"
         >
-          <h2 className="text-2xl md:text-3xl font-display font-bold">
+          <h2 className="text-[1.2rem] md:text-3xl font-display font-bold">
             {title}
           </h2>
           {viewAllLink && (
@@ -187,7 +187,7 @@ export function CategoryProductSection({
                   </button>
 
                   <div className="overflow-hidden py-4" ref={emblaRef}>
-                    <div className="flex gap-4 sm:gap-6 md:gap-8 px-2">
+                    <div className="flex gap-8 sm:gap-6 md:gap-8 px-2">
                       {filteredProducts.map((product, index) => (
                         <motion.div
                           key={product.id}

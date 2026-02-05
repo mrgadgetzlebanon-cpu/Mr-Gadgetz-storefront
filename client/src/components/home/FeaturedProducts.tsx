@@ -24,8 +24,8 @@ export function FeaturedProducts({
       <div className="container px-4 mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-              Trending Now
+            <h2 className="text-[1.2rem] md:text-3xl lg:text-4xl font-display font-bold mb-4">
+              Featured Products
             </h2>
             <p className="text-muted-foreground">
               Our most popular products this week.

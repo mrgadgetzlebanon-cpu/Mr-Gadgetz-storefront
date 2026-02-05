@@ -41,7 +41,7 @@ export function ProductCard({
       className={`group/card card-container relative flex flex-col bg-white dark:bg-[#1a1a2e] rounded-xl overflow-hidden ${
         isGrid
           ? "w-full max-w-[220px] lg:max-w-[240px] h-[380px]"
-          : "w-[150px] sm:w-[220px] h-[340px] sm:h-[400px]"
+          : "w-[175px] sm:w-[220px] h-[340px] sm:h-[400px]"
       }`}
       style={{ boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px" }}
       data-testid={`card-product-${product.id}`}
@@ -149,7 +149,7 @@ export function ProductCard({
 
         <div
           className="content-wrapper flex flex-col justify-center items-center text-center px-4 py-3 dark:bg-[#1e1e32]"
-          style={{ height: isGrid ? "35%" : "45%" }}
+          style={{ height: isGrid ? "35%" : "55%" }}
         >
           <h3
             className="font-display text-base leading-tight text-gray-900 dark:text-white transition-colors"
@@ -167,7 +167,7 @@ export function ProductCard({
           </h3>
 
           <div className="flex items-center justify-center gap-3 mt-2">
-            <span className="font-bold text-xl text-[#0c57ef] dark:text-[#48bfef]">
+            <span className="font-bold text-[1rem] text-[#0c57ef] dark:text-[#48bfef]">
               ${currentPrice.toFixed(2)}
             </span>
             {hasDiscount && comparePrice && (

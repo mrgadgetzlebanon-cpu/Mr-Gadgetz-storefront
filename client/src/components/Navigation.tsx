@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { usePaginatedProducts } from "@/hooks/use-products";
 import { useDebounce } from "@/hooks/use-debounce";
-import { NavigationMenu } from "@/components/navigation/NavigationMenu";
+import { NavigationMenu as MegaMenu } from "@/components/navigation/NavigationMenu";
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,6 +42,7 @@ export function Navigation() {
 
   const isProductPage = location.startsWith("/product/");
   const isShopQuery = location.startsWith("/shop?");
+  const isCollectionPage = location.startsWith("/collections");
   const isInfoPage = infoPages.includes(location);
 
   const isStandardPage =
@@ -50,6 +51,7 @@ export function Navigation() {
     location === "/search" ||
     location === "/contact" ||
     location === "/payment" ||
+    isCollectionPage ||
     isProductPage ||
     isShopQuery ||
     isInfoPage;
@@ -69,6 +71,21 @@ export function Navigation() {
     };
     window.addEventListener("scroll", handleScroll);
 
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      mediaQuery.removeEventListener("change", updateMatch);
+    };
+  }, []);
+
+  useEffect(() => {
+    const shouldLock = mobileMenuOpen;
+    document.body.style.overflow = shouldLock ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       const desktopHit = searchRef.current?.contains(target);
@@ -78,11 +95,8 @@ export function Navigation() {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
-      mediaQuery.removeEventListener("change", updateMatch);
     };
   }, []);
 
@@ -93,7 +107,7 @@ export function Navigation() {
     debouncedSearchQuery.length > 1 && (isDesktop || searchOpen);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchQuery.trim()) {
+    if (e.key === "Enter") {
       e.preventDefault();
       triggerSearch();
     }
@@ -101,8 +115,11 @@ export function Navigation() {
 
   const triggerSearch = () => {
     const term = searchQuery.trim();
-    if (!term) return;
-    setLocation(`/shop?search=${encodeURIComponent(term)}`);
+    if (!term) {
+      setLocation("/search");
+    } else {
+      setLocation(`/search?q=${encodeURIComponent(term)}`);
+    }
     setSearchOpen(false);
     setSearchQuery("");
   };
@@ -120,9 +137,10 @@ export function Navigation() {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
+        "bg-white border-border/50", // mobile default
         isScrolled
-          ? "bg-white/90 dark:bg-[#020617]/90 backdrop-blur-md border-border/50"
-          : "bg-transparent border-transparent",
+          ? "lg:bg-white/90 dark:lg:bg-[#020617]/90 lg:backdrop-blur-md lg:border-border/50"
+          : "lg:bg-transparent lg:border-transparent",
       )}
     >
       <div className="container mx-auto px-4 md:px-6 flex flex-col gap-2 py-3">
@@ -159,7 +177,7 @@ export function Navigation() {
               <form onSubmit={handleSearchSubmit} className="relative">
                 <Input
                   placeholder="Search products..."
-                  className="w-full rounded-full bg-muted/50 border-border py-[1.3rem] pl-4 pr-14 focus:border-[#0c57ef]/50 focus:ring-[#0c57ef]/20"
+                  className="w-full rounded-full bg-muted/50 border-border py-[1.3rem] pl-4 pr-14 focus:border-[#0c57ef]/50 outline-none focus:ring-0 focus-visible:ring-0 focus-visible:outline-none"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleSearchKeyDown}
@@ -276,19 +294,6 @@ export function Navigation() {
               variant="ghost"
               size="icon"
               className={cn(
-                "hover:bg-muted/50 rounded-full",
-                useWhiteLogo && "hover:bg-white/10",
-              )}
-              onClick={() => setSearchOpen(!searchOpen)}
-              aria-label="Search"
-            >
-              <Search className={cn("w-5 h-5", useWhiteLogo && "text-white")} />
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
                 "relative hover:bg-muted/50 rounded-full",
                 useWhiteLogo && "hover:bg-white/10",
               )}
@@ -324,19 +329,20 @@ export function Navigation() {
           </div>
         </div>
 
-        {/* Mobile Search Drawer */}
-        {searchOpen && (
+        {/* Mobile Sticky Search Bar */}
+        <div className="lg:hidden sticky top-[72px] z-[55] bg-transparent shadow-none">
           <div
+            className="pb-3 pt-2 px-4 relative w-screen left-1/2 -translate-x-1/2"
             ref={mobileSearchRef}
-            className={cn(
-              "lg:hidden absolute left-0 top-full w-full bg-background border-b border-border p-4 z-50 animate-in slide-in-from-top-2",
-            )}
           >
             <form onSubmit={handleSearchSubmit} className="relative">
               <Input
-                autoFocus
+                onFocus={() => setSearchOpen(true)}
                 placeholder="Search products..."
-                className="rounded-full bg-muted/50 border-border py-[1.3rem] pl-4 pr-14 focus:border-[#0c57ef]/50 focus:ring-[#0c57ef]/20"
+                className={cn(
+                  "w-full border-border py-[1.5rem] pl-4 pr-12 focus:border-[#0c57ef]/50 text-gray-900 placeholder:text-gray-500 outline-none focus:ring-0 focus-visible:ring-0 focus-visible:outline-none",
+                  searchQuery ? "bg-white" : "bg-transparent",
+                )}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
@@ -351,53 +357,62 @@ export function Navigation() {
                 <Search className="w-4 h-4" />
               </button>
             </form>
-            {searchLoading && debouncedSearchQuery.length > 1 && (
-              <div className="flex items-center justify-center py-4">
-                <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+            {searchOpen && (
+              <div className="absolute left-0 right-0 mt-2 bg-white border border-border rounded-2xl shadow-lg z-[60]">
+                {searchLoading && debouncedSearchQuery.length > 1 && (
+                  <div className="flex items-center justify-center py-4">
+                    <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                  </div>
+                )}
+                {!searchLoading && displayProducts.length > 0 && (
+                  <div className="divide-y divide-border">
+                    {displayProducts.map((product) => (
+                      <Link
+                        key={product.id}
+                        href={`/product/${product.handle}`}
+                        className="flex items-center gap-3 p-3 hover:bg-muted transition-colors"
+                        onClick={() => {
+                          setSearchOpen(false);
+                          setSearchQuery("");
+                        }}
+                        data-testid={`search-result-${product.id}`}
+                      >
+                        <img
+                          src={product.image}
+                          className="w-12 h-12 object-contain rounded-lg bg-muted"
+                        />
+                        <div>
+                          <p className="text-sm font-medium leading-none">
+                            {product.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            ${product.price}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                {!searchLoading &&
+                  debouncedSearchQuery.length > 1 &&
+                  displayProducts.length === 0 && (
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      No products found
+                    </p>
+                  )}
+                {!searchLoading && debouncedSearchQuery.length <= 1 && (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    Start typing to search
+                  </p>
+                )}
               </div>
             )}
-            {!searchLoading && displayProducts.length > 0 && (
-              <div className="mt-4 space-y-2">
-                {displayProducts.map((product) => (
-                  <Link
-                    key={product.id}
-                    href={`/product/${product.handle}`}
-                    className="flex items-center gap-3 p-2 hover:bg-muted rounded-xl transition-colors"
-                    onClick={() => {
-                      setSearchOpen(false);
-                      setSearchQuery("");
-                    }}
-                    data-testid={`search-result-${product.id}`}
-                  >
-                    <img
-                      src={product.image}
-                      className="w-10 h-10 object-contain rounded-lg bg-muted"
-                    />
-                    <div>
-                      <p className="text-sm font-medium leading-none">
-                        {product.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        ${product.price}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-            {!searchLoading &&
-              debouncedSearchQuery.length > 1 &&
-              displayProducts.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-4">
-                  No products found
-                </p>
-              )}
           </div>
-        )}
+        </div>
 
         {/* Desktop Nav Row */}
         <div className="hidden lg:flex pt-2 justify-center">
-          <NavigationMenu useWhiteLogo={useWhiteLogo} />
+          <MegaMenu useWhiteLogo={useWhiteLogo} />
         </div>
       </div>
 
@@ -411,7 +426,7 @@ export function Navigation() {
               : "bg-background border-border/50",
           )}
         >
-          <NavigationMenu
+          <MegaMenu
             useWhiteLogo={useWhiteLogo}
             variant="mobile"
             expandedMobileMenu={expandedMobileMenu}

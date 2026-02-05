@@ -10,6 +10,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 // Pages
 import Home from "@/pages/Home";
 import Shop from "@/pages/Shop";
+import Collection from "@/pages/Collection";
 import ProductDetails from "@/pages/ProductDetails";
 import SearchPage from "@/pages/Search";
 import Contact from "@/pages/Contact";
@@ -28,7 +29,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <Navigation />
       <CartDrawer />
       <ScrollToTop />
-      <main className="flex-1 pt-16 md:pt-28">{children}</main>
+      <main className="flex-1 pt-32 md:pt-40">{children}</main>
       <Footer />
     </div>
   );
@@ -41,6 +42,7 @@ export function Router() {
         <Route path="/" component={Home} />
 
         <Route path="/shop" component={Shop} />
+        <Route path="/collections/:handle" component={Collection} />
 
         <Route path="/search" component={SearchPage} />
         <Route path="/contact" component={Contact} />

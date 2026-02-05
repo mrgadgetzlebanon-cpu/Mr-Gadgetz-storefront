@@ -1,19 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Search,
-  SlidersHorizontal,
-  Loader2,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Search, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -22,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SortOption } from "@/hooks/use-products";
-import { ShopSidebar } from "./ShopSidebar";
+import { Slider } from "@/components/ui/slider";
 
 interface ShopHeaderProps {
   pageTitle: string;
@@ -39,7 +26,6 @@ interface ShopHeaderProps {
   totalPages?: number;
   hasNextPage: boolean;
   hasPrevPage: boolean;
-  isAllProducts: boolean;
   onNextPage: () => void;
   onPrevPage: () => void;
 }
@@ -59,7 +45,6 @@ export function ShopHeader({
   totalPages,
   hasNextPage,
   hasPrevPage,
-  isAllProducts,
   onNextPage,
   onPrevPage,
 }: ShopHeaderProps) {
@@ -80,10 +65,7 @@ export function ShopHeader({
           </Button>
           <span className="text-sm text-muted-foreground min-w-[80px] text-center">
             Page {currentPage}
-            {!isAllProducts &&
-              totalPages &&
-              totalPages > 0 &&
-              ` / ${totalPages}`}
+            {totalPages && totalPages > 0 && ` / ${totalPages}`}
           </span>
           <Button
             variant="outline"
@@ -99,17 +81,6 @@ export function ShopHeader({
       )}
 
       <div className="flex gap-2 w-full md:w-auto items-center md:ml-auto">
-        {/* <div className="relative flex-1 md:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search products..."
-            className="pl-9 rounded-full bg-muted/50 border-transparent hover:bg-muted focus:bg-background transition-all"
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            data-testid="input-search-products"
-          />
-        </div> */}
-
         <Select value={sortKey} onValueChange={onSortChange}>
           <SelectTrigger
             className="w-[140px] rounded-full"
@@ -125,27 +96,38 @@ export function ShopHeader({
           </SelectContent>
         </Select>
 
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="md:hidden rounded-full"
-              data-testid="button-filters-mobile"
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-80">
-            <SheetHeader className="mb-6">
-              <SheetTitle>Filters</SheetTitle>
-            </SheetHeader>
-            <ShopSidebar
-              localPriceRange={localPriceRange}
-              onPriceRangeChange={onPriceRangeChange}
+        <div className="hidden md:flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">Price</span>
+          <div className="w-48">
+            <Slider
+              min={0}
+              max={5000}
+              step={50}
+              value={localPriceRange}
+              onValueChange={onPriceRangeChange}
+              className="py-2"
+              data-testid="slider-price-range-inline"
             />
-          </SheetContent>
-        </Sheet>
+          </div>
+          <span className="text-xs text-muted-foreground w-28 text-right">
+            ${localPriceRange[0]} - ${localPriceRange[1]}
+          </span>
+        </div>
+
+        {/* Mobile price filter */}
+        <div className="flex md:hidden items-center gap-2">
+          <Search className="w-4 h-4 text-muted-foreground" />
+          <div className="w-full max-w-[200px]">
+            <Slider
+              min={0}
+              max={5000}
+              step={50}
+              value={localPriceRange}
+              onValueChange={onPriceRangeChange}
+              className="py-2"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

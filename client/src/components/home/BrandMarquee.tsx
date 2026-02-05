@@ -1,5 +1,18 @@
 import { motion } from "framer-motion";
-import { SiApple, SiSamsung, SiSony, SiLenovo, SiAsus, SiDell, SiHp, SiXiaomi, SiHuawei, SiLg, SiLogitech, SiRazer } from "react-icons/si";
+import {
+  SiApple,
+  SiSamsung,
+  SiSony,
+  SiLenovo,
+  SiAsus,
+  SiDell,
+  SiHp,
+  SiXiaomi,
+  SiHuawei,
+  SiLg,
+  SiLogitech,
+  SiRazer,
+} from "react-icons/si";
 
 interface Brand {
   name: string;
@@ -26,7 +39,10 @@ const doubledBrands = [...brands, ...brands];
 
 export function BrandMarquee() {
   return (
-    <section className="py-20 overflow-hidden bg-[#020617]" data-testid="section-brand-marquee">
+    <section
+      className="py-20 overflow-hidden bg-[#020617]"
+      data-testid="section-brand-marquee"
+    >
       <div className="container mx-auto px-4 mb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -35,11 +51,12 @@ export function BrandMarquee() {
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+          <h2 className="text-[1.2rem] md:text-3xl lg:text-4xl font-display font-bold text-white mb-4">
             Trusted Brands
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto">
-            We partner with the world's leading technology brands to bring you the best products
+            We partner with the world's leading technology brands to bring you
+            the best products
           </p>
         </motion.div>
       </div>
@@ -47,7 +64,7 @@ export function BrandMarquee() {
       <div className="relative">
         <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#020617] to-transparent z-10" />
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#020617] to-transparent z-10" />
-        
+
         <motion.div
           className="flex gap-12 items-center"
           animate={{
@@ -69,9 +86,7 @@ export function BrandMarquee() {
               data-testid={`brand-${brand.name.toLowerCase()}`}
             >
               <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/5 border border-white/10 flex items-center justify-center transition-all duration-300 group-hover:bg-white/10 group-hover:border-[#48bfef]/50 group-hover:shadow-[0_0_30px_rgba(72,191,239,0.3)]">
-                <brand.icon 
-                  className="w-10 h-10 md:w-14 md:h-14 text-white/70 group-hover:text-white transition-colors"
-                />
+                <brand.icon className="w-10 h-10 md:w-14 md:h-14 text-white/70 group-hover:text-white transition-colors" />
               </div>
               <p className="text-center text-white/50 text-sm mt-3 group-hover:text-white/80 transition-colors">
                 {brand.name}

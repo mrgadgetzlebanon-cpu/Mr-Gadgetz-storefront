@@ -25,7 +25,7 @@ export function BestSellersByCategory({
   return (
     <section className="py-24 bg-muted/30 overflow-hidden">
       <div className="container px-4 mx-auto">
-        <h2 className="text-3xl md:text-4xl font-display font-bold mb-16 text-center">
+        <h2 className="text-[1.2rem] md:text-3xl lg:text-4xl font-display font-bold mb-16 text-center">
           Best Sellers by Category
         </h2>
 

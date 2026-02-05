@@ -423,7 +423,7 @@ export function GlobalCategorySelection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-10"
         >
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+          <h2 className="text-[1.2rem] md:text-3xl lg:text-4xl font-display font-bold mb-4">
             Shop by Category
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -532,7 +532,7 @@ export function GlobalCategorySelection() {
                     </button>
 
                     <div className="overflow-hidden py-4" ref={emblaRef}>
-                      <div className="flex gap-4 sm:gap-6 md:gap-8 px-2">
+                      <div className="flex gap-8 sm:gap-6 md:gap-8 px-2">
                         {sortedProducts.map((product, index) => (
                           <motion.div
                             key={product.id}

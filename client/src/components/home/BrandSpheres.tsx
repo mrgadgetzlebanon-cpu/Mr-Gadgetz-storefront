@@ -12,24 +12,25 @@ export function BrandSpheres() {
     const handleScroll = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > 0;
+        const isVisible =
+          rect.top < window.innerHeight * 0.8 && rect.bottom > 0;
         setIsActive(isVisible);
         if (isVisible && !shouldRender) {
           setShouldRender(true);
         }
       }
     };
-    
+
     window.addEventListener("scroll", handleScroll);
     handleScroll();
-    
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, [shouldRender]);
 
   return (
-    <section 
+    <section
       ref={containerRef}
-      className="relative py-20 overflow-hidden bg-[#020617]" 
+      className="relative py-20 overflow-hidden bg-[#020617]"
       data-testid="section-brand-spheres"
     >
       <div className="container mx-auto px-4 mb-8">
@@ -40,30 +41,31 @@ export function BrandSpheres() {
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+          <h2 className="text-[1.2rem] md:text-3xl lg:text-4xl font-display font-bold text-white mb-4">
             Trusted Brands
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto">
-            We partner with the world's leading technology brands to bring you the best products
+            We partner with the world's leading technology brands to bring you
+            the best products
           </p>
         </motion.div>
       </div>
 
       <div className="h-[500px] relative">
         {shouldRender && (
-          <Suspense fallback={
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-            </div>
-          }>
+          <Suspense
+            fallback={
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+              </div>
+            }
+          >
             <BrandSpheresCanvas isActive={isActive} />
           </Suspense>
         )}
-        
+
         <div className="absolute inset-0 pointer-events-none flex items-end justify-center pb-8">
-          <p className="text-white/40 text-sm">
-            Move your mouse to interact
-          </p>
+          <p className="text-white/40 text-sm">Move your mouse to interact</p>
         </div>
       </div>
     </section>

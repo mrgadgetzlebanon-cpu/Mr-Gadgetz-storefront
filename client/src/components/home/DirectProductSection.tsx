@@ -109,7 +109,7 @@ export function DirectProductSection({
           transition={{ duration: 0.5 }}
           className="flex flex-wrap items-center justify-between gap-4 mb-6"
         >
-          <h2 className="text-2xl md:text-3xl font-display font-bold">
+          <h2 className="text-[1.2rem] md:text-3xl font-display font-bold">
             {title}
           </h2>
           <div className="flex items-center gap-3">
@@ -155,7 +155,7 @@ export function DirectProductSection({
               </button>
 
               <div className="overflow-hidden py-4" ref={emblaRef}>
-                <div className="flex gap-4 sm:gap-6 md:gap-8 px-2">
+                <div className="flex gap-8 sm:gap-6 md:gap-8 px-2">
                   {products.map((product, index) => (
                     <motion.div
                       key={product.id}
@@ -194,7 +194,7 @@ export function DirectProductSection({
             </div>
           )
         ) : isLoading ? (
-          <div className="flex gap-4 sm:gap-6 md:gap-8 overflow-hidden">
+          <div className="flex gap-8 sm:gap-6 md:gap-8 overflow-hidden">
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}

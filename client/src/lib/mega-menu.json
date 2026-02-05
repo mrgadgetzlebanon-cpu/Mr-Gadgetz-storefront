@@ -1,0 +1,333 @@
+[
+  {
+    "label": "Apple",
+    "href": "/collections/apple",
+    "children": [
+      {
+        "label": "iPhone",
+        "href": "/collections/apple-iphone",
+        "children": [
+          { "label": "iPhone 17", "href": "/collections/iphone-17" },
+          { "label": "iPhone 16", "href": "/collections/iphone-16" },
+          { "label": "iPhone 15", "href": "/collections/iphone-15" },
+          { "label": "iPhone 14", "href": "/collections/iphone-14" },
+          {
+            "label": "iPhone Accessories",
+            "href": "/collections/iphone-accessories"
+          }
+        ]
+      },
+      {
+        "label": "iPad",
+        "href": "/collections/apple-ipad",
+        "children": [
+          { "label": "iPad Pro", "href": "/collections/ipad-pro" },
+          { "label": "iPad Air", "href": "/collections/ipad-air" },
+          { "label": "iPad Mini", "href": "/collections/ipad-mini" },
+          { "label": "Standard iPad", "href": "/collections/ipad" }
+        ]
+      },
+      {
+        "label": "MacBook",
+        "href": "/collections/apple-macbook",
+        "children": [
+          { "label": "MacBook Pro", "href": "/collections/apple-macbook-pro" },
+          { "label": "MacBook Air", "href": "/collections/apple-macbook-air" },
+          {
+            "label": "MacBook Accessories",
+            "href": "/collections/apple-macbook-accessories"
+          }
+        ]
+      },
+      {
+        "label": "Watch",
+        "href": "/collections/apple-watch",
+        "children": [
+          {
+            "label": "Watch Ultra 2",
+            "href": "/collections/apple-watch-ultra-2nd-gen"
+          },
+          { "label": "Series 9", "href": "/collections/apple-watch-series-9" },
+          {
+            "label": "Watch SE",
+            "href": "/collections/apple-watch-se-2nd-gen"
+          },
+          {
+            "label": "Watch Accessories",
+            "href": "/collections/apple-watch-accessories"
+          }
+        ]
+      },
+      {
+        "label": "AirPods & Audio",
+        "href": "/collections/apple-airpods",
+        "children": [
+          { "label": "AirPods Pro", "href": "/collections/apple-airpods" },
+          { "label": "AirPods Max", "href": "/collections/apple-airpods" },
+          { "label": "HomePod & TV", "href": "/collections/apple-homepod-tv" }
+        ]
+      },
+      {
+        "label": "Desktop & Other",
+        "href": "/collections/apple-imac",
+        "children": [
+          { "label": "iMac", "href": "/collections/apple-imac" },
+          { "label": "Mac Mini", "href": "/collections/apple-mac-mini" },
+          {
+            "label": "Magic Mouse & Keyboard",
+            "href": "/collections/magic-mouse-keyboard"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Samsung",
+    "href": "/collections/samsung",
+    "children": [
+      { "label": "Phones", "href": "/collections/samsung-mobile-phones" },
+      { "label": "Tablets", "href": "/collections/samsung-tablets" },
+      { "label": "Watch", "href": "/collections/samsung-watch" },
+      { "label": "Audio", "href": "/collections/samsung-audio" },
+      { "label": "Accessories", "href": "/collections/samsung-accessories" }
+    ]
+  },
+  {
+    "label": "Gaming",
+    "href": "/collections/gaming",
+    "children": [
+      {
+        "label": "Consoles",
+        "href": "/collections/gaming-consoles",
+        "children": [
+          { "label": "PlayStation 5", "href": "/collections/sony-playstation" },
+          {
+            "label": "Nintendo Switch",
+            "href": "/collections/nintendo-switch"
+          },
+          { "label": "Xbox", "href": "/collections/xbox" },
+          {
+            "label": "Handheld Consoles",
+            "href": "/collections/handheld-consoles"
+          }
+        ]
+      },
+      {
+        "label": "Computers",
+        "href": "/collections/gaming-desktops",
+        "children": [
+          { "label": "Gaming Laptops", "href": "/collections/gaming-laptops" },
+          {
+            "label": "Custom Desktops",
+            "href": "/collections/custom-gaming-desktops"
+          },
+          {
+            "label": "Branded Desktops",
+            "href": "/collections/branded-gaming-desktops"
+          }
+        ]
+      },
+      {
+        "label": "VR & Accessories",
+        "href": "/collections/virtual-reality",
+        "children": [
+          { "label": "VR Headsets", "href": "/collections/vr-headsets" },
+          {
+            "label": "Gaming Monitors",
+            "href": "/collections/gaming-monitors"
+          },
+          {
+            "label": "Gaming Chairs",
+            "href": "/collections/gaming-chairs-desks"
+          },
+          { "label": "Controllers", "href": "/collections/controllers" }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Gaming Laptops",
+    "href": "/collections/gaming-laptops",
+    "children": [
+      { "label": "ASUS ROG / TUF", "href": "/collections/asus-gaming-laptops" },
+      { "label": "MSI", "href": "/collections/msi-gaming-laptops" },
+      { "label": "Acer Predator", "href": "/collections/acer-gaming-laptops" },
+      { "label": "Dell Alienware", "href": "/collections/dell-gaming" },
+      { "label": "HP Omen", "href": "/collections/hp-gaming-laptops" },
+      {
+        "label": "Lenovo Legion",
+        "href": "/collections/lenovo-gaming-laptops"
+      },
+      { "label": "Razer", "href": "/collections/razer-gaming-laptops" },
+      { "label": "Gigabyte", "href": "/collections/gigabyte-gaming-laptops" }
+    ]
+  },
+  {
+    "label": "Laptops",
+    "href": "/collections/laptops",
+    "children": [
+      { "label": "Asus", "href": "/collections/asus-laptops" },
+      { "label": "Dell", "href": "/collections/dell-laptops" },
+      { "label": "HP", "href": "/collections/hp-laptops" },
+      { "label": "Lenovo", "href": "/collections/lenovo-laptops" },
+      {
+        "label": "Microsoft Surface",
+        "href": "/collections/microsoft-surface"
+      },
+      { "label": "MSI", "href": "/collections/msi-gaming-laptops" },
+      { "label": "Samsung", "href": "/collections/samsung-laptops" },
+      { "label": "Acer Laptops", "href": "/collections/acer-laptops" }
+    ]
+  },
+  {
+    "label": "Desktops",
+    "href": "/collections/desktops",
+    "children": [
+      { "label": "Branded Desktops", "href": "/collections/branded-desktops" },
+      { "label": "Gaming Desktops", "href": "/collections/gaming-desktops" },
+      { "label": "All-in-One", "href": "/collections/all-in-one-desktops" },
+      { "label": "POS Systems", "href": "/collections/pos" }
+    ]
+  },
+  {
+    "label": "PC Parts",
+    "href": "/collections/pc-parts",
+    "children": [
+      { "label": "Motherboards", "href": "/collections/motherboards" },
+      { "label": "CPUs (Intel/AMD)", "href": "/collections/cpus" },
+      { "label": "GPUs (Graphics)", "href": "/collections/gpu" },
+      { "label": "RAM", "href": "/collections/ram" },
+      { "label": "Storage (SSD/HDD)", "href": "/collections/storage" },
+      { "label": "Power Supplies", "href": "/collections/power-supply" },
+      { "label": "Cases", "href": "/collections/cases" },
+      { "label": "Coolers", "href": "/collections/cpu-coolers" }
+    ]
+  },
+  {
+    "label": "Networking",
+    "href": "/collections/networking",
+    "children": [
+      { "label": "WiFi Routers", "href": "/collections/wifi-routers" },
+      {
+        "label": "Range Extenders",
+        "href": "/collections/wifi-range-extenders"
+      },
+      {
+        "label": "Switches & Routers",
+        "href": "/collections/switches-routers"
+      },
+      { "label": "Ubiquiti", "href": "/collections/ubiquiti-products" },
+      { "label": "Antennas", "href": "/collections/antennas" }
+    ]
+  },
+  {
+    "label": "Mobiles",
+    "href": "/collections/mobile-phones",
+    "children": [
+      {
+        "label": "Brands",
+        "href": "/collections/mobile-phones",
+        "children": [
+          { "label": "Apple iPhone", "href": "/collections/apple-iphone" },
+          { "label": "Samsung", "href": "/collections/samsung-mobile-phones" },
+          {
+            "label": "Google Pixel",
+            "href": "/collections/google-pixel-phones"
+          },
+          { "label": "Xiaomi", "href": "/collections/xiaomi-mobile-phones" },
+          { "label": "Nothing", "href": "/collections/nothing-phones" },
+          { "label": "Tecno", "href": "/collections/tecno-phones" }
+        ]
+      },
+      {
+        "label": "Gaming Phones",
+        "href": "/collections/gaming-phones",
+        "children": [
+          { "label": "ASUS ROG", "href": "/collections/asus-gaming-phones" },
+          { "label": "Redmagic", "href": "/collections/redmagic-phones" }
+        ]
+      },
+      {
+        "label": "Accessories",
+        "href": "/collections/mobile-accessories",
+        "children": [
+          { "label": "Power Banks", "href": "/collections/power-banks" },
+          {
+            "label": "Charging Stations",
+            "href": "/collections/charging-stations"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Tablets",
+    "href": "/collections/tablets",
+    "children": [
+      { "label": "Apple iPad", "href": "/collections/apple-ipad" },
+      { "label": "Samsung Tablets", "href": "/collections/samsung-tablets" },
+      { "label": "Xiaomi Tablets", "href": "/collections/xiaomi-tablets" },
+      { "label": "Amazon Tablets", "href": "/collections/amazon-tablets" },
+      { "label": "G-tab", "href": "/collections/g-tab" },
+      { "label": "Oteeto Tablets", "href": "/collections/oteeto-tablets" },
+      {
+        "label": "Tablet Accessories",
+        "href": "/collections/tablet-accessories"
+      }
+    ]
+  },
+  {
+    "label": "Audio",
+    "href": "/collections/audio",
+    "children": [
+      { "label": "Earbuds", "href": "/collections/earbuds" },
+      { "label": "Headphones", "href": "/collections/headphones" },
+      { "label": "Speakers", "href": "/collections/speakers" },
+      { "label": "Microphones", "href": "/collections/microphones" },
+      { "label": "DJ Equipment", "href": "/collections/dj-equipment" }
+    ]
+  },
+  {
+    "label": "Accessories",
+    "href": "/collections/accessories",
+    "children": [
+      {
+        "label": "Mobile Accessories",
+        "href": "/collections/mobile-accessories"
+      },
+      {
+        "label": "Tablet Accessories",
+        "href": "/collections/tablet-accessories"
+      },
+      { "label": "Computer Acc.", "href": "/collections/computer-accessories" },
+      { "label": "Printers", "href": "/collections/printers" },
+      { "label": "Projectors", "href": "/collections/projectors" },
+      { "label": "Smart Devices", "href": "/collections/smart-devices" },
+      { "label": "Scooters", "href": "/collections/e-scooters" },
+      { "label": "Backpacks", "href": "/collections/backpacks-bags" },
+      { "label": "Car Accessories", "href": "/collections/car-accessories" }
+    ]
+  },
+  {
+    "label": "Photography",
+    "href": "/collections/photography",
+    "children": [
+      { "label": "Cameras", "href": "/collections/cameras" },
+      { "label": "Action Cameras", "href": "/collections/action-cameras" },
+      { "label": "Gimbals", "href": "/collections/gimbal-stabilizer" },
+      { "label": "Lenses", "href": "/collections/camera-lenses" },
+      { "label": "Webcams", "href": "/collections/webcams" },
+      { "label": "Surveillance", "href": "/collections/surveillance-cameras" }
+    ]
+  },
+  {
+    "label": "Home Appliances",
+    "href": "/collections/home-appliances",
+    "children": [
+      { "label": "Kitchen", "href": "/collections/kitchen-appliances" },
+      { "label": "Cleaning", "href": "/collections/cleaning-devices" },
+      { "label": "Personal Care", "href": "/collections/personal-care" },
+      { "label": "Smart Home", "href": "/collections/smart-home" }
+    ]
+  }
+]
