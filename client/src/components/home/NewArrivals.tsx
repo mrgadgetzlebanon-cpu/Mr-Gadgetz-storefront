@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import type { WheelEvent } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import {
@@ -36,21 +35,6 @@ export function NewArrivals() {
   const scrollNext = useCallback(() => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
-
-  const handleWheel = useCallback(
-    (event: WheelEvent) => {
-      if (!emblaApi) return;
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-      event.preventDefault();
-      event.stopPropagation();
-      if (event.deltaY > 0) {
-        emblaApi.scrollNext();
-      } else {
-        emblaApi.scrollPrev();
-      }
-    },
-    [emblaApi],
-  );
 
   if (isLoading) {
     return (
@@ -129,11 +113,7 @@ export function NewArrivals() {
               <ChevronLeft className="w-5 h-5" />
             </button>
 
-            <div
-              className="overflow-hidden py-4"
-              ref={emblaRef}
-              onWheel={handleWheel}
-            >
+            <div className="overflow-hidden py-4" ref={emblaRef}>
               <div className="flex gap-8 sm:gap-6 md:gap-8 px-2">
                 {products.map((product, index) => (
                   <motion.div

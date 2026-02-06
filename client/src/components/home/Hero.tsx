@@ -16,6 +16,11 @@ const Hero = () => {
 
   const [loading, setLoading] = useState(true);
   const [loadedVideos, setLoadedVideos] = useState(0);
+  const [isDesktop, setIsDesktop] = useState<boolean>(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : false,
+  );
 
   const totalVideos = 3;
   const nextVideoRef = useRef<HTMLVideoElement>(null);
@@ -32,6 +37,14 @@ const Hero = () => {
     }
   }, [loadedVideos]);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   const handleMiniVdClick = () => {
     setHasClicked(true);
 
@@ -40,6 +53,7 @@ const Hero = () => {
 
   useGSAP(
     () => {
+      if (!isDesktop) return;
       if (hasClicked && nextVideoRef.current && currentVideoRef.current) {
         gsap.set(nextVideoRef.current, { visibility: "visible" });
         gsap.to(nextVideoRef.current, {
@@ -62,12 +76,13 @@ const Hero = () => {
       }
     },
     {
-      dependencies: [currentIndex],
+      dependencies: [currentIndex, isDesktop],
       revertOnUpdate: true,
     },
   );
 
   useGSAP(() => {
+    if (!isDesktop) return;
     const frame = videoFrameRef.current;
     if (!frame) return;
 
@@ -86,13 +101,23 @@ const Hero = () => {
         scrub: true,
       },
     });
-  });
+  }, [isDesktop]);
 
   const getVideoSrc = (index: number) => `videos/hero-${index}.mp4`;
 
+  if (!isDesktop) {
+    return (
+      <div data-testid="hero-section" className="w-full overflow-x-hidden">
+        <div className="block md:hidden px-4 pb-10 pt-6">
+          <MobileHero />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div data-testid="hero-section" className="w-full overflow-x-hidden">
-      <div className="relative hidden h-dvh w-screen overflow-x-hidden md:block">
+      <div className="relative h-dvh w-screen overflow-x-hidden">
         {loading && (
           <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
             <div className="three-body">
@@ -169,10 +194,6 @@ const Hero = () => {
         <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
           <b>M</b>R.G<b>A</b>DGET<b>Z</b>
         </h1>
-      </div>
-
-      <div className="block md:hidden px-4 pb-10 pt-6">
-        <MobileHero />
       </div>
     </div>
   );

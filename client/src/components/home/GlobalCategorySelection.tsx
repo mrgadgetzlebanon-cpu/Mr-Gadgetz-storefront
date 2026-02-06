@@ -1,4 +1,3 @@
-import type { WheelEvent } from "react";
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
@@ -386,21 +385,6 @@ export function GlobalCategorySelection() {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
-  const handleWheel = useCallback(
-    (event: WheelEvent) => {
-      if (!emblaApi) return;
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-      event.preventDefault();
-      event.stopPropagation();
-      if (event.deltaY > 0) {
-        emblaApi.scrollNext();
-      } else {
-        emblaApi.scrollPrev();
-      }
-    },
-    [emblaApi],
-  );
-
   useEffect(() => {
     if (activeCategory) {
       setShowProducts(true);
@@ -435,21 +419,6 @@ export function GlobalCategorySelection() {
 
   const scrollCategoriesNext = useCallback(
     () => categoryEmblaApi?.scrollNext(),
-    [categoryEmblaApi],
-  );
-
-  const handleCategoryWheel = useCallback(
-    (event: WheelEvent) => {
-      if (!categoryEmblaApi) return;
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-      event.preventDefault();
-      event.stopPropagation();
-      if (event.deltaY > 0) {
-        categoryEmblaApi.scrollNext();
-      } else {
-        categoryEmblaApi.scrollPrev();
-      }
-    },
     [categoryEmblaApi],
   );
 
@@ -495,11 +464,7 @@ export function GlobalCategorySelection() {
             </button>
           </div>
 
-          <div
-            className="overflow-hidden py-4"
-            ref={categoryEmblaRef}
-            onWheel={handleCategoryWheel}
-          >
+          <div className="overflow-hidden py-4" ref={categoryEmblaRef}>
             <div className="flex items-stretch gap-6">
               {categories.map((category, index) => (
                 <motion.div
@@ -573,11 +538,7 @@ export function GlobalCategorySelection() {
                       <ChevronLeft className="w-5 h-5" />
                     </button>
 
-                    <div
-                      className="overflow-hidden py-4"
-                      ref={emblaRef}
-                      onWheel={handleWheel}
-                    >
+                    <div className="overflow-hidden py-4" ref={emblaRef}>
                       <div className="flex gap-8 sm:gap-6 md:gap-8 px-2">
                         {sortedProducts.map((product, index) => (
                           <motion.div

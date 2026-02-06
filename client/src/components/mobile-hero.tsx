@@ -36,6 +36,7 @@ export function MobileHero() {
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
   const touchStartX = useRef<number | null>(null);
+  const resetTickRef = useRef<number>(0);
 
   useEffect(() => {
     if (images.length === 0) return;
@@ -45,6 +46,11 @@ export function MobileHero() {
 
     const tick = (timestamp: number) => {
       if (start === null) start = timestamp;
+      // If a reset was requested (slide changed), restart the timer baseline
+      if (resetTickRef.current) {
+        start = timestamp;
+        resetTickRef.current = 0;
+      }
       const elapsed = timestamp - start;
       const pct = Math.min(100, (elapsed / SLIDE_DURATION_MS) * 100);
       setProgress(pct);
@@ -63,7 +69,10 @@ export function MobileHero() {
   const goTo = (index: number) => {
     setActive((prev) => {
       const next = (index + images.length) % images.length;
-      if (next !== prev) setProgress(0);
+      if (next !== prev) {
+        setProgress(0);
+        resetTickRef.current = performance.now();
+      }
       return next;
     });
   };
