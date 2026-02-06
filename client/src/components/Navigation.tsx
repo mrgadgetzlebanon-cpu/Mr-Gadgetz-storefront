@@ -262,71 +262,72 @@ export function Navigation() {
         </div>
 
         {/* Mobile Top Row */}
-        <div className="flex lg:hidden items-center justify-between">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="hover:opacity-80 transition-opacity relative flex items-center"
+        <div className="flex lg:hidden items-center gap-3 justify-between">
+          {/* Menu */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              "lg:hidden hover:bg-muted/50 rounded-full",
+              useWhiteLogo && "hover:bg-white/10",
+            )}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
           >
-            <div className="relative h-8 w-32">
-              <img
-                src="/MR-Gadgetz-Logo-horizental_1768048140632.png"
-                alt="MR.GADGETz"
-                className={cn(
-                  "absolute inset-0 w-full h-full object-contain transition-opacity duration-300",
-                  useWhiteLogo ? "opacity-0" : "opacity-100",
-                )}
-              />
-              <img
-                src="/MR-Gadgetz-Logo-horizental-white_1768229870089.png"
-                alt="MR.GADGETz"
-                className={cn(
-                  "absolute inset-0 w-[150px] object-contain transition-opacity duration-300 translate-x-[5px] translate-y-[-19px]",
-                  useWhiteLogo ? "opacity-100" : "opacity-0",
-                )}
-              />
-            </div>
-          </Link>
+            {mobileMenuOpen ? (
+              <X className={cn("w-5 h-5", useWhiteLogo && "text-white")} />
+            ) : (
+              <Menu className={cn("w-5 h-5", useWhiteLogo && "text-white")} />
+            )}
+          </Button>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "relative hover:bg-muted/50 rounded-full",
-                useWhiteLogo && "hover:bg-white/10",
-              )}
-              onClick={() => setIsOpen(true)}
-              aria-label="Open cart"
+          {/* Logo */}
+          <div className="flex-1 flex justify-center">
+            <Link
+              href="/"
+              className="hover:opacity-80 transition-opacity relative flex items-center"
             >
-              <ShoppingBag
-                className={cn("w-5 h-5", useWhiteLogo && "text-white")}
-              />
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full bg-[#0c57ef] text-[10px] font-semibold text-white">
-                  {itemCount}
-                </span>
-              )}
-            </Button>
-
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "lg:hidden hover:bg-muted/50 rounded-full",
-                useWhiteLogo && "hover:bg-white/10",
-              )}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? (
-                <X className={cn("w-5 h-5", useWhiteLogo && "text-white")} />
-              ) : (
-                <Menu className={cn("w-5 h-5", useWhiteLogo && "text-white")} />
-              )}
-            </Button>
+              <div className="relative h-8 w-32">
+                <img
+                  src="/MR-Gadgetz-Logo-horizental_1768048140632.png"
+                  alt="MR.GADGETz"
+                  className={cn(
+                    "absolute inset-0 w-full h-full object-contain transition-opacity duration-300",
+                    useWhiteLogo ? "opacity-0" : "opacity-100",
+                  )}
+                />
+                <img
+                  src="/MR-Gadgetz-Logo-horizental-white_1768229870089.png"
+                  alt="MR.GADGETz"
+                  className={cn(
+                    "absolute inset-0 w-[150px] object-contain transition-opacity duration-300 translate-x-[5px] translate-y-[-19px]",
+                    useWhiteLogo ? "opacity-100" : "opacity-0",
+                  )}
+                />
+              </div>
+            </Link>
           </div>
+
+          {/* Cart */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              "relative hover:bg-muted/50 rounded-full",
+              useWhiteLogo && "hover:bg-white/10",
+            )}
+            onClick={() => setIsOpen(true)}
+            aria-label="Open cart"
+          >
+            <ShoppingBag
+              className={cn("w-5 h-5", useWhiteLogo && "text-white")}
+            />
+            {itemCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 rounded-full bg-[#0c57ef] text-[10px] font-semibold text-white">
+                {itemCount}
+              </span>
+            )}
+          </Button>
         </div>
 
         {/* Mobile Sticky Search Bar */}

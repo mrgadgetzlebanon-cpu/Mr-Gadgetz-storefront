@@ -1,3 +1,4 @@
+import type { WheelEvent } from "react";
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
@@ -34,9 +35,9 @@ function normalizeKey(value: string): string {
 
 const categories: CategoryItem[] = [
   {
-    id: "phones",
+    id: "mobile-phones",
     label: "Phones",
-    parentCategory: "Phones",
+    parentCategory: "Mobile Phones",
     image: "/img/Categories/category-phones.png",
   },
   {
@@ -84,7 +85,7 @@ const categories: CategoryItem[] = [
 ];
 
 const categoryFallbackTags: Record<string, string[]> = {
-  phones: ["phone", "smartphone", "mobile"],
+  "mobile-phones": ["phone", "smartphone", "mobile"],
   tablets: ["tablet", "ipad"],
   laptops: ["computer", "laptop", "pc"],
   watches: ["smart watch", "smartwatch"],
@@ -95,7 +96,7 @@ const categoryFallbackTags: Record<string, string[]> = {
 };
 
 const categoryHandleOrder: Record<string, string[]> = {
-  phones: ["Mobile Phones", "Mobile Accessories"],
+  "mobile-phones": ["Mobile Phones", "Mobile Accessories"],
   tablets: ["Tablets", "Tablet Accessories"],
   laptops: [
     "Laptops",
@@ -106,8 +107,14 @@ const categoryHandleOrder: Record<string, string[]> = {
   ],
 };
 
+const explicitCategoryHandles: Record<string, string[]> = {
+  "mobile-phones": ["mobile-phones"],
+  tablets: ["tablets"],
+  laptops: ["laptop"],
+};
+
 export function GlobalCategorySelection() {
-  const [activeCategory, setActiveCategory] = useState<string>("phones");
+  const [activeCategory, setActiveCategory] = useState<string>("mobile-phones");
   const [showProducts, setShowProducts] = useState(false);
   const [viewMode, setViewMode] = useState<"slider" | "grid">("slider");
   const productsSectionRef = useRef<HTMLDivElement>(null);
@@ -121,6 +128,9 @@ export function GlobalCategorySelection() {
   const resolveHandlesForCategory = useCallback(
     (category: CategoryItem | undefined): string[] => {
       if (!categoryStructure || !category) return [];
+
+      const fixed = explicitCategoryHandles[category.id];
+      if (fixed) return fixed;
 
       const categoryKeys = [
         category.parentCategory,
@@ -273,7 +283,7 @@ export function GlobalCategorySelection() {
 
       const deviceBucket = (() => {
         switch (activeCategory) {
-          case "phones": {
+          case "mobile-phones": {
             const device = matches(["phone", "smartphone", "mobile phone"]);
             const accessory = matches([
               "case",
@@ -376,6 +386,21 @@ export function GlobalCategorySelection() {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
+  const handleWheel = useCallback(
+    (event: WheelEvent) => {
+      if (!emblaApi) return;
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.deltaY > 0) {
+        emblaApi.scrollNext();
+      } else {
+        emblaApi.scrollPrev();
+      }
+    },
+    [emblaApi],
+  );
+
   useEffect(() => {
     if (activeCategory) {
       setShowProducts(true);
@@ -410,6 +435,21 @@ export function GlobalCategorySelection() {
 
   const scrollCategoriesNext = useCallback(
     () => categoryEmblaApi?.scrollNext(),
+    [categoryEmblaApi],
+  );
+
+  const handleCategoryWheel = useCallback(
+    (event: WheelEvent) => {
+      if (!categoryEmblaApi) return;
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.deltaY > 0) {
+        categoryEmblaApi.scrollNext();
+      } else {
+        categoryEmblaApi.scrollPrev();
+      }
+    },
     [categoryEmblaApi],
   );
 
@@ -455,7 +495,11 @@ export function GlobalCategorySelection() {
             </button>
           </div>
 
-          <div className="overflow-hidden py-4" ref={categoryEmblaRef}>
+          <div
+            className="overflow-hidden py-4"
+            ref={categoryEmblaRef}
+            onWheel={handleCategoryWheel}
+          >
             <div className="flex items-stretch gap-6">
               {categories.map((category, index) => (
                 <motion.div
@@ -490,9 +534,7 @@ export function GlobalCategorySelection() {
               ref={productsSectionRef}
             >
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                <h3 className="text-xl font-semibold">
-                  {activeItem?.label} Products
-                </h3>
+                <h3 className="text-xl font-semibold">{activeItem?.label}</h3>
                 <div className="flex items-center gap-3">
                   <div className="flex bg-muted p-1 rounded-full">
                     <Button
@@ -531,7 +573,11 @@ export function GlobalCategorySelection() {
                       <ChevronLeft className="w-5 h-5" />
                     </button>
 
-                    <div className="overflow-hidden py-4" ref={emblaRef}>
+                    <div
+                      className="overflow-hidden py-4"
+                      ref={emblaRef}
+                      onWheel={handleWheel}
+                    >
                       <div className="flex gap-8 sm:gap-6 md:gap-8 px-2">
                         {sortedProducts.map((product, index) => (
                           <motion.div
