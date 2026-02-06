@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 const SLIDE_DURATION_MS = 10000;
 const slides = [
   {
-    src: "/mobile-hero/iphone-mobile-banner.webp",
+    src: "/mobile-hero/iphone-mobile-banner.png",
     href: "/collections/iphone-17",
     label: "iPhone 17",
   },
@@ -15,17 +15,17 @@ const slides = [
     label: "Samsung",
   },
   {
-    src: "/mobile-hero/audio-mobile-banner.webp",
+    src: "/mobile-hero/audio-mobile-banner.png",
     href: "/collections/audio",
     label: "Audio",
   },
   {
-    src: "/mobile-hero/gaming-mobile-banner.webp",
+    src: "/mobile-hero/gaming-mobile-banner.png",
     href: "/collections/gaming",
     label: "Gaming",
   },
   {
-    src: "/mobile-hero/dyson-mobile-banner.webp",
+    src: "/mobile-hero/dyson-mobile-banner.png",
     href: "/collections/dyson",
     label: "Dyson",
   },
