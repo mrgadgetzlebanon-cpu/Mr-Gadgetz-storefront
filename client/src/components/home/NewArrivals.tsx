@@ -124,7 +124,11 @@ export function NewArrivals() {
                     transition={{ delay: index * 0.05 }}
                     className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px]"
                   >
-                    <ProductCard product={product} showNewTag />
+                    <ProductCard
+                      product={product}
+                      showNewTag
+                      isPriority={index < 4}
+                    />
                   </motion.div>
                 ))}
               </div>
@@ -148,7 +152,12 @@ export function NewArrivals() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
               >
-                <ProductCard product={product} showNewTag variant="grid" />
+                <ProductCard
+                  product={product}
+                  showNewTag
+                  variant="grid"
+                  isPriority={index < 6}
+                />
               </motion.div>
             ))}
           </div>

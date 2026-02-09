@@ -140,6 +140,9 @@ export function ShopByBrand() {
                       alt={brand.label}
                       className="w-[85%] h-[85%] object-contain filter grayscale"
                       loading="lazy"
+                      decoding="async"
+                      width={112}
+                      height={112}
                     />
                   </div>
                 </button>

@@ -9,18 +9,26 @@ interface ProductCardProps {
   product: Product;
   showNewTag?: boolean;
   variant?: "default" | "grid";
+  isPriority?: boolean;
 }
 
 export function ProductCard({
   product,
   showNewTag = false,
   variant = "default",
+  isPriority = false,
 }: ProductCardProps) {
   const isGrid = variant === "grid";
   const { addItem } = useCart();
   const [isHovered, setIsHovered] = useState(false);
   const images = product.images || [];
   const hasSecondImage = Array.isArray(images) && images.length > 1;
+
+  const loadingAttr = isPriority ? "eager" : "lazy";
+  const fetchPriority = isPriority ? "high" : "auto";
+  const decodingAttr = isPriority ? "auto" : "async";
+  const imgWidth = 600;
+  const imgHeight = 600;
 
   const currentPrice = Number(product.price);
   const comparePrice = product.originalPrice
@@ -86,18 +94,28 @@ export function ProductCard({
               <img
                 src={product.image}
                 alt={product.name}
+                width={imgWidth}
+                height={imgHeight}
                 className={`w-full h-full object-contain transition-transform duration-500 ease-out ${
                   hasSecondImage
                     ? "translate-x-0 group-hover/card:-translate-x-full"
                     : "group-hover/card:scale-105"
                 }`}
+                loading={loadingAttr}
+                decoding={decodingAttr}
+                fetchPriority={fetchPriority}
               />
 
               {hasSecondImage && (
                 <img
                   src={images[1]}
                   alt={`${product.name} secondary view`}
+                  width={imgWidth}
+                  height={imgHeight}
                   className="absolute inset-0 h-full w-full object-contain translate-x-full group-hover/card:translate-x-0 transition-transform duration-500 ease-out"
+                  loading={loadingAttr}
+                  decoding={decodingAttr}
+                  fetchPriority={fetchPriority}
                 />
               )}
             </div>

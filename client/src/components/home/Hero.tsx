@@ -119,7 +119,7 @@ const Hero = () => {
     <div data-testid="hero-section" className="w-full overflow-x-hidden">
       <div className="relative h-dvh w-screen overflow-x-hidden">
         {loading && (
-          <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
+          <div className="flex-center absolute z-[40] pointer-events-none h-dvh w-screen overflow-hidden bg-violet-50">
             <div className="three-body">
               <div className="three-body__dot"></div>
               <div className="three-body__dot"></div>
