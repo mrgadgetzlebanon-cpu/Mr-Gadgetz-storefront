@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const imageModules = import.meta.glob(
+const imageModules = import.meta.glob<string>(
   "/public/images/*.{png,jpg,jpeg,webp,svg}",
   {
     eager: true,
@@ -12,25 +12,35 @@ const imageModules = import.meta.glob(
 
 const LOOPS = 3;
 
+type Brand = {
+  label: string;
+  slug: string;
+  src: string;
+};
+
 export function ShopByBrand() {
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [, setLocation] = useLocation();
   const Maps = setLocation;
 
-  const brands = useMemo(() => {
+  const brands = useMemo<Brand[]>(() => {
     const entries = Object.entries(imageModules).map(([path, url]) => {
       const filename = path.split("/").pop() || "";
       const base = filename.replace(/\.[^.]+$/, "");
+      const src =
+        typeof url === "string"
+          ? url
+          : (url as { default?: string })?.default || "";
       return {
         label: base,
         slug: base.toLowerCase(),
-        src: typeof url === "string" ? url : url?.default || "",
+        src,
       };
     });
-    return entries.filter((b) => b.src); // ensure valid src
+    return entries.filter((b) => b.src);
   }, []);
 
-  const loopBrands = useMemo(
+  const loopBrands = useMemo<Brand[]>(
     () => Array.from({ length: LOOPS }, () => brands).flat(),
     [brands],
   );
@@ -70,14 +80,14 @@ export function ShopByBrand() {
     };
   }, [brands.length]);
 
-  const scrollByAmount = (direction) => {
+  const scrollByAmount = (direction: number) => {
     const container = scrollRef.current;
     if (!container) return;
     const amount = container.clientWidth * 0.7;
     container.scrollBy({ left: direction * amount, behavior: "smooth" });
   };
 
-  const handleNavigate = (brand) => {
+  const handleNavigate = (brand: Brand) => {
     Maps(`/search?q=${encodeURIComponent(brand.slug)}&type=product`);
   };
 

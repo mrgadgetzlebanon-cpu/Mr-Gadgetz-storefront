@@ -8,3 +8,4 @@ export { BrandMarquee } from "./BrandMarquee";
 export { BrandProductSection } from "./BrandProductSection";
 export { DirectProductSection } from "./DirectProductSection";
 export { CategoryProductSection } from "./CategoryProductSection";
+export { ShopByBrand } from "./ShopByBrand";

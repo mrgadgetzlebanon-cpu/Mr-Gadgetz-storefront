@@ -8,7 +8,7 @@ import { GlobalCategorySelection } from "@/components/home/GlobalCategorySelecti
 import { BrandProductSection } from "@/components/home/BrandProductSection";
 import { DirectProductSection } from "@/components/home/DirectProductSection";
 import { PromoBanner } from "@/components/home";
-import { ShopByBrand } from "@/components/home/ShopByBrand";
+import { ShopByBrand } from "@/components/home";
 
 // 1. APPLE CONFIGURATION (direct collection handles)
 const appleTabs = [
