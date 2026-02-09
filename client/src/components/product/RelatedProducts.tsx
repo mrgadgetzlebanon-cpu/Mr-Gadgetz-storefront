@@ -1,12 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProductCard } from "@/components/ProductCard";
-import {
-  usePaginatedProducts,
-  useProducts,
-  type ExtendedProduct,
-} from "@/hooks/use-products";
+import { useProducts, type ExtendedProduct } from "@/hooks/use-products";
 import useEmblaCarousel from "embla-carousel-react";
 
 interface RelatedProductsProps {
@@ -16,6 +12,16 @@ interface RelatedProductsProps {
 }
 
 type ProductWithVariant = ExtendedProduct & { variantId?: string };
+
+// Helper to shuffle the results so you don't always get the same 8
+function shuffleArray<T>(array: T[]): T[] {
+  const newArr = [...array];
+  for (let i = newArr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  }
+  return newArr;
+}
 
 function ProductSlider({
   products,
@@ -55,50 +61,46 @@ function ProductSlider({
   if (products.length === 0) return null;
 
   return (
-    <div className="space-y-4 ">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-display font-bold text-lg">{title}</h3>
-        <div className="flex gap-2">
-          <button
-            onClick={scrollPrev}
-            disabled={!canScrollPrev}
-            className={cn(
-              "w-8 h-8 rounded-full border border-border flex items-center justify-center transition-colors",
-              canScrollPrev
-                ? "hover:bg-muted"
-                : "opacity-40 cursor-not-allowed",
-            )}
-            data-testid={`button-${title.toLowerCase().replace(/\s+/g, "-")}-prev`}
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={scrollNext}
-            disabled={!canScrollNext}
-            className={cn(
-              "w-8 h-8 rounded-full border border-border flex items-center justify-center transition-colors",
-              canScrollNext
-                ? "hover:bg-muted"
-                : "opacity-40 cursor-not-allowed",
-            )}
-            data-testid={`button-${title.toLowerCase().replace(/\s+/g, "-")}-next`}
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
       </div>
 
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-8 pb-4">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="flex-shrink-0 w-[220px] sm:w-[240px]"
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
+      <div className="relative group/slider">
+        <button
+          onClick={scrollPrev}
+          disabled={!canScrollPrev}
+          className={cn(
+            "absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 shadow-lg flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity hover:bg-white dark:hover:bg-zinc-700",
+            !canScrollPrev && "opacity-0 cursor-not-allowed",
+          )}
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+
+        <div className="overflow-hidden py-4" ref={emblaRef}>
+          <div className="flex gap-8 sm:gap-6 md:gap-8 px-2">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px]"
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
         </div>
+
+        <button
+          onClick={scrollNext}
+          disabled={!canScrollNext}
+          className={cn(
+            "absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 shadow-lg flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity hover:bg-white dark:hover:bg-zinc-700",
+            !canScrollNext && "opacity-0 cursor-not-allowed",
+          )}
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
       </div>
     </div>
   );
@@ -110,22 +112,9 @@ export function RelatedProducts({
   vendor,
 }: RelatedProductsProps) {
   const { data: allProducts } = useProducts();
-  const normalizedVendor = vendor?.trim();
   const normalizedType = productType?.trim();
 
-  const escapeValue = (value: string) => value.replace(/'/g, "\\'");
-  const strictQuery =
-    normalizedVendor && normalizedType
-      ? `product_type:'${escapeValue(normalizedType)}' AND vendor:'${escapeValue(normalizedVendor)}'`
-      : "";
-
-  const { data: strictResult } = usePaginatedProducts({
-    handles: [],
-    searchQuery: strictQuery,
-    first: 12,
-    enabled: !!strictQuery,
-  });
-
+  // Recently Viewed Logic
   const [recentlyViewed, setRecentlyViewed] = useState<ProductWithVariant[]>(
     [],
   );
@@ -151,28 +140,67 @@ export function RelatedProducts({
 
   useEffect(() => {
     if (!currentProductId) return;
-
     const stored = localStorage.getItem("recentlyViewed");
     let ids: number[] = [];
-
     try {
       ids = stored ? JSON.parse(stored) : [];
     } catch {
       ids = [];
     }
-
     ids = ids.filter((id) => id !== currentProductId);
     ids.unshift(currentProductId);
     ids = ids.slice(0, 10);
-
     localStorage.setItem("recentlyViewed", JSON.stringify(ids));
   }, [currentProductId]);
 
-  const youMayAlsoLike = (strictResult?.products || [])
-    .filter((p) => p.id !== currentProductId)
-    .slice(0, 8);
+  const currentProduct = useMemo(
+    () => allProducts?.find((p) => p.id === currentProductId),
+    [allProducts, currentProductId],
+  );
 
-  const hasContent = youMayAlsoLike.length > 0 || recentlyViewed.length > 0;
+  // 1. Related by TYPE (Priority)
+  const relatedByType = useMemo(() => {
+    const targetType =
+      normalizedType?.toLowerCase() ||
+      currentProduct?.productType?.toLowerCase();
+
+    if (!targetType || !allProducts) return [];
+
+    // STRICT FILTER: Match Product Type Exactly
+    const results = allProducts.filter(
+      (p) =>
+        p.id !== currentProductId &&
+        (p.productType?.toLowerCase() || "") === targetType,
+    );
+
+    return shuffleArray(results).slice(0, 8);
+  }, [
+    allProducts,
+    currentProduct?.productType,
+    currentProductId,
+    normalizedType,
+  ]);
+
+  // 2. Fallback: Related by Collection (Only if Type fails)
+  const relatedByCollection = useMemo(() => {
+    if (!currentProduct?.category || !allProducts) return [];
+
+    const results = allProducts.filter(
+      (p) =>
+        p.id !== currentProductId &&
+        p.category === currentProduct.category &&
+        p.category !== "Home page" &&
+        p.category !== "All",
+    );
+
+    return shuffleArray(results).slice(0, 8);
+  }, [allProducts, currentProduct?.category, currentProductId]);
+
+  // LOGIC SWAP: Priority is now relatedByType
+  const similarProducts =
+    relatedByType.length > 0 ? relatedByType : relatedByCollection;
+
+  const hasContent = similarProducts.length > 0 || recentlyViewed.length > 0;
 
   if (!hasContent) return null;
 
@@ -182,8 +210,8 @@ export function RelatedProducts({
         <h2 className="text-2xl font-display font-bold">You Might Also Like</h2>
       </div>
 
-      {youMayAlsoLike.length > 0 && (
-        <ProductSlider products={youMayAlsoLike} title="Similar Products" />
+      {similarProducts.length > 0 && (
+        <ProductSlider products={similarProducts} title="Similar Products" />
       )}
 
       {recentlyViewed.length > 0 && (
