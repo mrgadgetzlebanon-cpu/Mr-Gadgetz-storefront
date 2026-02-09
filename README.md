@@ -98,11 +98,6 @@ The shop uses a vibrant brand color palette to create a lively, modern aesthetic
 
 ## External Dependencies
 
-### Database
-- **PostgreSQL**: Primary database (connection via `DATABASE_URL` environment variable)
-- **Drizzle ORM**: Database queries and schema management
-- **connect-pg-simple**: Session storage (available but not currently used)
-
 ### Frontend Libraries
 - **@tanstack/react-query**: Data fetching and caching
 - **framer-motion**: Animation library
