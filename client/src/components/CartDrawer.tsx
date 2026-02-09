@@ -82,7 +82,12 @@ export function CartDrawer() {
                         </h4>
                         <button
                           onClick={() => removeItem(item.id, item.variantId)}
-                          className="text-muted-foreground hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                          className={cn(
+                            "text-muted-foreground hover:text-destructive transition-colors",
+                            isMobile
+                              ? "opacity-100"
+                              : "opacity-0 group-hover:opacity-100",
+                          )}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

@@ -108,7 +108,7 @@ function ProductHeader({
               className="text-[10px] font-bold uppercase tracking-wider text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full"
               data-testid={`badge-new-${product.id}`}
             >
-              New
+              New Arrival
             </span>
           )}
           {isUsed && (

@@ -68,7 +68,7 @@ export function ProductCard({
                 className="bg-[#0c57ef] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md"
                 data-testid={`badge-new-${product.id}`}
               >
-                New
+                New Arrival
               </Badge>
             )}
             {isUsed && (
