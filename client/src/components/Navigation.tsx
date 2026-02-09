@@ -18,10 +18,12 @@ export function Navigation() {
     null,
   );
   const [isDesktop, setIsDesktop] = useState(false);
+  const [navHeight, setNavHeight] = useState(0);
   const [location, setLocation] = useLocation();
   const { itemCount, setIsOpen } = useCart();
   const searchRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
+  const navBarRef = useRef<HTMLDivElement>(null);
 
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
@@ -100,6 +102,26 @@ export function Navigation() {
     };
   }, []);
 
+  useEffect(() => {
+    const measureNavHeight = () => {
+      const height = navBarRef.current?.offsetHeight || 0;
+      setNavHeight(height);
+    };
+
+    measureNavHeight();
+    window.addEventListener("resize", measureNavHeight);
+    return () => window.removeEventListener("resize", measureNavHeight);
+  }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const id = requestAnimationFrame(() => {
+      const height = navBarRef.current?.offsetHeight || 0;
+      setNavHeight(height);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [mobileMenuOpen, isScrolled]);
+
   const displayProducts =
     debouncedSearchQuery.length > 1 ? searchResults?.products || [] : [];
 
@@ -143,7 +165,10 @@ export function Navigation() {
           : "lg:bg-transparent lg:border-transparent",
       )}
     >
-      <div className="container mx-auto px-4 md:px-6 flex flex-col gap-2 py-3">
+      <div
+        className="container mx-auto px-4 md:px-6 flex flex-col gap-2 py-3"
+        ref={navBarRef}
+      >
         {/* Desktop Top Row */}
         <div className="hidden lg:flex items-center gap-4 justify-between">
           {/* Logo */}
@@ -421,11 +446,21 @@ export function Navigation() {
       {mobileMenuOpen && (
         <div
           className={cn(
-            "lg:hidden absolute top-full left-0 right-0 border-b animate-in slide-in-from-top-5 max-h-[80vh] overflow-y-auto",
+            "lg:hidden absolute top-full left-0 right-0 border-b animate-in slide-in-from-top-5 overflow-y-auto",
             useWhiteLogo
               ? "bg-[#020617] border-white/10"
               : "bg-background border-border/50",
           )}
+          style={{
+            height:
+              navHeight > 0
+                ? `calc(100vh - ${navHeight}px)`
+                : "calc(100vh - 72px)",
+            maxHeight:
+              navHeight > 0
+                ? `calc(100vh - ${navHeight}px)`
+                : "calc(100vh - 72px)",
+          }}
         >
           <MegaMenu
             useWhiteLogo={useWhiteLogo}

@@ -152,14 +152,14 @@ export function ProductCard({
           style={{ height: isGrid ? "35%" : "55%" }}
         >
           <h3
-            className="font-display text-base leading-tight text-gray-900 dark:text-white transition-colors"
+            className="font-display text-[13px] leading-tight text-gray-900 dark:text-white transition-colors"
             style={{
               display: "-webkit-box",
-              WebkitLineClamp: 2,
+              WebkitLineClamp: 3,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              minHeight: "2.5rem",
+              minHeight: "3.4rem",
             }}
             title={product.name}
           >
@@ -167,11 +167,11 @@ export function ProductCard({
           </h3>
 
           <div className="flex items-center justify-center gap-3 mt-2">
-            <span className="font-bold text-[1rem] text-[#0c57ef] dark:text-[#48bfef]">
+            <span className="font-bold text-[13px] text-[#0c57ef] dark:text-[#48bfef]">
               ${currentPrice.toFixed(2)}
             </span>
             {hasDiscount && comparePrice && (
-              <span className="text-sm text-gray-400 line-through">
+              <span className="text-[13px] text-gray-400 line-through">
                 ${comparePrice.toFixed(2)}
               </span>
             )}

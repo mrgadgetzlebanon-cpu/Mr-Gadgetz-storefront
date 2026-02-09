@@ -8,20 +8,21 @@ import {
   MapPin,
   MessageCircle,
 } from "lucide-react";
-import megaMenu from "@/lib/mega-menu.json";
 
 export function Footer() {
-  const shopLinks = useMemo(() => {
-    const seen = new Set<string>();
-    return (megaMenu as Array<{ label: string; href: string }>).filter(
-      (item) => {
-        const key = item.label.toLowerCase();
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      },
-    );
-  }, []);
+  const shopLinks = useMemo(
+    () => [
+      { label: "Apple", href: "/collections/apple" },
+      { label: "Samsung", href: "/collections/samsung" },
+      { label: "Laptops", href: "/collections/laptops" },
+      { label: "Mobiles", href: "/collections/mobile-phones" },
+      { label: "Tablets", href: "/collections/tablets" },
+      { label: "Audio", href: "/collections/audio" },
+      { label: "Accessories", href: "/collections/accessories" },
+      { label: "Home Appliances", href: "/collections/home-appliances" },
+    ],
+    [],
+  );
 
   return (
     <footer className="bg-[#fff] text-gray-900 pt-20 pb-12 shadow-[0_-10px_20px_rgba(0,0,0,0.12)] sm:shadow-none border-t border-gray-200 sm:border-0">
@@ -46,7 +47,9 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-8 w-full md:contents">
             {/* Shop Categories - Split into 2 columns */}
             <div>
-              <h4 className="font-semibold mb-4 text-sm text-gray-900">Shop</h4>
+              <h4 className="font-semibold mb-4 text-base text-gray-900 underline">
+                Shop
+              </h4>
               <ul className="space-y-3 text-sm text-gray-600">
                 {shopLinks.map((item) => (
                   <li key={item.label}>
@@ -63,7 +66,7 @@ export function Footer() {
 
             {/* Legal */}
             <div className="block md:hidden">
-              <h4 className="font-semibold mb-4 text-sm text-gray-900">
+              <h4 className="font-semibold mb-4 text-base text-gray-900 underline">
                 Legal
               </h4>
               <ul className="space-y-3 text-sm text-gray-600">
@@ -92,22 +95,6 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="transition-colors hover:text-[#0c57ef]"
-                  >
-                    Help Center
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="transition-colors hover:text-[#0c57ef]"
-                  >
-                    Order Status
-                  </a>
-                </li>
-                <li>
                   <Link
                     href="/shipping-and-returns"
                     className="transition-colors hover:text-[#0c57ef]"
@@ -117,17 +104,9 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/payment"
-                    className="transition-colors hover:text-[#0c57ef]"
-                  >
-                    Payment Methods
-                  </Link>
-                </li>
-                <li className="md:hidden">
-                  <Link
                     href="/contact"
                     className="transition-colors hover:text-[#0c57ef]"
-                    data-testid="footer-contact"
+                    data-testid="footer-contact-mobile"
                   >
                     Contact Us
                   </Link>
@@ -138,7 +117,9 @@ export function Footer() {
 
           {/* Legal for desktop (only) */}
           <div className="hidden md:block">
-            <h4 className="font-semibold mb-4 text-sm text-gray-900">Legal</h4>
+            <h4 className="font-semibold mb-4 text-base text-gray-900 underline">
+              Legal
+            </h4>
             <ul className="space-y-3 text-sm text-gray-600">
               <li>
                 <Link
@@ -174,14 +155,6 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/payment"
-                  className="transition-colors hover:text-[#0c57ef]"
-                >
-                  Payment Methods
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/contact"
                   className="transition-colors hover:text-[#0c57ef]"
                   data-testid="footer-contact-desktop"
@@ -194,7 +167,7 @@ export function Footer() {
 
           {/* Customer Service */}
           <div className="flex flex-col gap-4 items-start">
-            <h4 className="font-semibold text-sm text-gray-900">
+            <h4 className="font-semibold text-base text-gray-900 underline">
               Customer Service
             </h4>
             <a

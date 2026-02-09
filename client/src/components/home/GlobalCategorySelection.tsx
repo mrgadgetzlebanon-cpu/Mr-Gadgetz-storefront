@@ -83,6 +83,17 @@ const categories: CategoryItem[] = [
   },
 ];
 
+const parentCategoryToCollection: Record<string, string> = {
+  "Mobile Phones": "mobile-phones",
+  Tablets: "tablets",
+  "PC and Laptops": "laptops",
+  Watches: "wearables",
+  "Smart Home": "smart-home",
+  Audio: "audio",
+  Gaming: "gaming",
+  Networking: "networking",
+};
+
 const categoryFallbackTags: Record<string, string[]> = {
   "mobile-phones": ["phone", "smartphone", "mobile"],
   tablets: ["tablet", "ipad"],
@@ -465,7 +476,7 @@ export function GlobalCategorySelection() {
           </div>
 
           <div className="overflow-hidden py-4" ref={categoryEmblaRef}>
-            <div className="flex items-stretch gap-6">
+            <div className="flex items-stretch gap-0 md:gap-6">
               {categories.map((category, index) => (
                 <motion.div
                   key={category.id}
@@ -520,7 +531,21 @@ export function GlobalCategorySelection() {
                     </Button>
                   </div>
                   <Link
-                    href={`/shop?category=parent:${activeItem?.parentCategory?.replace(/\s+/g, "+")}`}
+                    href={(() => {
+                      const collectionHandle = activeItem?.parentCategory
+                        ? parentCategoryToCollection[
+                            activeItem.parentCategory
+                          ] ||
+                          activeItem.parentCategory
+                            .toLowerCase()
+                            .replace(/&/g, "and")
+                            .replace(/[^a-z0-9]+/g, "-")
+                            .replace(/^-+|-+$/g, "")
+                        : "";
+                      return collectionHandle
+                        ? `/collections/${collectionHandle}`
+                        : "/collections";
+                    })()}
                     className="inline-flex items-center gap-2 text-[#0c57ef] hover:underline font-medium text-sm"
                   >
                     View All <ArrowRight className="w-4 h-4" />

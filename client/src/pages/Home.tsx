@@ -8,6 +8,7 @@ import { GlobalCategorySelection } from "@/components/home/GlobalCategorySelecti
 import { BrandProductSection } from "@/components/home/BrandProductSection";
 import { DirectProductSection } from "@/components/home/DirectProductSection";
 import { PromoBanner } from "@/components/home";
+import { ShopByBrand } from "@/components/home/ShopByBrand";
 
 // 1. APPLE CONFIGURATION (direct collection handles)
 const appleTabs = [
@@ -76,7 +77,6 @@ const laptopTabs = [
 
 // 3. SAMSUNG CONFIGURATION (direct collection handles from Shopify)
 const samsungTabs = [
-  { id: "all", label: "All Samsung", collectionHandle: "samsung" },
   { id: "phones", label: "Phones", collectionHandle: "samsung-mobile-phones" },
   { id: "tablets", label: "Tablets", collectionHandle: "samsung-tablets" },
   { id: "watch", label: "Watch", collectionHandle: "samsung-watch" },
@@ -180,7 +180,7 @@ export default function Home() {
         <BrandProductSection
           title="Premium Audio"
           tabs={audioTabs}
-          viewAllLink="/shop?category=audio"
+          viewAllLink="/collections/audio"
           bgClassName="bg-white"
         />
 
@@ -190,14 +190,14 @@ export default function Home() {
         <DirectProductSection
           title="Smartwatches & Wearables"
           parentCategories={["wearables"]}
-          viewAllLink="/shop?category=wearables"
+          viewAllLink="/collections/wearables"
           bgClassName="bg-white"
         />
         <PromoBanner
           imageSrc="/promo/Watch-Banner.avif"
           title="Smart Meets Style"
           buttonLabel="Shop Watches"
-          buttonHref="/shop?category=wearables"
+          buttonHref="/collections/wearables"
         />
 
         {/* 12. Dyson Products (Direct) */}
@@ -205,7 +205,7 @@ export default function Home() {
           title="Home Appliances"
           // FETCHING: Using exact Handle 'home-appliances-1'
           parentCategories={["home-appliances"]}
-          viewAllLink="/shop?category=home-appliances"
+          viewAllLink="/collections/home-appliances"
           bgClassName="bg-white"
         />
 
@@ -214,8 +214,10 @@ export default function Home() {
           title="Dyson Home Innovations"
           description="Elevate your space with Dyson vacuums, air purifiers, and more premium home tech."
           buttonLabel="Shop Dyson"
-          buttonHref="/shop?category=home-appliances"
+          buttonHref="/collections/home-appliances"
         />
+
+        <ShopByBrand />
 
         {/* Features Grid */}
         {/* <Features /> */}
