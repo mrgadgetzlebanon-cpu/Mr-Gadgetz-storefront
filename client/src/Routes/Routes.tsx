@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Switch, Route, Redirect } from "wouter";
 import { useScrollToTopOnRouteChange } from "@/hooks/use-scroll-to-top";
 
@@ -22,13 +23,14 @@ import InfoPage from "@/pages/InfoPage";
  * A Layout wrapper to keep the main Router file clean
  */
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   useScrollToTopOnRouteChange();
 
   return (
     <div className="flex flex-col min-h-screen font-sans">
-      <Navigation />
+      <Navigation onMobileMenuChange={setIsMobileMenuOpen} />
       <CartDrawer />
-      <ScrollToTop />
+      <ScrollToTop mobileMenuOpen={isMobileMenuOpen} />
       <main className="flex-1 pt-32 md:pt-40">{children}</main>
       <Footer />
     </div>

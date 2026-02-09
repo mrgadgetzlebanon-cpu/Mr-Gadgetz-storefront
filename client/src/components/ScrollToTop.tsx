@@ -3,9 +3,15 @@ import { ChevronUp } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-export function ScrollToTop() {
+type ScrollToTopProps = {
+  mobileMenuOpen?: boolean;
+};
+
+export function ScrollToTop({ mobileMenuOpen }: ScrollToTopProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -28,8 +34,14 @@ export function ScrollToTop() {
   };
 
   const whatsappNumber = "96178880120";
-  const whatsappMessage = encodeURIComponent("Hey, I would like to ask about a product");
+  const whatsappMessage = encodeURIComponent(
+    "Hey, I would like to ask about a product",
+  );
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
+  const shouldHide = isMobile && mobileMenuOpen;
+
+  if (shouldHide) return null;
 
   return (
     <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-3 items-center">

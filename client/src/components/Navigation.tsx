@@ -9,7 +9,11 @@ import { usePaginatedProducts } from "@/hooks/use-products";
 import { useDebounce } from "@/hooks/use-debounce";
 import { NavigationMenu as MegaMenu } from "@/components/navigation/NavigationMenu";
 
-export function Navigation() {
+type NavigationProps = {
+  onMobileMenuChange?: (open: boolean) => void;
+};
+
+export function Navigation({ onMobileMenuChange }: NavigationProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -155,6 +159,14 @@ export function Navigation() {
     setExpandedMobileMenu(expandedMobileMenu === label ? null : label);
   };
 
+  const handleToggleMobileMenu = () => {
+    setMobileMenuOpen((prev) => {
+      const next = !prev;
+      onMobileMenuChange?.(next);
+      return next;
+    });
+  };
+
   return (
     <nav
       className={cn(
@@ -296,7 +308,7 @@ export function Navigation() {
               "lg:hidden hover:bg-muted/50 rounded-full",
               useWhiteLogo && "hover:bg-white/10",
             )}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={handleToggleMobileMenu}
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
@@ -467,7 +479,10 @@ export function Navigation() {
             variant="mobile"
             expandedMobileMenu={expandedMobileMenu}
             onToggleMobileMenu={toggleMobileSubmenu}
-            onNavigate={() => setMobileMenuOpen(false)}
+            onNavigate={() => {
+              setMobileMenuOpen(false);
+              onMobileMenuChange?.(false);
+            }}
           />
         </div>
       )}
