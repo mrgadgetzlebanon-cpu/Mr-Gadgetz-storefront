@@ -179,7 +179,9 @@ export function ProductCard({
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              minHeight: "3.4rem",
+              lineHeight: "1.3",
+              maxHeight: "4rem",
+              overflowWrap: "break-word",
             }}
             title={product.name}
           >

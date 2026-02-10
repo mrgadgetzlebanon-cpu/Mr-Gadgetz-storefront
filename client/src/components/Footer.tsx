@@ -3,11 +3,12 @@ import { Link } from "wouter";
 import {
   Instagram,
   Facebook,
-  Phone,
   Mail,
+  Phone,
   MapPin,
   MessageCircle,
 } from "lucide-react";
+import { DistortionBackground } from "./ui/DistortionBackground";
 
 export function Footer() {
   const shopLinks = useMemo(
@@ -24,241 +25,224 @@ export function Footer() {
     [],
   );
 
+  const legalLinks = useMemo(
+    () => [
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Terms of Service", href: "/terms-of-service" },
+      { label: "Warranty", href: "/warranty" },
+      { label: "Returns", href: "/shipping-and-returns" },
+      { label: "Contact Us", href: "/contact" },
+    ],
+    [],
+  );
+
   return (
-    <footer className="bg-[#fff] text-gray-900 pt-20 pb-12 shadow-[0_-10px_20px_rgba(0,0,0,0.12)] sm:shadow-none border-t border-gray-200 sm:border-0">
-      <div className="container mx-auto px-4 pb-24">
-        <div className="flex flex-col gap-6 sm:grid sm:grid-cols-3 md:grid-cols-4 sm:gap-12 mb-14">
-          {/* Logo & Description (hidden on mobile) */}
-          <div className="col-span-1 hidden sm:block">
-            <Link href="/" className="inline-block mb-4">
+    <footer className="relative w-full min-h-[800px] flex flex-col justify-between overflow-hidden bg-transparent text-neutral-900">
+      {/* 1. The Distortion Layer (Light Mode) */}
+      <div className="absolute inset-0 z-0">
+        <DistortionBackground />
+      </div>
+
+      {/* 2. Content Layer */}
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 pb-8 flex flex-col h-full pt-24 pointer-events-none">
+        {/* TOP SECTION: Links & Contact - LIGHT GLASSY CONTAINER */}
+        <div className="pointer-events-auto bg-white border border-white/50 rounded-3xl p-8 md:p-12 grid grid-cols-1 md:grid-cols-12 gap-12 mb-auto shadow-2xl">
+          {/* Column 1: Brand & Address */}
+          <div className="md:col-span-4 space-y-6 hidden md:block">
+            <div className="hidden md:block space-y-4 text-sm text-neutral-700">
               <img
                 src="/assets/MR-Gadgetz-Logo-horizental_1768048140632.png"
                 alt="MR.GADGET"
-                className="h-16 object-contain"
+                className="h-12 object-contain"
               />
-            </Link>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Your everyday destination for smart gadgets, cool tech, and
-              innovation.
-            </p>
+              <p className="max-w-xs leading-relaxed">
+                Your everyday destination for smart gadgets, cool tech, and
+                innovation.
+              </p>
+
+              <a
+                href="https://maps.google.com"
+                target="_blank"
+                className="flex items-start gap-3 hover:text-blue-600 transition-colors"
+              >
+                <MapPin className="w-4 h-4 mt-1 text-blue-600" />
+                <span>
+                  El, Main Road, Baouchriyeh 1004
+                  <br />
+                  Beirut, Lebanon
+                </span>
+              </a>
+
+              <div className="flex flex-col gap-2">
+                <a
+                  href="mailto:info@mrgadgetz.net"
+                  className="flex items-center gap-2 hover:text-blue-600 transition-colors"
+                >
+                  <Mail className="w-4 h-4 text-blue-600" /> info@mrgadgetz.net
+                </a>
+                <a
+                  href="tel:+9613797772"
+                  className="flex items-center gap-2 hover:text-blue-600 transition-colors"
+                >
+                  <Phone className="w-4 h-4 text-blue-600" /> +961 3 797 772
+                </a>
+                <a
+                  href="https://wa.me/96178880120"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-blue-600 transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4 text-blue-600" /> +961 78
+                  880 120
+                </a>
+              </div>
+            </div>
           </div>
 
-          {/* Shop + Legal wrapper for mobile side-by-side */}
-          <div className="grid grid-cols-2 gap-8 w-full md:contents">
-            {/* Shop Categories - Split into 2 columns */}
+          {/* Columns 2 & 3: Shop + Support (paired on one row for mobile) */}
+          <div className="col-span-full md:col-span-4 md:col-start-7 grid grid-cols-2 gap-8">
             <div>
-              <h4 className="font-semibold mb-4 text-base text-gray-900 underline">
+              <h4 className="font-bold text-neutral-900 mb-6 uppercase tracking-widest text-xs">
                 Shop
               </h4>
-              <ul className="space-y-3 text-sm text-gray-600">
-                {shopLinks.map((item) => (
-                  <li key={item.label}>
+              <ul className="space-y-3 text-sm text-neutral-700 font-medium">
+                {shopLinks.map((link) => (
+                  <li key={link.label}>
                     <Link
-                      href={item.href || "#"}
-                      className="transition-colors hover:text-[#0c57ef]"
+                      href={link.href}
+                      className="hover:text-blue-600 transition-colors"
                     >
-                      {item.label}
+                      {link.label}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Legal */}
-            <div className="block md:hidden">
-              <h4 className="font-semibold mb-4 text-base text-gray-900 underline">
-                Legal
+            <div>
+              <h4 className="font-bold text-neutral-900 mb-6 uppercase tracking-widest text-xs">
+                Support
               </h4>
-              <ul className="space-y-3 text-sm text-gray-600">
-                <li>
-                  <Link
-                    href="/privacy-policy"
-                    className="transition-colors hover:text-[#0c57ef]"
-                  >
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms-of-service"
-                    className="transition-colors hover:text-[#0c57ef]"
-                  >
-                    Terms of Service
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/warranty"
-                    className="transition-colors hover:text-[#0c57ef]"
-                  >
-                    Warranty
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shipping-and-returns"
-                    className="transition-colors hover:text-[#0c57ef]"
-                  >
-                    Returns
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="transition-colors hover:text-[#0c57ef]"
-                    data-testid="footer-contact-mobile"
-                  >
-                    Contact Us
-                  </Link>
-                </li>
+              <ul className="space-y-3 text-sm text-neutral-700 font-medium">
+                {legalLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="hover:text-blue-600 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
-          {/* Legal for desktop (only) */}
-          <div className="hidden md:block">
-            <h4 className="font-semibold mb-4 text-base text-gray-900 underline">
-              Legal
+          {/* Column 4: Socials */}
+          <div className="col-span-full md:col-span-2 md:col-start-11">
+            <h4 className="font-bold text-neutral-900 mb-6 uppercase tracking-widest text-xs">
+              <span className="md:hidden">Customer Service</span>
+              <span className="hidden md:inline">Follow Us</span>
             </h4>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li>
-                <Link
-                  href="/privacy-policy"
-                  className="transition-colors hover:text-[#0c57ef]"
+            {/* Mobile-only contact details */}
+            <div className="md:hidden space-y-3 text-sm text-neutral-700 mb-6">
+              <div className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 mt-1 text-blue-600" />
+                <span>
+                  El, Main Road, Baouchriyeh 1004
+                  <br />
+                  Beirut, Lebanon
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="w-4 h-4 text-blue-600" />
+                <a
+                  href="mailto:info@mrgadgetz.net"
+                  className="hover:text-blue-600 transition-colors"
                 >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms-of-service"
-                  className="transition-colors hover:text-[#0c57ef]"
+                  info@mrgadgetz.net
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="w-4 h-4 text-blue-600" />
+                <a
+                  href="tel:+9613797772"
+                  className="hover:text-blue-600 transition-colors"
                 >
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/warranty"
-                  className="transition-colors hover:text-[#0c57ef]"
+                  +961 3 797 772
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <MessageCircle className="w-4 h-4 text-blue-600" />
+                <a
+                  href="https://wa.me/96178880120"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 transition-colors"
                 >
-                  Warranty
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/shipping-and-returns"
-                  className="transition-colors hover:text-[#0c57ef]"
-                >
-                  Returns
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="transition-colors hover:text-[#0c57ef]"
-                  data-testid="footer-contact-desktop"
-                >
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Customer Service */}
-          <div className="flex flex-col gap-4 items-start">
-            <h4 className="font-semibold text-base text-gray-900 underline">
-              Customer Service
-            </h4>
-            <a
-              href="https://maps.google.com/?q=MR+GADGETZ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-start gap-3 text-sm text-gray-700 transition-colors hover:text-[#0c57ef]"
-            >
-              <MapPin className="w-4 h-4 mt-0.5" />
-              <span>
-                El, Main Road, Baouchriyeh 1004
-                <br />
-                Beirut, Lebanon
-              </span>
-            </a>
-            <div className="space-y-4 text-sm text-gray-700">
-              <a
-                href="mailto:info@mrgadgetz.net"
-                className="flex items-center gap-2 transition-colors hover:text-[#0c57ef]"
-              >
-                <Mail className="w-4 h-4" /> info@mrgadgetz.net
-              </a>
-              <a
-                href="tel:+9613797772"
-                className="flex items-center gap-2 transition-colors hover:text-[#0c57ef]"
-              >
-                <Phone className="w-4 h-4" /> +961 3 797 772
-              </a>
-              <a
-                href="https://wa.me/96178880120"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 transition-colors hover:text-[#0c57ef]"
-              >
-                <MessageCircle className="w-4 h-4" /> +961 78 880 120
-              </a>
+                  +961 78 880 120
+                </a>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <a
+            <div className="flex gap-4">
+              <SocialLink
                 href="https://www.instagram.com/mrgadgetz.lb/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-900 hover:text-[#0c57ef] active:text-[#0a45c4] transition-colors duration-200 transition-transform hover:-translate-y-0.5"
-                aria-label="Visit our Instagram"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
+                icon={<Instagram size={20} />}
+              />
+              <SocialLink
                 href="https://www.facebook.com/people/Mrgadgetz-Lebanon/61567872119588/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-900 hover:text-[#0c57ef] active:text-[#0a45c4] transition-colors duration-200 transition-transform hover:-translate-y-0.5"
-                aria-label="Visit our Facebook"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
+                icon={<Facebook size={20} />}
+              />
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-gray-500">
-          <p>&copy; 2026 Mr.Gadgetz. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <img
-              src="/footer/visa.svg"
-              alt="Visa"
-              className="h-6 w-auto opacity-80"
-              loading="lazy"
-            />
+        {/* BOTTOM BAR: Copyright & Payments - LIGHT GLASSY CONTAINER */}
+        <div className="pointer-events-auto bg-white border border-white/50 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-6 shadow-lg mt-8">
+          <p className="text-xs text-neutral-600 uppercase tracking-widest">
+            © {new Date().getFullYear()} Mr. Gadgetz. All rights reserved.
+          </p>
+
+          <div className="flex items-center gap-4 opacity-80 grayscale hover:grayscale-0 transition-all duration-500">
+            <img src="/footer/visa.svg" alt="Visa" className="h-6 w-auto" />
             <img
               src="/footer/mastercard.svg"
               alt="Mastercard"
-              className="h-6 w-auto opacity-80"
-              loading="lazy"
+              className="h-6 w-auto"
             />
             <img
               src="/footer/cash-on-delivery.svg"
-              alt="Cash on Delivery"
-              className="h-6 w-auto opacity-80"
-              loading="lazy"
+              alt="COD"
+              className="h-6 w-auto"
             />
             <img
               src="/footer/whish-logo.svg"
               alt="Whish"
-              className="h-6 w-auto opacity-80"
-              loading="lazy"
+              className="h-5 w-auto"
             />
           </div>
         </div>
+
+        {/* mix-blend-multiply makes it look like ink stamped on paper */}
+        <div className="flex-1 flex items-center justify-center py-10 pointer-events-none select-none">
+          <h1 className="text-[13vw] md:text-[15vw] leading-none font-black tracking-tighter text-neutral-900/10 mix-blend-multiply">
+            MR.GADGETZ
+          </h1>
+        </div>
       </div>
     </footer>
+  );
+}
+
+function SocialLink({ href, icon }: { href: string; icon: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-10 h-10 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:bg-neutral-900 hover:text-white transition-all duration-300"
+    >
+      {icon}
+    </a>
   );
 }
