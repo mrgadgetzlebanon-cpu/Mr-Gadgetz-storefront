@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { sanitizeHTML } from "@/lib/sanitize";
 
 interface ProductDescriptionProps {
   descriptionHtml?: string;
@@ -44,8 +45,12 @@ export function ProductDescription({
     return null;
   }
 
-  const splitContent = descriptionHtml
-    ? parseDescriptionWithHiddenTag(descriptionHtml)
+  const safeDescriptionHtml = descriptionHtml
+    ? sanitizeHTML(descriptionHtml)
+    : undefined;
+
+  const splitContent = safeDescriptionHtml
+    ? parseDescriptionWithHiddenTag(safeDescriptionHtml)
     : null;
   const hasSpecsFromHtml = splitContent?.specs && splitContent.specs.length > 0;
 
@@ -58,7 +63,9 @@ export function ProductDescription({
           </h3>
           <div
             className="text-muted-foreground leading-relaxed prose prose-sm dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: splitContent.description }}
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHTML(splitContent.description),
+            }}
           />
         </div>
         {(hasSpecsFromHtml || hasWarranty) && (
@@ -86,7 +93,9 @@ export function ProductDescription({
                 >
                   <div
                     className="text-muted-foreground leading-relaxed prose prose-sm dark:prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: splitContent.specs }}
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHTML(splitContent.specs),
+                    }}
                   />
                 </div>
               </>
@@ -143,7 +152,9 @@ export function ProductDescription({
           {descriptionHtml ? (
             <div
               className="text-muted-foreground leading-relaxed prose prose-sm dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHTML(descriptionHtml),
+              }}
             />
           ) : (
             <p className="text-muted-foreground leading-relaxed">

@@ -103,6 +103,8 @@ export function ProductCard({
                 }`}
                 loading={loadingAttr}
                 decoding={decodingAttr}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
               />
 
               {hasSecondImage && (
@@ -114,6 +116,8 @@ export function ProductCard({
                   className="absolute inset-0 h-full w-full object-contain translate-x-full group-hover/card:translate-x-0 transition-transform duration-500 ease-out"
                   loading={loadingAttr}
                   decoding={decodingAttr}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                 />
               )}
             </div>

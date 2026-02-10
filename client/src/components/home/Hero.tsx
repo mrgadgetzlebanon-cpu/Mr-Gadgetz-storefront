@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import ZentryButton from "./ZentryButton";
 import VideoPreview from "./VideoPreview";
 import MobileHero from "../mobile-hero";
+import { SecureVideo } from "@/components/SecureVideo";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -140,33 +141,36 @@ const Hero = () => {
                   data-testid="button-video-preview"
                   className="origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100"
                 >
-                  <video
+                  <SecureVideo
                     ref={currentVideoRef}
                     src={getVideoSrc((currentIndex % totalVideos) + 1)}
                     loop
                     muted
                     className="size-64 origin-center scale-150 object-cover object-center"
                     onLoadedData={handleVideoLoad}
+                    playsInline
                   />
                 </div>
               </VideoPreview>
             </div>
 
-            <video
+            <SecureVideo
               ref={nextVideoRef}
               src={getVideoSrc(currentIndex)}
               loop
               muted
               className="absolute-center invisible absolute z-20 size-64 object-cover object-center"
               onLoadedData={handleVideoLoad}
+              playsInline
             />
-            <video
+            <SecureVideo
               src={getVideoSrc(currentIndex === totalVideos ? 1 : currentIndex)}
               autoPlay
               loop
               muted
               className="absolute left-0 top-0 size-full object-cover object-center"
               onLoadedData={handleVideoLoad}
+              playsInline
             />
           </div>
 

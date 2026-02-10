@@ -3,6 +3,7 @@ import NotFound from "@/pages/not-found";
 import { LEGAL_CONTENT } from "@/lib/legal-content";
 import { SEO } from "@/components/SEO";
 import { buildCanonicalUrl } from "@/lib/seo";
+import { sanitizeHTML } from "@/lib/sanitize";
 
 const CONTENT_KEY_MAP: Record<string, string> = {
   "privacy-policy": "privacy-policy",
@@ -57,7 +58,9 @@ export default function InfoPage({ pageKey, slug }: InfoPageProps) {
             <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 md:p-10 shadow-sm text-left">
               <article
                 className="prose prose-slate max-w-none prose-headings:text-gray-900 prose-strong:text-gray-900 prose-a:text-[#0c57ef] prose-h3:mt-10 prose-h4:mt-6"
-                dangerouslySetInnerHTML={{ __html: entry.content }}
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHTML(entry.content),
+                }}
               />
             </div>
 

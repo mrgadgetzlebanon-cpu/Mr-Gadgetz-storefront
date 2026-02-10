@@ -2,6 +2,7 @@ import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import clsx from "clsx";
+import { sanitizeHTML } from "@/lib/sanitize";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,9 +17,9 @@ const AnimatedTitle = ({ title, containerClass }: AnimatedTitleProps) => {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    
+
     const words = container.querySelectorAll(".animated-word");
-    
+
     const ctx = gsap.context(() => {
       const titleAnimation = gsap.timeline({
         scrollTrigger: {
@@ -37,7 +38,7 @@ const AnimatedTitle = ({ title, containerClass }: AnimatedTitleProps) => {
           ease: "power2.inOut",
           stagger: 0.02,
         },
-        0
+        0,
       );
     }, container);
 
@@ -55,7 +56,7 @@ const AnimatedTitle = ({ title, containerClass }: AnimatedTitleProps) => {
             <span
               key={idx}
               className="animated-word"
-              dangerouslySetInnerHTML={{ __html: word }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHTML(word) }}
             />
           ))}
         </div>

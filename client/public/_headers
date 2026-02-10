@@ -1,0 +1,11 @@
+/*
+  # Draft hardened headers (no SRI)
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), fullscreen=(self)
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.shopify.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://cdn.shopify.com; media-src 'self' blob: https://cdn.shopify.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.shopify.com https://*.myshopify.com https://www.googletagmanager.com https://*.mrgadgetz.net; frame-ancestors 'none';
+*/
