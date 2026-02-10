@@ -63,12 +63,8 @@ export function NavigationMenu({
         );
 
         setCollectionImages(map);
-        if (process.env.NODE_ENV !== "production") {
-          console.debug("Loaded collection images handles", Object.keys(map));
-          console.debug("Networking image", map["networking"]);
-        }
       } catch (error) {
-        console.error("Failed to load collection images", error);
+        /* silently ignore collection image fetch failures */
       }
     })();
 

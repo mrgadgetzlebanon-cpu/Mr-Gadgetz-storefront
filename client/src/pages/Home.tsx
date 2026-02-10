@@ -1,4 +1,5 @@
-import { Helmet } from "react-helmet-async";
+import { SEO } from "@/components/SEO";
+import { buildCanonicalUrl } from "@/lib/seo";
 import Hero from "@/components/home/Hero";
 // import About from "@/components/home/About";
 import Features from "@/components/home/Features";
@@ -99,18 +100,11 @@ const audioTabs = [
 export default function Home() {
   return (
     <>
-      <Helmet>
-        <title>Mr. Gadgetz | Premium Electronics Store</title>
-        <meta
-          name="description"
-          content="Discover the latest tech gadgets and premium electronics at Mr. Gadgetz. Shop smartphones, laptops, audio, gaming gear, and more with fast shipping."
-        />
-        <meta property="og:title" content="Mr. Gadgetz | Premium Electronics" />
-        <meta
-          property="og:description"
-          content="Discover the latest tech gadgets and premium electronics at Mr. Gadgetz. Shop smartphones, laptops, audio, gaming gear, and more."
-        />
-      </Helmet>
+      <SEO
+        title="Mr. Gadgetz | Premium Electronics Store"
+        description="Discover the latest tech gadgets and premium electronics at Mr. Gadgetz. Shop smartphones, laptops, audio, gaming gear, and more with fast shipping."
+        url={buildCanonicalUrl("/")}
+      />
 
       <main className="relative min-h-screen min-w-screen overflow-hidden">
         {/* 1. Hero Section */}

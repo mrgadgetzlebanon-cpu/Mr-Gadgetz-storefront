@@ -1,7 +1,8 @@
-import { Helmet } from "react-helmet-async";
 import { useSearch } from "wouter";
 import { SortOption } from "@/hooks/use-products";
 import { ShopCategoryView } from "@/components/shop/ShopCategoryView";
+import { buildCanonicalUrl } from "@/lib/seo";
+import { SEO } from "@/components/SEO";
 
 export default function Shop() {
   const searchString = useSearch();
@@ -11,13 +12,7 @@ export default function Shop() {
   const cursorParam = params.get("cursor");
   const searchParam = params.get("search");
 
-  // Generate page title based on current view
-  const getPageTitle = () => {
-    if (searchParam) {
-      return `Search: ${searchParam} | Mr. Gadgetz`;
-    }
-    return "Shop | Mr. Gadgetz";
-  };
+  const pageTitle = searchParam ? `Search: ${searchParam}` : "Shop";
 
   const getPageDescription = () => {
     if (searchParam) {
@@ -28,12 +23,11 @@ export default function Shop() {
 
   return (
     <>
-      <Helmet>
-        <title>{getPageTitle()}</title>
-        <meta name="description" content={getPageDescription()} />
-        <meta property="og:title" content={getPageTitle()} />
-        <meta property="og:description" content={getPageDescription()} />
-      </Helmet>
+      <SEO
+        title={pageTitle}
+        description={getPageDescription()}
+        url={buildCanonicalUrl("/shop")}
+      />
       <ShopCategoryView
         sortParam={sortParam}
         pageParam={pageParam}

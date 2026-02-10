@@ -1,7 +1,12 @@
-import { Helmet } from "react-helmet-async";
 import { useSearch } from "wouter";
 import { SortOption } from "@/hooks/use-products";
 import { ShopCategoryView } from "@/components/shop/ShopCategoryView";
+import {
+  buildPageTitle,
+  buildMetaDescription,
+  buildCanonicalUrl,
+} from "@/lib/seo";
+import { SEO } from "@/components/SEO";
 
 function toTitle(text: string) {
   const cleaned = text.replace(/[-_]+/g, " ").trim();
@@ -22,19 +27,18 @@ export default function Collection({ params }: { params: { handle: string } }) {
   const searchParam = paramsObj.get("search");
 
   const titleText = toTitle(handle);
-  const pageTitle = `${titleText} | Mr. Gadgetz`;
-  const pageDescription = `Browse ${titleText} at Mr. Gadgetz. Discover curated products in this collection.`;
+  const pageTitle = buildPageTitle(titleText);
+  const pageDescription = buildMetaDescription();
 
   const basePath = `/collections/${handle}`;
 
   return (
     <>
-      <Helmet>
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
-        <meta property="og:title" content={pageTitle} />
-        <meta property="og:description" content={pageDescription} />
-      </Helmet>
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        url={buildCanonicalUrl(`/collections/${handle}`)}
+      />
       <ShopCategoryView
         sortParam={sortParam}
         pageParam={pageParam}

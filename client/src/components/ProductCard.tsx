@@ -103,7 +103,6 @@ export function ProductCard({
                 }`}
                 loading={loadingAttr}
                 decoding={decodingAttr}
-                fetchPriority={fetchPriority}
               />
 
               {hasSecondImage && (
@@ -115,7 +114,6 @@ export function ProductCard({
                   className="absolute inset-0 h-full w-full object-contain translate-x-full group-hover/card:translate-x-0 transition-transform duration-500 ease-out"
                   loading={loadingAttr}
                   decoding={decodingAttr}
-                  fetchPriority={fetchPriority}
                 />
               )}
             </div>

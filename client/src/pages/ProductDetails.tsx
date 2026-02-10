@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet-async";
 import { useProductByHandle } from "@/hooks/use-products";
 import { useRoute, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,8 @@ import { ProductInfo } from "@/components/product/ProductInfo";
 import { ProductDescription } from "@/components/product/ProductDescription";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { useProductVariant } from "@/hooks/use-product-variant";
+import { buildMetaDescription, buildCanonicalUrl } from "@/lib/seo";
+import { SEO } from "@/components/SEO";
 
 export default function ProductDetails() {
   const [match, params] = useRoute("/product/:handle");
@@ -71,22 +72,31 @@ export default function ProductDetails() {
   const imagesWithVariant = variantImage
     ? [variantImage, ...allImages.filter((img) => img !== variantImage)]
     : allImages;
-  const productTitle = `${product.name} | Mr. Gadgetz`;
-  const productDescription = `Buy ${product.name} at Mr. Gadgetz. ${product.brand} - Premium quality electronics with fast shipping.`;
+  const seoDescription = buildMetaDescription(
+    product.description || product.descriptionHtml,
+  );
+  const seoUrl = buildCanonicalUrl(`/product/${product.handle}`);
+  const seoImage = variantImage || product.image;
+  const productPrice = Number(product.price) || 0;
+  const isAvailable = (product as any)?.availableForSale ?? true;
 
   return (
     <>
-      <Helmet>
-        <title>{productTitle}</title>
-        <meta name="description" content={productDescription} />
-        <meta property="og:title" content={productTitle} />
-        <meta property="og:description" content={productDescription} />
-        <meta property="og:image" content={product.image} />
-        <meta property="og:type" content="product" />
-        <meta name="twitter:title" content={productTitle} />
-        <meta name="twitter:description" content={productDescription} />
-        <meta name="twitter:image" content={product.image} />
-      </Helmet>
+      <SEO
+        title={product.name}
+        description={seoDescription}
+        image={seoImage}
+        url={seoUrl}
+        type="product"
+        productData={{
+          title: product.name,
+          image: seoImage,
+          description: product.description,
+          vendor: product.brand || "Mr. Gadgetz",
+          price: productPrice,
+          availability: isAvailable,
+        }}
+      />
       <div className="container mx-auto px-4 py-8 bg-white">
         <button
           onClick={handleGoBack}

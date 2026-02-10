@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { ChevronLeft } from "lucide-react";
 import * as THREE from "three";
+import { SEO } from "@/components/SEO";
+import { buildCanonicalUrl } from "@/lib/seo";
 
 function ParticleBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -172,48 +174,55 @@ function ParticleBackground() {
 
 export default function NotFound() {
   return (
-    <div className="fixed inset-0 overflow-hidden bg-[#020617]">
-      <ParticleBackground />
+    <>
+      <SEO
+        title="Page Not Found"
+        description="The page you are looking for could not be found. Browse Mr. Gadgetz for premium electronics, phones, laptops, and accessories."
+        url={buildCanonicalUrl("/404")}
+      />
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div className="text-center max-w-lg mx-auto">
-          <h1
-            className="text-[12rem] md:text-[16rem] font-display font-bold leading-none mb-4 select-none"
-            style={{
-              color: "black",
-              textShadow: `
+      <div className="fixed inset-0 overflow-hidden bg-[#020617]">
+        <ParticleBackground />
+
+        <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+          <div className="text-center max-w-lg mx-auto">
+            <h1
+              className="text-[12rem] md:text-[16rem] font-display font-bold leading-none mb-4 select-none"
+              style={{
+                color: "black",
+                textShadow: `
                 0 0 1px #48bfef,
                 0 0 2px #48bfef,
                 0 0 10px rgba(72, 191, 239, 0.5),
                 0 0 20px rgba(72, 191, 239, 0.3),
                 0 0 40px rgba(72, 191, 239, 0.2)
               `,
-              WebkitTextStroke: "2px #48bfef",
-            }}
-            data-testid="text-404"
-          >
-            404
-          </h1>
+                WebkitTextStroke: "2px #48bfef",
+              }}
+              data-testid="text-404"
+            >
+              404
+            </h1>
 
-          <p
-            className="text-xl md:text-2xl font-medium tracking-[0.3em] mb-12 select-none"
-            style={{
-              color: "transparent",
-              textShadow: `
+            <p
+              className="text-xl md:text-2xl font-medium tracking-[0.3em] mb-12 select-none"
+              style={{
+                color: "transparent",
+                textShadow: `
                 0 0 1px rgba(255, 255, 255, 0.8),
                 0 0 5px rgba(255, 255, 255, 0.4),
                 0 0 10px rgba(72, 191, 239, 0.3)
               `,
-              WebkitTextStroke: "1px rgba(255, 255, 255, 0.7)",
-            }}
-            data-testid="text-error-message"
-          >
-            SIGNAL LOST
-          </p>
+                WebkitTextStroke: "1px rgba(255, 255, 255, 0.7)",
+              }}
+              data-testid="text-error-message"
+            >
+              SIGNAL LOST
+            </p>
 
-          <Link href="/shop">
-            <button
-              className="
+            <Link href="/shop">
+              <button
+                className="
                 relative overflow-hidden z-10 inline-flex items-center justify-center 
                 rounded-full px-8 py-3 font-semibold transition-all duration-500 ease-in-out
                 bg-[#0c57ef] text-white border-[#0c57ef]
@@ -229,14 +238,15 @@ export default function NotFound() {
 
                 hover:before:h-[300%] hover:before:top-1/2
               "
-              data-testid="button-back-to-shop"
-            >
-              <ChevronLeft className="w-5 h-5 mr-2" />
-              Back to Shop
-            </button>
-          </Link>
+                data-testid="button-back-to-shop"
+              >
+                <ChevronLeft className="w-5 h-5 mr-2" />
+                Back to Shop
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

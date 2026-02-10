@@ -9,7 +9,8 @@ export type {
 
 const SHOP_URL = import.meta.env.VITE_SHOPIFY_SHOP_URL;
 const ACCESS_TOKEN = import.meta.env.VITE_SHOPIFY_ACCESS_TOKEN;
-const API_VERSION = import.meta.env.VITE_SHOPIFY_API_VERSION;
+// Fallback to a stable Shopify API version if not provided to prevent network errors in dev.
+const API_VERSION = import.meta.env.VITE_SHOPIFY_API_VERSION || "2024-10";
 
 export async function shopifyFetch<T>({
   query,

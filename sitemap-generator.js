@@ -162,8 +162,8 @@ function generateCollectionXML(collections) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
   collections.forEach(({ node }) => {
-    // Matches your filter logic: /shop?category=handle
-    const url = `${SITE_URL}/shop?category=${node.handle}`;
+    // Matches your filter logic: /collections/handle
+    const url = `${SITE_URL}/collections/${node.handle}`;
     const date = node.updatedAt.split("T")[0];
 
     xml += `  <url>

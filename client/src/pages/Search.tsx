@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet-async";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useSearch } from "wouter";
 import {
@@ -6,11 +5,13 @@ import {
   buildMultiFieldSearchQuery,
   SortOption,
 } from "@/hooks/use-products";
+import { buildCanonicalUrl } from "@/lib/seo";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductCardSkeleton } from "@/components/ProductCardSkeleton";
 import { Input } from "@/components/ui/input";
 import { Search as SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SEO } from "@/components/SEO";
 
 export default function SearchPage() {
   const [, setLocation] = useLocation();
@@ -44,9 +45,7 @@ export default function SearchPage() {
 
   const products = data?.products || [];
 
-  const pageTitle = searchTerm
-    ? `Search: ${searchTerm} | Mr. Gadgetz`
-    : "Search | Mr. Gadgetz";
+  const pageTitle = searchTerm ? `Search: ${searchTerm}` : "Search";
 
   const resultCount = products.length;
 
@@ -76,14 +75,11 @@ export default function SearchPage() {
 
   return (
     <>
-      <Helmet>
-        <title>{pageTitle}</title>
-        <meta
-          name="description"
-          content={`Search for electronics and gadgets at Mr. Gadgetz. ${search ? `Results for "${search}".` : "Find smartphones, laptops, audio, gaming gear, and more."}`}
-        />
-        <meta property="og:title" content={pageTitle} />
-      </Helmet>
+      <SEO
+        title={pageTitle}
+        description={`Search for electronics and gadgets at Mr. Gadgetz. ${search ? `Results for "${search}".` : "Find smartphones, laptops, audio, gaming gear, and more."}`}
+        url={buildCanonicalUrl("/search")}
+      />
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-3xl mx-auto mb-10">
           <h1 className="text-4xl font-display font-bold mb-6 text-center">

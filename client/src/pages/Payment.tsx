@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { OrderSummary, PaymentForm } from "@/components/payment";
 import { createCheckout } from "@/lib/shopify";
+import { SEO } from "@/components/SEO";
 
 export default function Payment() {
   const { toast } = useToast();
@@ -66,37 +67,45 @@ export default function Payment() {
   if (items.length === 0 && !isRedirecting) return null;
 
   return (
-    <div className="min-h-screen py-24 bg-muted/30">
-      <div className="container px-4 mx-auto">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12"
-          >
-            <h1 className="text-4xl font-display font-bold mb-2 text-center">
-              Checkout
-            </h1>
-            <p className="text-muted-foreground text-center">
-              Review your order and complete payment.
-            </p>
-          </motion.div>
+    <>
+      <SEO
+        title="Checkout"
+        description="Secure checkout for your Mr. Gadgetz order. Review your cart and complete your purchase with fast delivery and official warranty."
+        url={"/payment"}
+      />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <OrderSummary
-              items={items}
-              total={total}
-              onRemoveItem={removeItem}
-              onUpdateQuantity={updateQuantity}
-            />
-            <PaymentForm
-              total={total}
-              onSubmit={handlePaymentSubmit}
-              isLoading={isRedirecting}
-            />
+      <div className="min-h-screen py-24 bg-muted/30">
+        <div className="container px-4 mx-auto">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-12"
+            >
+              <h1 className="text-4xl font-display font-bold mb-2 text-center">
+                Checkout
+              </h1>
+              <p className="text-muted-foreground text-center">
+                Review your order and complete payment.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <OrderSummary
+                items={items}
+                total={total}
+                onRemoveItem={removeItem}
+                onUpdateQuantity={updateQuantity}
+              />
+              <PaymentForm
+                total={total}
+                onSubmit={handlePaymentSubmit}
+                isLoading={isRedirecting}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
