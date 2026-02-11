@@ -59,7 +59,7 @@ export function ProductCard({
         className="h-full flex flex-col"
       >
         <div
-          className="img-wrapper relative overflow-hidden dark:bg-[#252540]"
+          className="img-wrapper relative overflow-hidden dark:bg-[#252540] select-none"
           style={{ height: isGrid ? "65%" : "55%" }}
         >
           <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
@@ -96,7 +96,7 @@ export function ProductCard({
                 alt={product.name}
                 width={imgWidth}
                 height={imgHeight}
-                className={`w-full h-full object-contain transition-transform duration-500 ease-out ${
+                className={`w-full h-full object-contain transition-transform duration-500 ease-out select-none ${
                   hasSecondImage
                     ? "translate-x-0 group-hover/card:-translate-x-full"
                     : "group-hover/card:scale-105"
@@ -113,7 +113,7 @@ export function ProductCard({
                   alt={`${product.name} secondary view`}
                   width={imgWidth}
                   height={imgHeight}
-                  className="absolute inset-0 h-full w-full object-contain translate-x-full group-hover/card:translate-x-0 transition-transform duration-500 ease-out"
+                  className="absolute inset-0 h-full w-full object-contain translate-x-full group-hover/card:translate-x-0 transition-transform duration-500 ease-out select-none"
                   loading={loadingAttr}
                   decoding={decodingAttr}
                   draggable={false}
@@ -168,21 +168,11 @@ export function ProductCard({
         </div>
 
         <div
-          className="content-wrapper flex flex-col justify-center items-center text-center px-4 py-3 dark:bg-[#1e1e32]"
+          className="content-wrapper flex flex-col justify-center items-center text-center px-4 py-3 dark:bg-[#1e1e32] select-none"
           style={{ height: isGrid ? "35%" : "55%" }}
         >
           <h3
-            className="font-display text-[13px] leading-tight text-gray-900 dark:text-white transition-colors"
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              lineHeight: "1.3",
-              maxHeight: "4rem",
-              overflowWrap: "break-word",
-            }}
+            className="font-display text-[13px] leading-tight text-gray-900 dark:text-white transition-colors break-words"
             title={product.name}
           >
             {product.name}
