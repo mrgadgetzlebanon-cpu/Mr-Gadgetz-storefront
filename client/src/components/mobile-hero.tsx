@@ -10,9 +10,9 @@ const slides = [
     label: "iPhone 17",
   },
   {
-    src: "/mobile-hero/samsung-banner-mobile.png",
-    href: "/collections/samsung",
-    label: "Samsung",
+    src: "/mobile-hero/jbl-mobile-banner.png",
+    href: "/collections/jbl",
+    label: "JBL",
   },
   {
     src: "/mobile-hero/audio-mobile-banner.png",
