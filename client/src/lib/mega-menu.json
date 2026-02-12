@@ -29,10 +29,10 @@
       },
       {
         "label": "MacBook",
-        "href": "/collections/apple-macbook",
+        "href": "/collections/macbook",
         "children": [
           { "label": "MacBook Pro", "href": "/collections/apple-macbook-pro" },
-          { "label": "MacBook Air", "href": "/collections/apple-macbook-air" },
+          { "label": "MacBook Air", "href": "/collections/macbook-air" },
           {
             "label": "MacBook Accessories",
             "href": "/collections/apple-macbook-accessories"
@@ -64,14 +64,14 @@
         "children": [
           { "label": "AirPods Pro", "href": "/collections/apple-airpods" },
           { "label": "AirPods Max", "href": "/collections/apple-airpods" },
-          { "label": "HomePod & TV", "href": "/collections/apple-homepod-tv" }
+          { "label": "HomePod & TV", "href": "/collections/homepod-tv" }
         ]
       },
       {
         "label": "Desktop & Other",
         "href": "/collections/apple-imac",
         "children": [
-          { "label": "iMac", "href": "/collections/apple-imac" },
+          { "label": "iMac", "href": "/collections/imac" },
           { "label": "Mac Mini", "href": "/collections/apple-mac-mini" },
           {
             "label": "Magic Mouse & Keyboard",

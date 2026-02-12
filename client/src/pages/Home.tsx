@@ -15,11 +15,11 @@ import { ShopByBrand } from "@/components/home";
 const appleTabs = [
   { id: "iphone", label: "iPhone", collectionHandle: "apple-iphone" },
   { id: "ipad", label: "iPad", collectionHandle: "apple-ipad" },
-  { id: "macbook", label: "MacBook", collectionHandle: "apple-macbook" },
-  { id: "imac", label: "iMac", collectionHandle: "apple-imac" },
+  { id: "macbook", label: "MacBook", collectionHandle: "macbook" },
+  { id: "imac", label: "iMac", collectionHandle: "imac" },
   { id: "watch", label: "Apple Watch", collectionHandle: "apple-watch" },
   { id: "audio", label: "AirPods & Audio", collectionHandle: "apple-airpods" },
-  { id: "home", label: "HomePod & TV", collectionHandle: "apple-homepod-tv" },
+  { id: "home", label: "HomePod & TV", collectionHandle: "homepod-tv" },
   {
     id: "accessories",
     label: "Magic Mouse & Keyboard",
@@ -42,7 +42,7 @@ const laptopTabs = [
   {
     id: "apple",
     label: "MacBook",
-    collectionHandle: "apple-macbook",
+    collectionHandle: "macbook",
   },
   {
     id: "msi",
