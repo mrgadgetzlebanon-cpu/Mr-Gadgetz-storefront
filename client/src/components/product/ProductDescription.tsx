@@ -14,8 +14,8 @@ function parseDescriptionWithHiddenTag(
   html: string,
 ): { description: string; specs: string } | null {
   const markers: RegExp[] = [
-    /<span[^>]*id\s*=\s*["']?hidden["']?[^>]*>.*?<\/span>/is,
-    /<div[^>]*id\s*=\s*["']?hidden["']?[^>]*>.*?<\/div>/is,
+    /<span[^>]*id\s*=\s*["']?hidden["']?[^>]*>[\s\S]*?<\/span>/i,
+    /<div[^>]*id\s*=\s*["']?hidden["']?[^>]*>[\s\S]*?<\/div>/i,
     /<!--\s*hidden\s*-->/i,
     /<\/hidden>/i,
     // Shopify sometimes replaces the marker with an empty paragraph or nbsp
