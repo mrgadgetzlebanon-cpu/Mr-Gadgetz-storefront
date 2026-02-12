@@ -64,7 +64,7 @@ export function Navigation({ onMobileMenuChange }: NavigationProps) {
 
   const isNotFoundPage = !isStandardPage;
   const isContactPage = location === "/contact";
-  const useWhiteLogo = isNotFoundPage || (isContactPage && !isScrolled);
+  const useWhiteLogo = isContactPage && !isScrolled;
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1024px)");

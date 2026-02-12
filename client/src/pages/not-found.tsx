@@ -169,7 +169,9 @@ function ParticleBackground() {
     };
   }, []);
 
-  return <div ref={containerRef} className="fixed inset-0" />;
+  return (
+    <div ref={containerRef} className="absolute inset-0 pointer-events-none" />
+  );
 }
 
 export default function NotFound() {
@@ -181,10 +183,10 @@ export default function NotFound() {
         url={buildCanonicalUrl("/404")}
       />
 
-      <div className="fixed inset-0 overflow-hidden bg-[#020617]">
+      <div className="relative min-h-screen overflow-hidden bg-[#020617]">
         <ParticleBackground />
 
-        <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+        <div className="relative z-10 flex items-center justify-center min-h-screen p-4 pb-24 md:pb-32">
           <div className="text-center max-w-lg mx-auto">
             <h1
               className="text-[12rem] md:text-[16rem] font-display font-bold leading-none mb-4 select-none"
