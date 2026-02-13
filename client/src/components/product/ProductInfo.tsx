@@ -175,6 +175,14 @@ function InfoTiles({ isAvailable }: { isAvailable: boolean }) {
           </p>
         </div>
       </div>
+      <div className="bg-muted/30 p-4 rounded-xl">
+        <h4 className="font-medium text-sm">Important Note</h4>
+        <p className="text-xs text-muted-foreground mt-1">
+          Images are for display purposes only. The delivered product may differ
+          in appearance or color. Refer to the manufacturer’s website using the
+          product code or SKU for exact details.
+        </p>
+      </div>
     </div>
   );
 }
