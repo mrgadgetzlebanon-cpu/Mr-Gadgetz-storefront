@@ -128,43 +128,6 @@ export function ProductCard({
               </span>
             </div>
           )}
-
-          <button
-            className="
-              absolute bottom-6 left-1/2 -translate-x-1/2 z-20
-              opacity-0 group-hover/card:opacity-100
-              translate-y-8 group-hover/card:translate-y-0
-              transition-all duration-300 ease-out
-              bg-[#0c57ef] text-white rounded-full px-8 py-3
-              flex items-center gap-2 font-medium text-sm
-              overflow-hidden
-            "
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              addItem(product);
-            }}
-            data-testid={`add-to-cart-${product.id}`}
-          >
-            {/* Fill layer */}
-            <span
-              className={`
-                absolute inset-0 bg-white transition-all duration-500 ease-out
-                ${isHovered ? "fill-in" : "fill-out"}
-              `}
-            />
-
-            <span
-              className={`
-                relative z-10 transition-colors duration-300
-                ${isHovered ? "text-[#0c57ef]" : "text-white"}
-              `}
-            >
-              Add
-            </span>
-          </button>
         </div>
 
         <div
@@ -188,6 +151,31 @@ export function ProductCard({
               </span>
             )}
           </div>
+
+          <button
+            className="relative mt-4 bg-[#0c57ef] text-white rounded-full px-8 py-3 flex items-center gap-2 font-medium text-sm overflow-hidden transition-all duration-300 opacity-0 translate-y-2 group-hover/card:opacity-100 group-hover/card:translate-y-0"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              addItem(product);
+            }}
+            data-testid={`add-to-cart-${product.id}`}
+          >
+            <span
+              className={`absolute inset-0 bg-white transition-all duration-500 ease-out ${
+                isHovered ? "fill-in" : "fill-out"
+              }`}
+            />
+            <span
+              className={`relative z-10 transition-colors duration-300 ${
+                isHovered ? "text-[#0c57ef]" : "text-white"
+              }`}
+            >
+              Add
+            </span>
+          </button>
         </div>
       </Link>
     </motion.div>
