@@ -117,6 +117,7 @@ export function ShopCategoryView({
   const effectivePage = isCursorMode
     ? urlPage
     : Math.min(urlPage, totalClientPages);
+  const displayPage = isCursorMode ? urlPage : effectivePage;
 
   const filteredProducts = useMemo(() => {
     if (isCursorMode) return hybridFilteredProducts;
@@ -131,7 +132,7 @@ export function ShopCategoryView({
   const hasNextPage = isCursorMode
     ? !!serverPageInfo?.hasNextPage
     : (serverPageInfo?.hasNextPage ?? effectivePage < totalClientPages);
-  const hasPrevPage = effectivePage > 1;
+  const hasPrevPage = isCursorMode ? urlPage > 1 : effectivePage > 1;
 
   const pageTitle = useMemo(() => {
     if (pageTitleOverride) return pageTitleOverride;
@@ -174,43 +175,47 @@ export function ShopCategoryView({
 
   const handleNextPage = useCallback(() => {
     if (!hasNextPage) return;
+
     const nextPage = urlPage + 1;
     const cursor = serverPageInfo?.endCursor || null;
-    if (cursor) {
+
+    if (isCursorMode && cursor) {
       setCursorMap((prev) => new Map(prev).set(nextPage, cursor));
     }
-    if (serverPageInfo?.hasNextPage) {
-      navigateToShop({
-        sort: sortKey,
-        page: nextPage,
-        cursor: cursor || undefined,
-        search: search.trim() || undefined,
-      });
-    }
+
+    navigateToShop({
+      sort: sortKey,
+      page: nextPage,
+      cursor: isCursorMode ? cursor || undefined : undefined,
+      search: search.trim() || undefined,
+    });
+
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [
-    serverPageInfo?.endCursor,
-    serverPageInfo?.hasNextPage,
-    urlPage,
-    sortKey,
-    navigateToShop,
-    search,
     hasNextPage,
+    urlPage,
+    serverPageInfo?.endCursor,
+    isCursorMode,
+    setCursorMap,
+    navigateToShop,
+    sortKey,
+    search,
   ]);
 
   const handlePrevPage = useCallback(() => {
-    if (urlPage > 1) {
-      const prevPage = urlPage - 1;
-      const prevCursor = cursorMap.get(prevPage);
-      navigateToShop({
-        sort: sortKey,
-        page: prevPage > 1 ? prevPage : undefined,
-        cursor: prevCursor,
-        search: search.trim() || undefined,
-      });
-    }
+    if (!hasPrevPage) return;
+
+    const prevPage = urlPage - 1;
+    const prevCursor = cursorMap.get(prevPage);
+    navigateToShop({
+      sort: sortKey,
+      page: prevPage > 1 ? prevPage : undefined,
+      cursor: prevCursor,
+      search: search.trim() || undefined,
+    });
+
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [urlPage, sortKey, navigateToShop, cursorMap, search]);
+  }, [hasPrevPage, urlPage, cursorMap, navigateToShop, sortKey, search]);
 
   useEffect(() => {
     if (
@@ -230,30 +235,45 @@ export function ShopCategoryView({
     sortKey,
     search,
   ]);
+  useEffect(() => {
+    if (!isCursorMode && urlPage > totalClientPages) {
+      const targetPage = Math.max(1, totalClientPages);
+      navigateToShop({
+        sort: sortKey,
+        page: targetPage > 1 ? targetPage : undefined,
+        search: search.trim() || undefined,
+      });
+    }
+  }, [
+    isCursorMode,
+    urlPage,
+    totalClientPages,
+    navigateToShop,
+    sortKey,
+    search,
+  ]);
 
   return (
     <div className="container mx-auto px-4 py-8 pt-16">
-      <div className="z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 -mx-4 px-4 pb-4 md:static md:bg-transparent md:backdrop-blur-none md:pb-0 md:mx-0 md:px-0">
-        <ShopHeader
-          pageTitle={pageTitle}
-          productCount={hybridFilteredProducts.length}
-          isFetching={isFetching}
-          isLoading={isLoading}
-          search={search}
-          onSearchChange={setSearch}
-          sortKey={sortKey}
-          onSortChange={handleSortChange}
-          localPriceRange={localPriceRange}
-          onPriceRangeChange={setLocalPriceRange}
-          maxPrice={maxPrice}
-          currentPage={urlPage}
-          totalPages={isCursorMode ? undefined : totalClientPages}
-          hasNextPage={!!hasNextPage}
-          hasPrevPage={hasPrevPage}
-          onNextPage={handleNextPage}
-          onPrevPage={handlePrevPage}
-        />
-      </div>
+      <ShopHeader
+        pageTitle={pageTitle}
+        productCount={hybridFilteredProducts.length}
+        isFetching={isFetching}
+        isLoading={isLoading}
+        search={search}
+        onSearchChange={setSearch}
+        sortKey={sortKey}
+        onSortChange={handleSortChange}
+        localPriceRange={localPriceRange}
+        currentPage={displayPage}
+        onPriceRangeChange={setLocalPriceRange}
+        maxPrice={maxPrice}
+        totalPages={isCursorMode ? undefined : totalClientPages}
+        hasNextPage={!!hasNextPage}
+        hasPrevPage={hasPrevPage}
+        onNextPage={handleNextPage}
+        onPrevPage={handlePrevPage}
+      />
 
       <div className="space-y-8">
         <ProductGrid
@@ -263,7 +283,7 @@ export function ShopCategoryView({
         />
 
         <ShopPagination
-          currentPage={urlPage}
+          currentPage={displayPage}
           totalPages={isCursorMode ? undefined : totalClientPages}
           hasNextPage={!!hasNextPage}
           hasPrevPage={hasPrevPage}

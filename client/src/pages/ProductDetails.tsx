@@ -1,16 +1,32 @@
+import { lazy, Suspense } from "react";
 import { useProductByHandle } from "@/hooks/use-products";
 import { useRoute, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { ProductDetailsSkeleton } from "@/components/ProductDetailsSkeleton";
-import { ProductImageSlider } from "@/components/product/ProductImageSlider";
 import { ProductInfo } from "@/components/product/ProductInfo";
-import { ProductDescription } from "@/components/product/ProductDescription";
-import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { useProductVariant } from "@/hooks/use-product-variant";
 import { buildMetaDescription, buildCanonicalUrl } from "@/lib/seo";
 import { SEO } from "@/components/SEO";
+
+const ProductImageSlider = lazy(() =>
+  import("@/components/product/ProductImageSlider").then((m) => ({
+    default: m.ProductImageSlider,
+  })),
+);
+
+const ProductDescription = lazy(() =>
+  import("@/components/product/ProductDescription").then((m) => ({
+    default: m.ProductDescription,
+  })),
+);
+
+const RelatedProducts = lazy(() =>
+  import("@/components/product/RelatedProducts").then((m) => ({
+    default: m.RelatedProducts,
+  })),
+);
 
 export default function ProductDetails() {
   const [match, params] = useRoute("/product/:handle");
@@ -80,6 +96,14 @@ export default function ProductDetails() {
   const productPrice = Number(product.price) || 0;
   const isAvailable = (product as any)?.availableForSale ?? true;
 
+  const renderMediaFallback = () => (
+    <div className="aspect-square w-full rounded-2xl bg-muted animate-pulse" />
+  );
+
+  const renderContentFallback = () => (
+    <div className="rounded-2xl bg-muted animate-pulse h-64" />
+  );
+
   return (
     <>
       <SEO
@@ -109,11 +133,13 @@ export default function ProductDetails() {
         {/* Upper Content - Two Columns */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Left - Image Slider */}
-          <ProductImageSlider
-            images={imagesWithVariant}
-            productName={product.name}
-            activeVariant={activeVariant}
-          />
+          <Suspense fallback={renderMediaFallback()}>
+            <ProductImageSlider
+              images={imagesWithVariant}
+              productName={product.name}
+              activeVariant={activeVariant}
+            />
+          </Suspense>
 
           {/* Right - Product Info */}
           <ProductInfo
@@ -132,20 +158,24 @@ export default function ProductDetails() {
 
         {/* Lower Content - Description & Specs */}
         <div className="mt-12 pt-8 border-t border-border/50">
-          <ProductDescription
-            descriptionHtml={product.descriptionHtml}
-            description={product.description}
-            specs={product.specs as Record<string, string> | undefined}
-            warranty={product.warranty}
-          />
+          <Suspense fallback={renderContentFallback()}>
+            <ProductDescription
+              descriptionHtml={product.descriptionHtml}
+              description={product.description}
+              specs={product.specs as Record<string, string> | undefined}
+              warranty={product.warranty}
+            />
+          </Suspense>
         </div>
 
         {/* Related Products */}
-        <RelatedProducts
-          currentProductId={product.id}
-          productType={product.productType}
-          vendor={product.brand}
-        />
+        <Suspense fallback={renderContentFallback()}>
+          <RelatedProducts
+            currentProductId={product.id}
+            productType={product.productType}
+            vendor={product.brand}
+          />
+        </Suspense>
       </div>
     </>
   );
