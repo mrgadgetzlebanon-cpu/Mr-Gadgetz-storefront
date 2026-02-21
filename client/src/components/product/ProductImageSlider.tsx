@@ -87,6 +87,12 @@ export function ProductImageSlider({
                   <img
                     src={img}
                     alt={`${productName} ${i + 1}`}
+                    width={800}
+                    height={800}
+                    loading={i === 0 ? "eager" : "lazy"}
+                    fetchPriority={i === 0 ? "high" : "auto"}
+                    decoding="async"
+                    /* ----------------------------- */
                     className="w-full h-full object-contain"
                     style={{ mixBlendMode: "multiply" }}
                   />
