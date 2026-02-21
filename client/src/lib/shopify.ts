@@ -110,7 +110,7 @@ export const PRODUCTS_BY_COLLECTION_QUERY = `
             images(first: 2) {
               edges {
                 node {
-                  url
+                  url(transform: {maxWidth: 800, preferredContentType: WEBP})
                   altText
                 }
               }
@@ -168,7 +168,7 @@ export const ALL_PRODUCTS_QUERY = `
           images(first: 5) {
             edges {
               node {
-                url
+                url(transform: {maxWidth: 800, preferredContentType: WEBP})
                 altText
               }
             }
@@ -226,7 +226,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       images(first: 10) {
         edges {
           node {
-            url
+            url(transform: {maxWidth: 1200, preferredContentType: WEBP})
             altText
           }
         }
@@ -238,7 +238,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
             title
             availableForSale
             image {
-              url
+              url(transform: {maxWidth: 1200, preferredContentType: WEBP})
               altText
             }
             priceV2 {
