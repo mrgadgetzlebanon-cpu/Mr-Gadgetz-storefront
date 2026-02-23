@@ -1,3 +1,14 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.mrgadgetz.net/sitemap.xml
+
+# Block cart and checkout flows
+Disallow: /cart
+Disallow: /checkout
+Disallow: /payment
+
+# Block internal search results to prevent infinite URL indexing
+Disallow: /search
+Disallow: /search?*
+
+# Point Google directly to your map
+Sitemap: https://mrgadgetz.net/sitemap.xml
